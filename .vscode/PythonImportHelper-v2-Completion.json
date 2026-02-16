@@ -1,0 +1,564 @@
+[
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "GenericBaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "get_asgi_application",
+        "importPath": "django.core.asgi",
+        "description": "django.core.asgi",
+        "isExtraImport": true,
+        "detail": "django.core.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_USER_MODEL",
+        "importPath": "django.conf.global_settings",
+        "description": "django.conf.global_settings",
+        "isExtraImport": true,
+        "detail": "django.conf.global_settings",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "get_wsgi_application",
+        "importPath": "django.core.wsgi",
+        "description": "django.core.wsgi",
+        "isExtraImport": true,
+        "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "django.db.models.deletion",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.db.models.deletion",
+        "description": "django.db.models.deletion",
+        "detail": "django.db.models.deletion",
+        "documentation": {}
+    },
+    {
+        "label": "UserAdmin",
+        "importPath": "django.contrib.auth.admin",
+        "description": "django.contrib.auth.admin",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.admin",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "Role",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseUserManager",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "AbstractBaseUser",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "PermissionsMixin",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "base.migrations.0001_initial",
+        "description": "base.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Status',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),\n                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),",
+        "detail": "base.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "BaseConfig",
+        "kind": 6,
+        "importPath": "base.apps",
+        "description": "base.apps",
+        "peekOfCode": "class BaseConfig(AppConfig):\n    name = 'base'",
+        "detail": "base.apps",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "kind": 6,
+        "importPath": "base.models",
+        "description": "base.models",
+        "peekOfCode": "class BaseModel(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)\n    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))\n    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Date modified'))\n    class Meta:\n        abstract = True\nclass GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))\n    class Meta:",
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "GenericBaseModel",
+        "kind": 6,
+        "importPath": "base.models",
+        "description": "base.models",
+        "peekOfCode": "class GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))\n    class Meta:\n        abstract = True\nclass Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:\n        verbose_name = _('Status')\n        verbose_name_plural = _('Statuses')",
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Status",
+        "kind": 6,
+        "importPath": "base.models",
+        "description": "base.models",
+        "peekOfCode": "class Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:\n        verbose_name = _('Status')\n        verbose_name_plural = _('Statuses')\n    def __str__(self):\n        return self.name",
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "pettycash_system.asgi",
+        "description": "pettycash_system.asgi",
+        "peekOfCode": "application = get_asgi_application()",
+        "detail": "pettycash_system.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECRET_KEY",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "SECRET_KEY = 'django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEBUG",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "DEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ALLOWED_HOSTS",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "ALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "INSTALLED_APPS",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "INSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n]",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MIDDLEWARE",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n]\nROOT_URLCONF = 'pettycash_system.urls'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ROOT_URLCONF",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "ROOT_URLCONF = 'pettycash_system.urls'\nTEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TEMPLATES",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "TEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',\n                'django.contrib.messages.context_processors.messages',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "WSGI_APPLICATION",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "WSGI_APPLICATION = 'pettycash_system.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/6.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': 'pettycash_db',\n        'USER':'postgres',\n        'PASSWORD':'root',\n        'HOST':'localhost',",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASES",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': 'pettycash_db',\n        'USER':'postgres',\n        'PASSWORD':'root',\n        'HOST':'localhost',\n        'PORT':'5432'\n    }\n}",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_PASSWORD_VALIDATORS",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "AUTH_PASSWORD_VALIDATORS = [\n    {\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',\n    },",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LANGUAGE_CODE",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_ZONE",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_I18N",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_TZ",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATIC_URL",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "STATIC_URL = 'static/'",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "pettycash_system.urls",
+        "description": "pettycash_system.urls",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n]",
+        "detail": "pettycash_system.urls",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "pettycash_system.wsgi",
+        "description": "pettycash_system.wsgi",
+        "peekOfCode": "application = get_wsgi_application()",
+        "detail": "pettycash_system.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0001_initial",
+        "description": "users.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('auth', '0012_alter_user_first_name_max_length'),\n        ('base', '0001_initial'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Role',\n            fields=[",
+        "detail": "users.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "UsersConfig",
+        "kind": 6,
+        "importPath": "users.apps",
+        "description": "users.apps",
+        "peekOfCode": "class UsersConfig(AppConfig):\n    name = 'users'",
+        "detail": "users.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Role",
+        "kind": 6,
+        "importPath": "users.models",
+        "description": "users.models",
+        "peekOfCode": "class Role(GenericBaseModel):\n    code = models.CharField(max_length=20,unique=True)\n    class Meta:\n        verbose_name = _('Role')\n        verbose_name_plural = _('Roles')\n    def __str__(self):\n        return self.name\n# Create your models here.\nclass UserManager(BaseUserManager):\n    def create_user(self, email, password=None, **extra_fields):",
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "UserManager",
+        "kind": 6,
+        "importPath": "users.models",
+        "description": "users.models",
+        "peekOfCode": "class UserManager(BaseUserManager):\n    def create_user(self, email, password=None, **extra_fields):\n        # validation error when we dont pass email later\n        if not email: raise ValueError(\"Users must have an email address\")\n        email = self.normalize_email(email) # Normalize the email address by lowercasing the domain part of it.\n        #auto assign a status if not provided\n        if 'status' not in extra_fields:\n            status,_ = Status.objects.get_or_create(\n                code =\"ACT\",\n                defaults={'name':'Active', 'description': 'Active user'}",
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "kind": 6,
+        "importPath": "users.models",
+        "description": "users.models",
+        "peekOfCode": "class User(BaseModel, AbstractBaseUser, PermissionsMixin):\n    email = models.EmailField(unique=True, verbose_name=_('Email'))\n    first_name = models.CharField(max_length=150, blank=True, verbose_name=_('First name'))\n    last_name = models.CharField(max_length=150, blank=True, verbose_name=_('Last name'))\n    other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))\n    phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))\n    national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))\n    avatar_url = models.CharField(max_length=500, blank=True, null=True)\n    last_login = models.DateTimeField(blank=True, null=True)\n    is_active = models.BooleanField(default=True)",
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "manage",
+        "description": "manage",
+        "peekOfCode": "def main():\n    \"\"\"Run administrative tasks.\"\"\"\n    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pettycash_system.settings')\n    try:\n        from django.core.management import execute_from_command_line\n    except ImportError as exc:\n        raise ImportError(\n            \"Couldn't import Django. Are you sure it's installed and \"\n            \"available on your PYTHONPATH environment variable? Did you \"\n            \"forget to activate a virtual environment?\"",
+        "detail": "manage",
+        "documentation": {}
+    }
+]

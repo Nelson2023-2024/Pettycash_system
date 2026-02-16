@@ -19,3 +19,14 @@ class GenericBaseModel(BaseModel):
 
     class Meta:
         abstract = True
+
+
+class Status(GenericBaseModel):
+    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))
+
+    class Meta:
+        verbose_name = _('Status')
+        verbose_name_plural = _('Statuses')
+
+    def __str__(self):
+        return self.name
