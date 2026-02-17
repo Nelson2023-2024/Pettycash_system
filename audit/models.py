@@ -61,7 +61,7 @@ class TransactionLogBase(BaseModel):
 
 
     metadata = models.JSONField(null=True, blank=True, verbose_name=_('Metadata'))
-    entity_type = models.CharField(max_length=20,blank=True, verbose_name=_('Entity Type'))
+    entity_type = models.CharField(max_length=50,blank=True, verbose_name=_('Entity Type'))
     entity_id = models.CharField(max_length=100, blank=True, verbose_name=_('Entity ID'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
 

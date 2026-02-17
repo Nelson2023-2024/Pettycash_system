@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'users',
     'audit',
     'finance',
+    'department',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
