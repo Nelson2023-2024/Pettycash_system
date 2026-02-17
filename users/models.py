@@ -2,16 +2,19 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from base.models import BaseModel, GenericBaseModel, Status
 from django.utils.translation import gettext_lazy as _
+from department.models import Department
 
 class Role(GenericBaseModel):
     code = models.CharField(max_length=20,unique=True)
 
-    class Meta:
-        verbose_name = _('Role')
-        verbose_name_plural = _('Roles')
-
     def __str__(self):
         return self.name
+
+    class Meta:
+        db_table = 'role'
+        verbose_name = _('Role')
+        verbose_name_plural = _('Roles')
+        ordering = ['-created_at']
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -80,6 +83,16 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         verbose_name='Status',
 
     )
+
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='users',
+        verbose_name=_('Department')
+    )
+
     role = models.ForeignKey(
         Role,
         on_delete=models.PROTECT,
@@ -94,3 +107,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.first_name+" "+self.last_name
+
+    class Meta:
+        db_table = 'user'
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+        ordering = ['-created_at']
