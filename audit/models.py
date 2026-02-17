@@ -1,20 +1,11 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from base.models import GenericBaseModel,BaseModel,Status
+from base.models import GenericBaseModel,BaseModel,Status,Category
 from users.models import User
 from django.utils import timezone
 
-class EventCategory(GenericBaseModel):
-    code = models.CharField(max_length=20, unique=True, blank=True)
 
-    #REVERSE ACCESS(auto - created by Django):
-    #   category.event_types.all()  ← from EventTypes.category FK
-
-    class Meta:
-        db_table = 'event_category'
-        verbose_name = _('Event Category')
-        verbose_name_plural = _('Event Categories')
 
 
 
@@ -24,7 +15,7 @@ class EventTypes(GenericBaseModel):
     is_active = models.BooleanField(default=True)
 
     event_category = models.ForeignKey(
-        EventCategory,
+        Category,
         related_name='event_types',
         verbose_name=_('Event Category'),
         on_delete=models.PROTECT

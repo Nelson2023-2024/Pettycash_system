@@ -33,3 +33,13 @@ class Status(GenericBaseModel):
 
     def __str__(self):
         return self.name
+
+class Category(GenericBaseModel):
+    code = models.CharField(max_length=20, unique=True, blank=True, verbose_name=_('Code'))
+
+    #REVERSE ACCESS(auto - created by Django):
+    #   category.event_types.all()  ← from EventTypes.category FK
+    class Meta:
+        db_table = 'category'
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
