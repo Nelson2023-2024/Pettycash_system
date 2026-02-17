@@ -28,6 +28,7 @@ class Status(GenericBaseModel):
     code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))
 
     class Meta:
+        db_table = 'status'
         verbose_name = _('Status')
         verbose_name_plural = _('Statuses')
 
