@@ -27,6 +27,8 @@ class ResponseProvider:
             else:
                 error_message = str(ex)
             return cls.bad_request(message="Validation Error", error=error_message)
+        elif isinstance(ex, ValueError):
+            return cls.bad_request(message="Bad Request", error=str(ex))
         elif isinstance(ex, ObjectDoesNotExist):
             return cls.not_found(error=str(ex))
         elif isinstance(ex, PermissionDenied):
