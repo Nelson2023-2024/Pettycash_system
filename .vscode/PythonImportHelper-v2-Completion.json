@@ -192,6 +192,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -882,6 +898,14 @@
         "documentation": {}
     },
     {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
         "label": "JsonResponse",
         "importPath": "django.http",
         "description": "django.http",
@@ -963,6 +987,14 @@
     },
     {
         "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogService",
         "importPath": "services.services",
         "description": "services.services",
         "isExtraImport": true,
@@ -1357,6 +1389,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0005_eventtypes_code",
+        "description": "audit.migrations.0005_eventtypes_code",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0004_alter_transactionlogbase_entity_type'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='eventtypes',\n            name='code',\n            field=models.CharField(blank=True, max_length=20, null=True, unique=True, verbose_name='Code'),\n        ),",
+        "detail": "audit.migrations.0005_eventtypes_code",
+        "documentation": {}
+    },
+    {
         "label": "AuditConfig",
         "kind": 6,
         "importPath": "audit.apps",
@@ -1370,7 +1411,7 @@
         "kind": 6,
         "importPath": "audit.models",
         "description": "audit.models",
-        "peekOfCode": "class EventTypes(GenericBaseModel):\n    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))\n    is_active = models.BooleanField(default=True)\n    event_category = models.ForeignKey(\n        Category,\n        related_name='event_types',\n        verbose_name=_('Event Category'),\n        on_delete=models.PROTECT\n    )\n    # USAGE:",
+        "peekOfCode": "class EventTypes(GenericBaseModel):\n    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))\n    is_active = models.BooleanField(default=True)\n    code = models.CharField(max_length=20, unique=True, null=True , blank=True,verbose_name=_('Code'))\n    event_category = models.ForeignKey(\n        Category,\n        related_name='event_types',\n        verbose_name=_('Event Category'),\n        on_delete=models.PROTECT\n    )",
         "detail": "audit.models",
         "documentation": {}
     },
@@ -1892,7 +1933,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class EventTypeService(ServiceBase):\n    manager = EventTypes.objects\n    def get_by_category(self, category_code):\n        return self.manager.filter(event_category__code=category_code)\n    def get_active(self):\n        return self.manager.filter(is_active=True)\nclass TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    def get_by_entity(self, entity_type, entity_id):\n        return self.manager.filter(entity_type=entity_type, entity_id=entity_id)",
+        "peekOfCode": "class EventTypeService(ServiceBase):\n    manager = EventTypes.objects\n    def get_by_category(self, category_code):\n        return self.manager.filter(event_category__code=category_code)\n    def get_active(self):\n        return self.manager.filter(is_active=True)\n# -----------------------------------------------------------------------------\n# TRANSACTION LOG SERVICE\n# -----------------------------------------------------------------------------\nclass TransactionLogService(ServiceBase):",
         "detail": "services.services",
         "documentation": {}
     },
@@ -1901,7 +1942,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    def get_by_entity(self, entity_type, entity_id):\n        return self.manager.filter(entity_type=entity_type, entity_id=entity_id)\n    def get_by_user(self, user_id):\n        return self.manager.filter(triggered_by__id=user_id)\n    def get_by_event_type(self, event_code):\n        return self.manager.filter(event_type__code=event_code)\nclass NotificationService(ServiceBase):\n    manager = Notifications.objects",
+        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    @staticmethod\n    def log(\n            event_code: str,\n            triggered_by: User,\n            entity,\n            status_code: str ='200',\n            message: str = '',\n            metadata: dict =None,",
         "detail": "services.services",
         "documentation": {}
     },

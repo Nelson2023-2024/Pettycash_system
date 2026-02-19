@@ -7,6 +7,8 @@ from department.models import Department
 from audit.models import EventTypes, TransactionLogBase, Notifications
 from users.models import User, Role
 from services.serviceBase import ServiceBase
+from django.utils import timezone
+
 
 class StatusService(ServiceBase):
     manager = Status.objects
@@ -38,6 +40,28 @@ class UserService(ServiceBase):
         user.save(update_fields=['last_login'])
         return user
 
+    @staticmethod
+    def log_login(user: User, request) -> None:
+        TransactionLogService().log(
+            event_code='user_login_success',
+            triggered_by=user,
+            entity=user,
+            status_code='ACT',
+            message=f'{user.email} logged in successfully',
+            ip_address=request.META.get('REMOTE_ADDR'),
+            metadata={
+                'user_id': str(user.id),
+                'email': user.email,
+                'role': user.role.name,
+                'department': user.department.name if user.department else None,
+                'user_agent': request.META.get('HTTP_USER_AGENT'),
+                'device_type': 'mobile' if 'Mobile' in request.META.get('HTTP_USER_AGENT', '') else 'desktop',
+                'ip_address': request.META.get('REMOTE_ADDR'),
+                'forwarded_ip': request.META.get('HTTP_X_FORWARDED_FOR'),
+                'login_method': 'email_password',
+                'login_at': timezone.now().isoformat(),
+            }
+        )
 
 class DepartmentService(ServiceBase):
     manager = Department.objects
@@ -57,17 +81,58 @@ class EventTypeService(ServiceBase):
     def get_active(self):
         return self.manager.filter(is_active=True)
 
+# -----------------------------------------------------------------------------
+# TRANSACTION LOG SERVICE
+# -----------------------------------------------------------------------------
 class TransactionLogService(ServiceBase):
     manager = TransactionLogBase.objects
 
-    def get_by_entity(self, entity_type, entity_id):
-        return self.manager.filter(entity_type=entity_type, entity_id=entity_id)
+    @staticmethod
+    def log(
+            event_code: str,
+            triggered_by: User,
+            entity,
+            status_code: str ='200',
+            message: str = '',
+            metadata: dict =None,
+            ip_address: str = None
+    ) -> TransactionLogBase:
+        event_type = EventTypes.objects.get(code=event_code)
+        status = Status.objects.get(code=status_code)
 
-    def get_by_user(self, user_id):
-        return self.manager.filter(triggered_by__id=user_id)
+        return TransactionLogBase.objects.create(
+            event_type=event_type,
+            triggered_by=triggered_by,
+            status=status,
+            event_message = message,
+            metadata = metadata or {},
+            entity_type=entity.__class__.__name__, # "User", "ExpenseRequest" etc
+            entity_id = str(entity.pk),
+            user_ip_address=ip_address
+        )
 
-    def get_by_event_type(self, event_code):
-        return self.manager.filter(event_type__code=event_code)
+    @staticmethod
+    def get_logs_for_entity(entity):
+        """get all logs for a specific entity e.g. user, expense"""
+        return TransactionLogBase.objects.filter(
+            entity_type=entity.__class__.__name__,
+            entity_id=str(entity.pk)
+        ).select_related('event_type', 'triggered_by', 'status')
+
+    @staticmethod
+    def get_logs_by_event(event_code: str):
+        """Get all logs for a specific event e.g all logins"""
+        return TransactionLogBase.objects.filter(
+            event_type__code=event_code
+        ).select_related('event_type', 'triggered_by', 'status')
+
+    @staticmethod
+    def get_user_logs(user: User):
+        """Everything a specific user has triggered"""
+        return TransactionLogBase.objects.filter(
+            triggered_by=user
+        ).select_related('event_type', 'status')
+
 
 class NotificationService(ServiceBase):
     manager = Notifications.objects

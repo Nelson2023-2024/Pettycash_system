@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
-from services.services import UserService
+from services.services import UserService, TransactionLogService
 from django.contrib.auth import get_user_model
 from authenticate.services.token_service import TokenService
 from utils.response_provider import ResponseProvider
@@ -34,6 +34,8 @@ class AuthService:
         # Delegate persistence
         user = UserService().update_last_login(user)
 
+        # Log successful login
+        UserService().log_login(user,request)
 
         user_data = {
             'id': str(user.id),
@@ -53,6 +55,8 @@ class AuthService:
         )
 
         return response
+
+
     @classmethod
     def logout(cls) -> JsonResponse:
         """
@@ -62,4 +66,17 @@ class AuthService:
         response = ResponseProvider.success(message='Logout successful')
         response.delete_cookie(key='jwt')
         return response
+
+    @classmethod
+    def forgot_password(cls):
+        """
+        for 1 to reset their password they must 1st enter in their personal email
+        check if the email exists in the DB and is active if true:
+            generate an randoom 6 digit OTP
+            sent to their email
+            they get the OTP
+            enter it into a form field and its verified
+
+        """
+        pass
         
