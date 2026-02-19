@@ -1,4 +1,5 @@
 from django.db.models import Manager
+from typing import Type
 
 from finance.models import PettyCashAccount, ExpenseRequest, TopUpRequest, DisbursementReconciliation
 from base.models import Status, Category
@@ -19,17 +20,24 @@ class RoleService(ServiceBase):
 class UserService(ServiceBase):
     manager = User.objects
 
-    def get_by_email(self, email):
-        return self.manager.filter(email=email).first()
+    ## AUTHENTICATION QUERIES
 
-    def get_by_role(self, role_code):
-        return self.manager.filter(role__code=role_code)
+    """
+    LOGIN usage
+    This method retrieves an active user from the database based on the provided email address u. 
+    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.
+    """
+    def get_active_user_by_email(self,email):
+        return self.manager.get(email=email,is_active=True)
 
-    def get_by_department(self,department_id):
-        return self.manager.filter(department__id=department_id)
+    @staticmethod
+    def update_last_login(user: User) ->User:
+        from django.utils import timezone
 
-    def get_active_users(self):
-        return self.manager.filter(is_active=True)
+        user.last_login = timezone.now()
+        user.save(update_fields=['last_login'])
+        return user
+
 
 class DepartmentService(ServiceBase):
     manager = Department.objects
