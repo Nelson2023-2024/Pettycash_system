@@ -834,6 +834,14 @@
         "documentation": {}
     },
     {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
         "label": "Role",
         "importPath": "users.models",
         "description": "users.models",
@@ -930,12 +938,35 @@
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "kind": 6,
+        "label": "TokenService",
+        "importPath": "authenticate.services.token_service",
+        "description": "authenticate.services.token_service",
         "isExtraImport": true,
-        "importPath": "datetime",
-        "description": "datetime",
-        "detail": "datetime",
+        "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ENV",
+        "importPath": "config.env_config",
+        "description": "config.env_config",
+        "isExtraImport": true,
+        "detail": "config.env_config",
         "documentation": {}
     },
     {
@@ -948,11 +979,20 @@
         "documentation": {}
     },
     {
-        "label": "login",
-        "importPath": "authenticate.views",
-        "description": "authenticate.views",
+        "label": "datetime",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "authenticate.views",
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
         "documentation": {}
     },
     {
@@ -980,6 +1020,14 @@
         "documentation": {}
     },
     {
+        "label": "login",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
         "label": "require_http_methods",
         "importPath": "django.views.decorators.http",
         "description": "django.views.decorators.http",
@@ -993,14 +1041,6 @@
         "description": "django.views.decorators.csrf",
         "isExtraImport": true,
         "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
         "documentation": {}
     },
     {
@@ -1260,7 +1300,7 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls'))\n]",
+        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls')),\n  path('departments/',include('authenticate.urls')),\n]",
         "detail": "api.urls",
         "documentation": {}
     },
@@ -1355,6 +1395,15 @@
         "documentation": {}
     },
     {
+        "label": "TokenService",
+        "kind": 6,
+        "importPath": "authenticate.services.token_service",
+        "description": "authenticate.services.token_service",
+        "peekOfCode": "class TokenService:\n    @staticmethod\n    def generate_token(user: User, response: JsonResponse, cookie_name,max_age: int) -> str:\n        now = timezone.now()\n        payload = {\n            'user_id': str(user.id),\n            'exp':  now + datetime.timedelta(seconds=max_age),\n            'iat': now\n        }\n        token = jwt.encode(payload, ENV.JWT_SECRET, algorithm='HS256' )",
+        "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
         "label": "AuthenticateConfig",
         "kind": 6,
         "importPath": "authenticate.apps",
@@ -1377,7 +1426,7 @@
         "kind": 2,
         "importPath": "authenticate.views",
         "description": "authenticate.views",
-        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return ResponseProvider.success(message=\"Login successful\", data=user_data)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\ndef logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
+        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return user_data\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\ndef logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
         "detail": "authenticate.views",
         "documentation": {}
     },
@@ -1474,28 +1523,28 @@
     {
         "label": "Environment",
         "kind": 6,
-        "importPath": "config.env.config",
-        "description": "config.env.config",
+        "importPath": "config.env_config",
+        "description": "config.env_config",
         "peekOfCode": "class Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
-        "detail": "config.env.config",
+        "detail": "config.env_config",
         "documentation": {}
     },
     {
         "label": "BASE_DIR",
         "kind": 5,
-        "importPath": "config.env.config",
-        "description": "config.env.config",
+        "importPath": "config.env_config",
+        "description": "config.env_config",
         "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\nload_dotenv(BASE_DIR / \".env\")\nclass Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
-        "detail": "config.env.config",
+        "detail": "config.env_config",
         "documentation": {}
     },
     {
         "label": "ENV",
         "kind": 5,
-        "importPath": "config.env.config",
-        "description": "config.env.config",
+        "importPath": "config.env_config",
+        "description": "config.env_config",
         "peekOfCode": "ENV = Environment()",
-        "detail": "config.env.config",
+        "detail": "config.env_config",
         "documentation": {}
     },
     {
@@ -1755,7 +1804,7 @@
         "kind": 5,
         "importPath": "pettycash_system.urls",
         "description": "pettycash_system.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/v1/', include('api.urls'))\n]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/v1/', include('api.urls')),\n]",
         "detail": "pettycash_system.urls",
         "documentation": {}
     },
