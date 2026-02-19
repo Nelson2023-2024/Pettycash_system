@@ -1,5 +1,550 @@
 [
     {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "transaction",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "django.db.models.deletion",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.db.models.deletion",
+        "description": "django.db.models.deletion",
+        "detail": "django.db.models.deletion",
+        "documentation": {}
+    },
+    {
         "label": "uuid",
         "kind": 6,
         "isExtraImport": true,
@@ -9,79 +554,183 @@
         "documentation": {}
     },
     {
-        "label": "migrations",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "migrations",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "TransactionLogBase",
+        "importPath": "audit.models",
+        "description": "audit.models",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "audit.models",
         "documentation": {}
     },
     {
-        "label": "admin",
-        "importPath": "django.contrib",
-        "description": "django.contrib",
+        "label": "Notifications",
+        "importPath": "audit.models",
+        "description": "audit.models",
         "isExtraImport": true,
-        "detail": "django.contrib",
+        "detail": "audit.models",
         "documentation": {}
     },
     {
-        "label": "admin",
-        "importPath": "django.contrib",
-        "description": "django.contrib",
+        "label": "EventTypes",
+        "importPath": "audit.models",
+        "description": "audit.models",
         "isExtraImport": true,
-        "detail": "django.contrib",
+        "detail": "audit.models",
         "documentation": {}
     },
     {
-        "label": "admin",
-        "importPath": "django.contrib",
-        "description": "django.contrib",
+        "label": "EventTypes",
+        "importPath": "audit.models",
+        "description": "audit.models",
         "isExtraImport": true,
-        "detail": "django.contrib",
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogBase",
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "isExtraImport": true,
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "Notifications",
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "isExtraImport": true,
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "gettext_lazy",
+        "importPath": "django.utils.translation",
+        "description": "django.utils.translation",
+        "isExtraImport": true,
+        "detail": "django.utils.translation",
+        "documentation": {}
+    },
+    {
+        "label": "GenericBaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
         "documentation": {}
     },
     {
         "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Category",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Category",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "GenericBaseModel",
         "importPath": "base.models",
         "description": "base.models",
         "isExtraImport": true,
@@ -113,133 +762,67 @@
         "documentation": {}
     },
     {
-        "label": "AppConfig",
-        "importPath": "django.apps",
-        "description": "django.apps",
+        "label": "Category",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.apps",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "AppConfig",
-        "importPath": "django.apps",
-        "description": "django.apps",
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.apps",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "gettext_lazy",
-        "importPath": "django.utils.translation",
-        "description": "django.utils.translation",
+        "label": "Category",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.utils.translation",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "gettext_lazy",
-        "importPath": "django.utils.translation",
-        "description": "django.utils.translation",
+        "label": "BaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.utils.translation",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "TestCase",
-        "importPath": "django.test",
-        "description": "django.test",
+        "label": "GenericBaseModel",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.test",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "TestCase",
-        "importPath": "django.test",
-        "description": "django.test",
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
         "isExtraImport": true,
-        "detail": "django.test",
+        "detail": "base.models",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "users.models",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
-        "documentation": {}
-    },
-    {
-        "label": "os",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "get_asgi_application",
-        "importPath": "django.core.asgi",
-        "description": "django.core.asgi",
-        "isExtraImport": true,
-        "detail": "django.core.asgi",
-        "documentation": {}
-    },
-    {
-        "label": "Path",
-        "importPath": "pathlib",
-        "description": "pathlib",
-        "isExtraImport": true,
-        "detail": "pathlib",
-        "documentation": {}
-    },
-    {
-        "label": "AUTH_USER_MODEL",
-        "importPath": "django.conf.global_settings",
-        "description": "django.conf.global_settings",
-        "isExtraImport": true,
-        "detail": "django.conf.global_settings",
-        "documentation": {}
-    },
-    {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
-        "label": "get_wsgi_application",
-        "importPath": "django.core.wsgi",
-        "description": "django.core.wsgi",
-        "isExtraImport": true,
-        "detail": "django.core.wsgi",
-        "documentation": {}
-    },
-    {
-        "label": "django.db.models.deletion",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "django.db.models.deletion",
-        "description": "django.db.models.deletion",
-        "detail": "django.db.models.deletion",
-        "documentation": {}
-    },
-    {
-        "label": "UserAdmin",
-        "importPath": "django.contrib.auth.admin",
-        "description": "django.contrib.auth.admin",
-        "isExtraImport": true,
-        "detail": "django.contrib.auth.admin",
+        "detail": "users.models",
         "documentation": {}
     },
     {
@@ -256,6 +839,361 @@
         "description": "users.models",
         "isExtraImport": true,
         "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "Role",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "ValidationError",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "ValidationError",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "ObjectDoesNotExist",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "PermissionDenied",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "get_user_model",
+        "importPath": "django.contrib.auth",
+        "description": "django.contrib.auth",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "jwt",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "jwt",
+        "description": "jwt",
+        "detail": "jwt",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "QueryDict",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "require_http_methods",
+        "importPath": "django.views.decorators.http",
+        "description": "django.views.decorators.http",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.http",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "AuthService",
+        "importPath": "authenticate.services.auth_services",
+        "description": "authenticate.services.auth_services",
+        "isExtraImport": true,
+        "detail": "authenticate.services.auth_services",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "importPath": "department.models",
+        "description": "department.models",
+        "isExtraImport": true,
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "importPath": "department.models",
+        "description": "department.models",
+        "isExtraImport": true,
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "importPath": "department.models",
+        "description": "department.models",
+        "isExtraImport": true,
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "importPath": "department.models",
+        "description": "department.models",
+        "isExtraImport": true,
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccount",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliation",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccount",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliation",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "get_asgi_application",
+        "importPath": "django.core.asgi",
+        "description": "django.core.asgi",
+        "isExtraImport": true,
+        "detail": "django.core.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_USER_MODEL",
+        "importPath": "django.conf.global_settings",
+        "description": "django.conf.global_settings",
+        "isExtraImport": true,
+        "detail": "django.conf.global_settings",
+        "documentation": {}
+    },
+    {
+        "label": "get_wsgi_application",
+        "importPath": "django.core.wsgi",
+        "description": "django.core.wsgi",
+        "isExtraImport": true,
+        "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "Manager",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "Type",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "ServiceBase",
+        "importPath": "services.serviceBase",
+        "description": "services.serviceBase",
+        "isExtraImport": true,
+        "detail": "services.serviceBase",
+        "documentation": {}
+    },
+    {
+        "label": "UserAdmin",
+        "importPath": "django.contrib.auth.admin",
+        "description": "django.contrib.auth.admin",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.admin",
         "documentation": {}
     },
     {
@@ -283,6 +1221,23 @@
         "documentation": {}
     },
     {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "DjangoJSONEncoder",
+        "importPath": "django.core.serializers.json",
+        "description": "django.core.serializers.json",
+        "isExtraImport": true,
+        "detail": "django.core.serializers.json",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
@@ -292,12 +1247,183 @@
         "documentation": {}
     },
     {
+        "label": "ApiConfig",
+        "kind": 6,
+        "importPath": "api.apps",
+        "description": "api.apps",
+        "peekOfCode": "class ApiConfig(AppConfig):\n    name = 'api'",
+        "detail": "api.apps",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "api.urls",
+        "description": "api.urls",
+        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls'))\n]",
+        "detail": "api.urls",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0001_initial",
+        "description": "audit.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('base', '0002_alter_status_options'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='EventCategory',\n            fields=[",
+        "detail": "audit.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0002_alter_transactionlogbase_options_and_more",
+        "description": "audit.migrations.0002_alter_transactionlogbase_options_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterModelOptions(\n            name='transactionlogbase',\n            options={'ordering': ['-created_at'], 'verbose_name': 'TransactionLog', 'verbose_name_plural': 'TransactionLogs'},\n        ),\n        migrations.AlterModelTable(",
+        "detail": "audit.migrations.0002_alter_transactionlogbase_options_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0003_alter_eventtypes_event_category_delete_eventcategory",
+        "description": "audit.migrations.0003_alter_eventtypes_event_category_delete_eventcategory",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0002_alter_transactionlogbase_options_and_more'),\n        ('base', '0003_category'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='eventtypes',\n            name='event_category',\n            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='event_types', to='base.category', verbose_name='Event Category'),",
+        "detail": "audit.migrations.0003_alter_eventtypes_event_category_delete_eventcategory",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0004_alter_transactionlogbase_entity_type",
+        "description": "audit.migrations.0004_alter_transactionlogbase_entity_type",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0003_alter_eventtypes_event_category_delete_eventcategory'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='transactionlogbase',\n            name='entity_type',\n            field=models.CharField(blank=True, max_length=50, verbose_name='Entity Type'),\n        ),",
+        "detail": "audit.migrations.0004_alter_transactionlogbase_entity_type",
+        "documentation": {}
+    },
+    {
+        "label": "AuditConfig",
+        "kind": 6,
+        "importPath": "audit.apps",
+        "description": "audit.apps",
+        "peekOfCode": "class AuditConfig(AppConfig):\n    name = 'audit'",
+        "detail": "audit.apps",
+        "documentation": {}
+    },
+    {
+        "label": "EventTypes",
+        "kind": 6,
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "peekOfCode": "class EventTypes(GenericBaseModel):\n    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))\n    is_active = models.BooleanField(default=True)\n    event_category = models.ForeignKey(\n        Category,\n        related_name='event_types',\n        verbose_name=_('Event Category'),\n        on_delete=models.PROTECT\n    )\n    # USAGE:",
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogBase",
+        "kind": 6,
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "peekOfCode": "class TransactionLogBase(BaseModel):\n    updated_at = None\n    user_ip_address = models.GenericIPAddressField(\n        editable=False,\n        null=True,\n        blank=True,\n        verbose_name=_(\"User IP Address\")\n    )\n    event_type = models.ForeignKey(\n        EventTypes,",
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "Notifications",
+        "kind": 6,
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "peekOfCode": "class Notifications(BaseModel):\n    updated_at = None\n    transaction_log = models.ForeignKey(\n        TransactionLogBase,\n        on_delete=models.PROTECT, # You cannot delete a log if notifications reference it\n        related_name='notifications'  # → log.notifications.all()\n    )\n    recipient = models.ForeignKey(\n        User,\n        on_delete=models.PROTECT, #  You cannot delete a user if notifications exist",
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "AuthService",
+        "kind": 6,
+        "importPath": "authenticate.services.auth_services",
+        "description": "authenticate.services.auth_services",
+        "peekOfCode": "class AuthService:\n    @classmethod\n    def login(cls, request) -> dict:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"\n        data = get_clean_request_data(request,required_fields={'email', 'password'})",
+        "detail": "authenticate.services.auth_services",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "kind": 5,
+        "importPath": "authenticate.services.auth_services",
+        "description": "authenticate.services.auth_services",
+        "peekOfCode": "User = get_user_model()\nclass AuthService:\n    @classmethod\n    def login(cls, request) -> dict:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"",
+        "detail": "authenticate.services.auth_services",
+        "documentation": {}
+    },
+    {
+        "label": "AuthenticateConfig",
+        "kind": 6,
+        "importPath": "authenticate.apps",
+        "description": "authenticate.apps",
+        "peekOfCode": "class AuthenticateConfig(AppConfig):\n    name = 'authenticate'",
+        "detail": "authenticate.apps",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "authenticate.urls",
+        "description": "authenticate.urls",
+        "peekOfCode": "urlpatterns = [\n  path('login/',login, name='login')\n]",
+        "detail": "authenticate.urls",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return ResponseProvider.success(message=\"Login successful\", data=user_data)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\ndef logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "logout",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
         "label": "Migration",
         "kind": 6,
         "importPath": "base.migrations.0001_initial",
         "description": "base.migrations.0001_initial",
         "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Status',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),\n                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),",
         "detail": "base.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "base.migrations.0002_alter_status_options",
+        "description": "base.migrations.0002_alter_status_options",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterModelOptions(\n            name='status',\n            options={'verbose_name': 'Status', 'verbose_name_plural': 'Statuses'},\n        ),\n    ]",
+        "detail": "base.migrations.0002_alter_status_options",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "base.migrations.0003_category",
+        "description": "base.migrations.0003_category",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0002_alter_status_options'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Category',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),\n                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),",
+        "detail": "base.migrations.0003_category",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "base.migrations.0004_alter_status_table",
+        "description": "base.migrations.0004_alter_status_table",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0003_category'),\n    ]\n    operations = [\n        migrations.AlterModelTable(\n            name='status',\n            table='status',\n        ),\n    ]",
+        "detail": "base.migrations.0004_alter_status_table",
         "documentation": {}
     },
     {
@@ -323,7 +1449,7 @@
         "kind": 6,
         "importPath": "base.models",
         "description": "base.models",
-        "peekOfCode": "class GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))\n    class Meta:\n        abstract = True\nclass Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:\n        verbose_name = _('Status')\n        verbose_name_plural = _('Statuses')",
+        "peekOfCode": "class GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))\n    class Meta:\n        abstract = True\n    def __str__(self):\n        return self.name\nclass Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:",
         "detail": "base.models",
         "documentation": {}
     },
@@ -332,8 +1458,134 @@
         "kind": 6,
         "importPath": "base.models",
         "description": "base.models",
-        "peekOfCode": "class Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:\n        verbose_name = _('Status')\n        verbose_name_plural = _('Statuses')\n    def __str__(self):\n        return self.name",
+        "peekOfCode": "class Status(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    class Meta:\n        db_table = 'status'\n        verbose_name = _('Status')\n        verbose_name_plural = _('Statuses')\n    def __str__(self):\n        return self.name\nclass Category(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, blank=True, verbose_name=_('Code'))",
         "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Category",
+        "kind": 6,
+        "importPath": "base.models",
+        "description": "base.models",
+        "peekOfCode": "class Category(GenericBaseModel):\n    code = models.CharField(max_length=20, unique=True, blank=True, verbose_name=_('Code'))\n    #REVERSE ACCESS(auto - created by Django):\n    #   category.event_types.all()  ← from EventTypes.category FK\n    class Meta:\n        db_table = 'category'\n        verbose_name = _('Category')\n        verbose_name_plural = _('Categories')",
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Environment",
+        "kind": 6,
+        "importPath": "config.env.config",
+        "description": "config.env.config",
+        "peekOfCode": "class Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
+        "detail": "config.env.config",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "config.env.config",
+        "description": "config.env.config",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\nload_dotenv(BASE_DIR / \".env\")\nclass Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
+        "detail": "config.env.config",
+        "documentation": {}
+    },
+    {
+        "label": "ENV",
+        "kind": 5,
+        "importPath": "config.env.config",
+        "description": "config.env.config",
+        "peekOfCode": "ENV = Environment()",
+        "detail": "config.env.config",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "department.migrations.0001_initial",
+        "description": "department.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Department',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),",
+        "detail": "department.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "DepartmentConfig",
+        "kind": 6,
+        "importPath": "department.apps",
+        "description": "department.apps",
+        "peekOfCode": "class DepartmentConfig(AppConfig):\n    name = 'department'",
+        "detail": "department.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "kind": 6,
+        "importPath": "department.models",
+        "description": "department.models",
+        "peekOfCode": "class Department(GenericBaseModel):\n    # e.g., 'FIN', 'HR', 'OPS'\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    is_active = models.BooleanField(default=True)\n    # Points to the Manager (from the users app)\n    line_manager = models.ForeignKey(\n        'users.User',\n        on_delete=models.SET_NULL,\n        null=True,\n        blank=True,",
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0001_initial",
+        "description": "finance.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('base', '0003_category'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='PettyCashAccount',\n            fields=[",
+        "detail": "finance.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0002_expenserequest_decision_at_and_more",
+        "description": "finance.migrations.0002_expenserequest_decision_at_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0004_alter_status_table'),\n        ('department', '0001_initial'),\n        ('finance', '0001_initial'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='expenserequest',",
+        "detail": "finance.migrations.0002_expenserequest_decision_at_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "FinanceConfig",
+        "kind": 6,
+        "importPath": "finance.apps",
+        "description": "finance.apps",
+        "peekOfCode": "class FinanceConfig(AppConfig):\n    name = 'finance'",
+        "detail": "finance.apps",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccount",
+        "kind": 6,
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "peekOfCode": "class PettyCashAccount(GenericBaseModel):\n    is_active = models.BooleanField(default=True,verbose_name=_('Is Active'))\n    account_type = models.CharField(default='mpesa', max_length=20, blank=True, verbose_name=_('Account Type'))\n    mpesa_phone_number = models.CharField(max_length=15, blank=True, verbose_name=_('Phone number'))\n    current_balance = models.DecimalField(max_digits=8,default=0, decimal_places=2, blank=True,verbose_name=_('Current balance'))\n    minimum_threshold = models.DecimalField(max_digits=8, default=0, decimal_places=2,blank=True, verbose_name=_('Minimum Threshold'))\n    class Meta:\n        db_table = 'pettycash_account'\n        verbose_name = _('PettyCash account')\n        verbose_name_plural = _('PettyCash accounts')",
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequest",
+        "kind": 6,
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "peekOfCode": "class ExpenseRequest(BaseModel):\n    class ExpenseType(models.TextChoices):\n        REIMBURSEMENT = 'reimbursement', _('Reimbursement')\n        DISBURSEMENT = 'disbursement', _('Disbursement')\n    employee = models.ForeignKey(\n        User,\n        on_delete=models.PROTECT,\n        related_name='expense_request',\n        verbose_name=_('Employee')\n    )",
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequest",
+        "kind": 6,
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "peekOfCode": "class TopUpRequest(BaseModel):\n    pettycash_account = models.ForeignKey(\n        PettyCashAccount,\n        on_delete=models.PROTECT,\n        related_name='topup_requests',\n        verbose_name=_('Petty Cash Account')\n    )\n    status = models.ForeignKey(\n        Status,\n        on_delete=models.PROTECT,",
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliation",
+        "kind": 6,
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "peekOfCode": "class DisbursementReconciliation(BaseModel):\n    \"\"\"\n    Tracks the reconciliation of disbursement-type expense requests.\n    \"\"\"\n    expense_request = models.OneToOneField(\n        ExpenseRequest,\n        on_delete=models.CASCADE,\n        related_name='disbursement_reconciliation',\n        verbose_name='Expense Request'\n    )",
+        "detail": "finance.models",
         "documentation": {}
     },
     {
@@ -359,7 +1611,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "SECRET_KEY = 'django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',",
+        "peekOfCode": "SECRET_KEY = 'django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'audit',",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -368,7 +1620,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "DEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',",
+        "peekOfCode": "DEBUG = True\nALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'audit',\n    'finance',\n    'department',",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -377,7 +1629,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "ALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
+        "peekOfCode": "ALLOWED_HOSTS = []\nAUTH_USER_MODEL='users.User'\n# Application definition\nINSTALLED_APPS = [\n    'base',\n    'users',\n    'audit',\n    'finance',\n    'department',\n    'django.contrib.admin',",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -386,7 +1638,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "INSTALLED_APPS = [\n    'base',\n    'users',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n]",
+        "peekOfCode": "INSTALLED_APPS = [\n    'base',\n    'users',\n    'audit',\n    'finance',\n    'department',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -445,11 +1697,20 @@
         "documentation": {}
     },
     {
+        "label": "LOGGING",
+        "kind": 5,
+        "importPath": "pettycash_system.settings",
+        "description": "pettycash_system.settings",
+        "peekOfCode": "LOGGING = {\n    'version': 1,\n    'handlers': {\n        'console': {\n            'class': 'logging.StreamHandler',\n        },\n    },\n    'loggers': {\n        'django.db.backends': {\n            'handlers': ['console'],",
+        "detail": "pettycash_system.settings",
+        "documentation": {}
+    },
+    {
         "label": "LANGUAGE_CODE",
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -458,7 +1719,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "TIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -494,7 +1755,7 @@
         "kind": 5,
         "importPath": "pettycash_system.urls",
         "description": "pettycash_system.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/v1/', include('api.urls'))\n]",
         "detail": "pettycash_system.urls",
         "documentation": {}
     },
@@ -508,12 +1769,156 @@
         "documentation": {}
     },
     {
+        "label": "ServiceBase",
+        "kind": 6,
+        "importPath": "services.serviceBase",
+        "description": "services.serviceBase",
+        "peekOfCode": "class ServiceBase(object):\n    manager = None\n    def all(self, *args, **kwargs):\n        return self.manager.all(*args, **kwargs)\n    def get(self, *args, **kwargs):\n        return self.manager.get(*args,**kwargs)\n    def filter(self, *args, **kwargs):\n        return self.manager.filter(*args, **kwargs)\n    def create(self, *args, **kwargs):\n        return self.manager.create(**kwargs)",
+        "detail": "services.serviceBase",
+        "documentation": {}
+    },
+    {
+        "label": "StatusService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class StatusService(ServiceBase):\n    manager = Status.objects\nclass CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "CategoryService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. ",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "RoleService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self,email):\n        return self.manager.get(email=email,is_active=True)",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DepartmentService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class DepartmentService(ServiceBase):\n    manager = Department.objects\n    def get_active_departments(self):\n        return self.manager.filter(is_active=True)\n    def get_by_manager(self, user_id):\n        return self.manager.filter(line_manager__id=user_id)\nclass EventTypeService(ServiceBase):\n    manager = EventTypes.objects\n    def get_by_category(self, category_code):\n        return self.manager.filter(event_category__code=category_code)",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "EventTypeService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class EventTypeService(ServiceBase):\n    manager = EventTypes.objects\n    def get_by_category(self, category_code):\n        return self.manager.filter(event_category__code=category_code)\n    def get_active(self):\n        return self.manager.filter(is_active=True)\nclass TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    def get_by_entity(self, entity_type, entity_id):\n        return self.manager.filter(entity_type=entity_type, entity_id=entity_id)",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    def get_by_entity(self, entity_type, entity_id):\n        return self.manager.filter(entity_type=entity_type, entity_id=entity_id)\n    def get_by_user(self, user_id):\n        return self.manager.filter(triggered_by__id=user_id)\n    def get_by_event_type(self, event_code):\n        return self.manager.filter(event_type__code=event_code)\nclass NotificationService(ServiceBase):\n    manager = Notifications.objects",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "NotificationService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class NotificationService(ServiceBase):\n    manager = Notifications.objects\n    def get_unread(self, user_id):\n        return self.manager.filter(recipient__id=user_id, is_read=False)\n    def get_by_recipient(self, user_id):\n        return self.manager.filter(recipient__id=user_id)\n    def mark_as_read(self, uuid):\n        return self.filter(id=uuid).update(is_read=True)\nclass PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccountService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects\n    def get_active_accounts(self):\n        return self.manager.filter(is_active=True)\n    def get_below_threshold(self):\n        from django.db.models import F\n        return self.manager.filter(current_balance__lte=F('minimum_threshold'))\nclass ExpenseRequestService(ServiceBase):\n    manager = ExpenseRequest.objects\n    def get_by_employee(self, user_id):",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class ExpenseRequestService(ServiceBase):\n    manager = ExpenseRequest.objects\n    def get_by_employee(self, user_id):\n        return self.manager.filter(employee__id=user_id)\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_department(self, department_id):\n        return self.manager.filter(department__id=department_id)\n    def get_assigned_to(self, user_id):\n        return self.manager.filter(assigned_to__id=user_id)",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class TopUpRequestService(ServiceBase):\n    manager = TopUpRequest.objects\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_requester(self, user_id):\n        return self.manager.filter(requested_by__id=user_id)\n    def get_auto_triggered(self):\n        return self.manager.filter(is_auto_triggered=True)\nclass DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliationService",
+        "kind": 6,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_submitter(self, user_id):\n        return self.manager.filter(submitted_by__id=user_id)\n    def get_by_expense_request(self, expense_request_id):\n        return self.manager.filter(expense_request__id=expense_request_id).first()",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "Migration",
         "kind": 6,
         "importPath": "users.migrations.0001_initial",
         "description": "users.migrations.0001_initial",
         "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('auth', '0012_alter_user_first_name_max_length'),\n        ('base', '0001_initial'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Role',\n            fields=[",
         "detail": "users.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0002_alter_role_options",
+        "description": "users.migrations.0002_alter_role_options",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterModelOptions(\n            name='role',\n            options={'verbose_name': 'Role', 'verbose_name_plural': 'Roles'},\n        ),\n    ]",
+        "detail": "users.migrations.0002_alter_role_options",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0003_alter_role_options_alter_user_options_and_more",
+        "description": "users.migrations.0003_alter_role_options_alter_user_options_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('department', '0001_initial'),\n        ('users', '0002_alter_role_options'),\n    ]\n    operations = [\n        migrations.AlterModelOptions(\n            name='role',\n            options={'ordering': ['-created_at'], 'verbose_name': 'Role', 'verbose_name_plural': 'Roles'},\n        ),",
+        "detail": "users.migrations.0003_alter_role_options_alter_user_options_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "CustomUserAdmin",
+        "kind": 6,
+        "importPath": "users.admin",
+        "description": "users.admin",
+        "peekOfCode": "class CustomUserAdmin(UserAdmin):\n    model = User\n    ordering = ['email']\n    # columns for showing various user fields just like a table on admin\n    list_display = ['first_name','last_name','phone_number','email','is_staff', 'last_login','status', 'role',]\n    fieldsets = [\n        ['Auth Fields', {'fields': ['email', 'password']}],\n        ['Personal info', {'fields': ['first_name','last_name','other_name','national_id','phone_number','avatar_url']}],\n        ['System Information', {'fields':['status','role','is_active','is_staff','is_superuser','groups','user_permissions']}]\n    ]",
+        "detail": "users.admin",
         "documentation": {}
     },
     {
@@ -530,7 +1935,7 @@
         "kind": 6,
         "importPath": "users.models",
         "description": "users.models",
-        "peekOfCode": "class Role(GenericBaseModel):\n    code = models.CharField(max_length=20,unique=True)\n    class Meta:\n        verbose_name = _('Role')\n        verbose_name_plural = _('Roles')\n    def __str__(self):\n        return self.name\n# Create your models here.\nclass UserManager(BaseUserManager):\n    def create_user(self, email, password=None, **extra_fields):",
+        "peekOfCode": "class Role(GenericBaseModel):\n    code = models.CharField(max_length=20,unique=True)\n    def __str__(self):\n        return self.name\n    class Meta:\n        db_table = 'role'\n        verbose_name = _('Role')\n        verbose_name_plural = _('Roles')\n        ordering = ['-created_at']\n# Create your models here.",
         "detail": "users.models",
         "documentation": {}
     },
@@ -550,6 +1955,42 @@
         "description": "users.models",
         "peekOfCode": "class User(BaseModel, AbstractBaseUser, PermissionsMixin):\n    email = models.EmailField(unique=True, verbose_name=_('Email'))\n    first_name = models.CharField(max_length=150, blank=True, verbose_name=_('First name'))\n    last_name = models.CharField(max_length=150, blank=True, verbose_name=_('Last name'))\n    other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))\n    phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))\n    national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))\n    avatar_url = models.CharField(max_length=500, blank=True, null=True)\n    last_login = models.DateTimeField(blank=True, null=True)\n    is_active = models.BooleanField(default=True)",
         "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "parse_request_body",
+        "kind": 2,
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "peekOfCode": "def parse_request_body(request) -> dict:\n    \"\"\"Parse raw request data based on content type.\"\"\"\n    try:\n        content_type = request.META.get('CONTENT_TYPE', '')\n        if 'application/json' in content_type:\n            return json.loads(request.body) if request.body else {}\n        elif 'multipart/form-data' in content_type:\n            return request.POST.dict()\n        elif request.method == 'GET':\n            return request.GET.dict()",
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "clean_data",
+        "kind": 2,
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "peekOfCode": "def clean_data(\n    data: dict,\n    required_fields: set = None,\n    allowed_fields: set = None,\n) -> dict:\n    \"\"\"\n    Sanitize and validate a data dictionary.\n    - Strips whitespace from strings\n    - Converts empty strings to None\n    - Filters to allowed_fields if provided",
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "get_clean_request_data",
+        "kind": 2,
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "peekOfCode": "def get_clean_request_data(\n    request,\n    required_fields: set = None,\n    allowed_fields: set = None,\n) -> dict:\n    \"\"\"\n    One-shot helper: parse the request then clean the result.\n    Use this in views.\n    required_fields — fields that must be present or we reject the request. e.g. you can't submit an expense without amount.\n    allowed_fields — fields that are permitted to be processed. Anything outside this list gets silently dropped even if the user sends it.",
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "kind": 6,
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "peekOfCode": "class ResponseProvider:\n    @staticmethod\n    def _response(success: bool, code: str, message: str, status: int, data=None, error=None) -> JsonResponse:\n        if data is None: data ={}\n        return JsonResponse(\n            data={\n                'success': success,\n                'code': code,\n                'message': message,\n                'data': data,",
+        "detail": "utils.response_provider",
         "documentation": {}
     },
     {

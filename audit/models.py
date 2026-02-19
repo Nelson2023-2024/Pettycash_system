@@ -125,10 +125,11 @@ class Notifications(BaseModel):
     # notif.transaction_log.event_type.code → "expense_approved"
     # notif.transaction_log.entity_id       → "1042"
 
-
     def save(self, *args, **kwargs):
-        if self.is_read:
+        if self.is_read and not self.read_at:
             self.read_at = timezone.now()
+        elif not self.is_read:
+            self.read_at = None
         super().save(*args, **kwargs)
 
     def __str__(self):
