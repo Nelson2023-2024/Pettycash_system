@@ -882,6 +882,46 @@
         "documentation": {}
     },
     {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "QueryDict",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
         "label": "get_clean_request_data",
         "importPath": "utils.common",
         "description": "utils.common",
@@ -988,39 +1028,15 @@
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
-        "label": "QueryDict",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
         "label": "login",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "logout",
         "importPath": "authenticate.views",
         "description": "authenticate.views",
         "isExtraImport": true,
@@ -1381,7 +1397,7 @@
         "kind": 6,
         "importPath": "authenticate.services.auth_services",
         "description": "authenticate.services.auth_services",
-        "peekOfCode": "class AuthService:\n    @classmethod\n    def login(cls, request) -> dict:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"\n        data = get_clean_request_data(request,required_fields={'email', 'password'})",
+        "peekOfCode": "class AuthService:\n    @classmethod\n    def login(cls, request) -> JsonResponse:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"\n        data = get_clean_request_data(request,required_fields={'email', 'password'})",
         "detail": "authenticate.services.auth_services",
         "documentation": {}
     },
@@ -1390,7 +1406,7 @@
         "kind": 5,
         "importPath": "authenticate.services.auth_services",
         "description": "authenticate.services.auth_services",
-        "peekOfCode": "User = get_user_model()\nclass AuthService:\n    @classmethod\n    def login(cls, request) -> dict:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"",
+        "peekOfCode": "User = get_user_model()\nclass AuthService:\n    @classmethod\n    def login(cls, request) -> JsonResponse:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"",
         "detail": "authenticate.services.auth_services",
         "documentation": {}
     },
@@ -1417,7 +1433,7 @@
         "kind": 5,
         "importPath": "authenticate.urls",
         "description": "authenticate.urls",
-        "peekOfCode": "urlpatterns = [\n  path('login/',login, name='login')\n]",
+        "peekOfCode": "urlpatterns = [\n  path('login/',login, name='login'),\n  path('logout/',logout, name='logout'),\n]",
         "detail": "authenticate.urls",
         "documentation": {}
     },
@@ -1426,7 +1442,7 @@
         "kind": 2,
         "importPath": "authenticate.views",
         "description": "authenticate.views",
-        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return user_data\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\ndef logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
+        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return user_data\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@require_http_methods(['POST'])\ndef logout(request) -> JsonResponse:\n    try:",
         "detail": "authenticate.views",
         "documentation": {}
     },
@@ -1435,7 +1451,7 @@
         "kind": 2,
         "importPath": "authenticate.views",
         "description": "authenticate.views",
-        "peekOfCode": "def logout(request) -> JsonResponse:\n    AuthService.logout(request.user)\n    return ResponseProvider.success(message=\"Logout successful\")",
+        "peekOfCode": "def logout(request) -> JsonResponse:\n    try:\n        return  AuthService.logout()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)",
         "detail": "authenticate.views",
         "documentation": {}
     },

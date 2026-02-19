@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.http import JsonResponse
+
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
 from services.services import UserService
@@ -10,7 +12,7 @@ User = get_user_model()
 
 class AuthService:
     @classmethod
-    def login(cls, request) -> dict:
+    def login(cls, request) -> JsonResponse:
         """
         Authenticate a user with email and password.
         update the last_login to now()
@@ -52,9 +54,12 @@ class AuthService:
 
         return response
     @classmethod
-    def logout(cls, user, response: ResponseProvider) -> None:
+    def logout(cls) -> JsonResponse:
         """
         Logout the current user.
         Delete the cookie
         """
+        response = ResponseProvider.success(message='Logout successful')
+        response.delete_cookie(key='jwt')
+        return response
         
