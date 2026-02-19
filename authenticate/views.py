@@ -11,7 +11,7 @@ from authenticate.services.auth_services import AuthService
 def login(request) -> JsonResponse:
     try:
         user_data = AuthService.login(request)
-        return ResponseProvider.success(message="Login successful", data=user_data)
+        return user_data
     except Exception as ex:
         return ResponseProvider.handle_exception(ex)
 

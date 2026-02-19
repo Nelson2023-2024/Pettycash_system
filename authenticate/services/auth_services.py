@@ -3,9 +3,8 @@ from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
 from services.services import UserService
 from django.contrib.auth import get_user_model
-from django.utils import timezone
-import datetime
-import jwt
+from authenticate.services.token_service import TokenService
+from utils.response_provider import ResponseProvider
 
 User = get_user_model()
 
@@ -33,32 +32,29 @@ class AuthService:
         # Delegate persistence
         user = UserService().update_last_login(user)
 
-        # authenticate the user accessToken - 15 minutes refreshToken - 7 days
-        now = timezone.now()
 
-        payload = {
-            "user_id": str(user.id),
-            "email": user.email,
-            "role": user.role.code,
-            "exp": now + datetime.timedelta(minutes=30),
-            "iat": now,
-        }
-
-        access_token = jwt.encode(payload, 'ssefre', algorithm="HS256")
-
-        return {
+        user_data = {
             'id': str(user.id),
             'email': user.email,
             'fullname': user.first_name +" "+ user.last_name,
             'status':user.status.name,
             'role':user.role.name,
-            'token': access_token
         }
+        response = ResponseProvider.success(message="Login successful", data=user_data)
 
+        # generate token and set cookie
+        token = TokenService().generate_token(
+            user,
+            max_age=30*60,
+            response=response,
+            cookie_name='jwt'
+        )
+
+        return response
     @classmethod
-    def logout(cls, user) -> None:
+    def logout(cls, user, response: ResponseProvider) -> None:
         """
         Logout the current user.
-        Extend this if you have tokens/sessions to invalidate.
+        Delete the cookie
         """
-        pass
+        
