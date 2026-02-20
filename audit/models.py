@@ -14,7 +14,7 @@ from django.utils import timezone
 class EventTypes(GenericBaseModel):
     status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))
     is_active = models.BooleanField(default=True)
-    code = models.CharField(max_length=20, unique=True, null=True , blank=True,verbose_name=_('Code'))
+    code = models.CharField(max_length=100, unique=True, null=True , blank=True,verbose_name=_('Code'))
 
     event_category = models.ForeignKey(
         Category,
