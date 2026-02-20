@@ -208,6 +208,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -504,11 +520,19 @@
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
         "documentation": {}
     },
     {
@@ -882,11 +906,11 @@
         "documentation": {}
     },
     {
-        "label": "timezone",
-        "importPath": "django.utils",
-        "description": "django.utils",
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.utils",
+        "detail": "users.models",
         "documentation": {}
     },
     {
@@ -903,6 +927,22 @@
         "description": "django.utils",
         "isExtraImport": true,
         "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
         "documentation": {}
     },
     {
@@ -954,6 +994,22 @@
         "documentation": {}
     },
     {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "ValidationError",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
         "label": "ValidationError",
         "importPath": "django.core.exceptions",
         "description": "django.core.exceptions",
@@ -1002,6 +1058,14 @@
         "documentation": {}
     },
     {
+        "label": "PettyCashAccountService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "get_user_model",
         "importPath": "django.contrib.auth",
         "description": "django.contrib.auth",
@@ -1031,6 +1095,46 @@
         "description": "utils.response_provider",
         "isExtraImport": true,
         "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ENV",
+        "importPath": "config.env_config",
+        "description": "config.env_config",
+        "isExtraImport": true,
+        "detail": "config.env_config",
         "documentation": {}
     },
     {
@@ -1081,6 +1185,14 @@
         "description": "django.views.decorators.http",
         "isExtraImport": true,
         "detail": "django.views.decorators.http",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
         "documentation": {}
     },
     {
@@ -1229,6 +1341,38 @@
         "documentation": {}
     },
     {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Type",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
+        "isExtraImport": true,
+        "detail": "utils.decorators.login_required",
+        "documentation": {}
+    },
+    {
         "label": "get_asgi_application",
         "importPath": "django.core.asgi",
         "description": "django.core.asgi",
@@ -1258,14 +1402,6 @@
         "description": "django.db.models",
         "isExtraImport": true,
         "detail": "django.db.models",
-        "documentation": {}
-    },
-    {
-        "label": "Type",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
         "documentation": {}
     },
     {
@@ -1309,6 +1445,22 @@
         "documentation": {}
     },
     {
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
         "label": "json",
         "kind": 6,
         "isExtraImport": true,
@@ -1348,7 +1500,7 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls')),\n  path('departments/',include('authenticate.urls')),\n]",
+        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls')),\n  path('finance/',include('finance.urls')),\n]",
         "detail": "api.urls",
         "documentation": {}
     },
@@ -1398,6 +1550,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0006_alter_eventtypes_code",
+        "description": "audit.migrations.0006_alter_eventtypes_code",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0005_eventtypes_code'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='eventtypes',\n            name='code',\n            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Code'),\n        ),",
+        "detail": "audit.migrations.0006_alter_eventtypes_code",
+        "documentation": {}
+    },
+    {
         "label": "AuditConfig",
         "kind": 6,
         "importPath": "audit.apps",
@@ -1411,7 +1572,7 @@
         "kind": 6,
         "importPath": "audit.models",
         "description": "audit.models",
-        "peekOfCode": "class EventTypes(GenericBaseModel):\n    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))\n    is_active = models.BooleanField(default=True)\n    code = models.CharField(max_length=20, unique=True, null=True , blank=True,verbose_name=_('Code'))\n    event_category = models.ForeignKey(\n        Category,\n        related_name='event_types',\n        verbose_name=_('Event Category'),\n        on_delete=models.PROTECT\n    )",
+        "peekOfCode": "class EventTypes(GenericBaseModel):\n    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))\n    is_active = models.BooleanField(default=True)\n    code = models.CharField(max_length=100, unique=True, null=True , blank=True,verbose_name=_('Code'))\n    event_category = models.ForeignKey(\n        Category,\n        related_name='event_types',\n        verbose_name=_('Event Category'),\n        on_delete=models.PROTECT\n    )",
         "detail": "audit.models",
         "documentation": {}
     },
@@ -1650,6 +1811,15 @@
         "documentation": {}
     },
     {
+        "label": "PettyCashService",
+        "kind": 6,
+        "importPath": "finance.services.pettycash_services",
+        "description": "finance.services.pettycash_services",
+        "peekOfCode": "class PettyCashService:\n    @classmethod\n    def create_petty_cash_account(cls,request) -> ResponseProvider:\n        data = get_clean_request_data(request, required_fields={'name', 'description', 'mpesa_phone_number', 'minimum_threshold'})\n        name = data.get('name')\n        description = data.get('description')\n        mpesa_phone_number = data.get('mpesa_phone_number')\n        minimum_threshold=data.get('minimum_threshold')\n        petty_cash = PettyCashAccountService().create_account(\n            name,",
+        "detail": "finance.services.pettycash_services",
+        "documentation": {}
+    },
+    {
         "label": "FinanceConfig",
         "kind": 6,
         "importPath": "finance.apps",
@@ -1692,6 +1862,60 @@
         "description": "finance.models",
         "peekOfCode": "class DisbursementReconciliation(BaseModel):\n    \"\"\"\n    Tracks the reconciliation of disbursement-type expense requests.\n    \"\"\"\n    expense_request = models.OneToOneField(\n        ExpenseRequest,\n        on_delete=models.CASCADE,\n        related_name='disbursement_reconciliation',\n        verbose_name='Expense Request'\n    )",
         "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "finance.urls",
+        "description": "finance.urls",
+        "peekOfCode": "urlpatterns = [\n  path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),\n  path('petty_cash/', get_all_petty_cash_view, name='get-all-petty-cash-accounts'),\n  path('petty_cash/<str:account_id>/', get_petty_cash_view, name='get-petty-cash-account'),\n  path('petty_cash/<str:account_id>/update/', update_petty_cash_view, name='update-petty-cash-account'),\n  path('petty_cash/<str:account_id>/deactivate/', deactivate_petty_cash_view, name='deactivate-petty-cash-account'),\n]",
+        "detail": "finance.urls",
+        "documentation": {}
+    },
+    {
+        "label": "create_petty_cash_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def create_petty_cash_view(request) -> ResponseProvider | Any:\n    try:\n        return PettyCashService.create_petty_cash_account(request)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['GET'])\n@login_required('ADM', 'CFO','FO')\ndef get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_petty_cash_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.get_petty_cash_account(account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['GET'])\n@login_required('ADM','CFO','FO')\ndef get_all_petty_cash_view(request) -> JsonResponse:\n    try:",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_all_petty_cash_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def get_all_petty_cash_view(request) -> JsonResponse:\n    try:\n        return PettyCashService.get_all_petty_cash_accounts()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['PATCH'])\n@login_required('ADM','CFO')\ndef update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "update_petty_cash_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.update_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['DELETE'])\n@login_required('ADM','CFO')\ndef deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "deactivate_petty_cash_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.deactivate_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)",
+        "detail": "finance.views",
         "documentation": {}
     },
     {
@@ -1942,7 +2166,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    @staticmethod\n    def log(\n            event_code: str,\n            triggered_by: User,\n            entity,\n            status_code: str ='200',\n            message: str = '',\n            metadata: dict =None,",
+        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    @staticmethod\n    def log(\n            event_code: str,\n            triggered_by: User,\n            entity,\n            status_code: str ='ACT',\n            message: str = '',\n            metadata: dict =None,",
         "detail": "services.services",
         "documentation": {}
     },
@@ -1960,7 +2184,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects\n    def get_active_accounts(self):\n        return self.manager.filter(is_active=True)\n    def get_below_threshold(self):\n        from django.db.models import F\n        return self.manager.filter(current_balance__lte=F('minimum_threshold'))\nclass ExpenseRequestService(ServiceBase):\n    manager = ExpenseRequest.objects\n    def get_by_employee(self, user_id):",
+        "peekOfCode": "class PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects\n    def create_account(self, name, description, mpesa_phone_number, minimum_threshold, triggered_by: User,request=None):\n        account = self.manager.create(\n            name=name,\n            description=description,\n            mpesa_phone_number=mpesa_phone_number,\n            minimum_threshold=minimum_threshold\n        )\n        try:",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2061,6 +2285,24 @@
         "description": "users.models",
         "peekOfCode": "class User(BaseModel, AbstractBaseUser, PermissionsMixin):\n    email = models.EmailField(unique=True, verbose_name=_('Email'))\n    first_name = models.CharField(max_length=150, blank=True, verbose_name=_('First name'))\n    last_name = models.CharField(max_length=150, blank=True, verbose_name=_('Last name'))\n    other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))\n    phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))\n    national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))\n    avatar_url = models.CharField(max_length=500, blank=True, null=True)\n    last_login = models.DateTimeField(blank=True, null=True)\n    is_active = models.BooleanField(default=True)",
         "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "kind": 2,
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "peekOfCode": "def allowed_http_methods(allowed_methods=None):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, *args, **kwargs):\n            if allowed_methods and request.method not in allowed_methods:\n                return ResponseProvider().bad_request(\n                    message='Method not allowed',\n                    error=f\"{request.method} method is not allowed. Allowed methods: {','.join(allowed_methods)}\"       \n                )\n            return func(request, *args, **kwargs)",
+        "detail": "utils.decorators.allowed_http_methods",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "kind": 2,
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
+        "peekOfCode": "def login_required(*allowed_roles):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, *args, **kwargs):\n            token = request.COOKIES.get('jwt')\n            if not token:\n                return ResponseProvider().unauthorized(message='Authentication required')\n            try:\n                payload = jwt.decode(token,ENV.JWT_SECRET,algorithms=['HS256'])\n                user = User.objects.select_related('role','status').get(id=payload['user_id'], is_active=True)",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
