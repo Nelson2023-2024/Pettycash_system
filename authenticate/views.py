@@ -6,15 +6,20 @@ from utils.response_provider import ResponseProvider
 from authenticate.services.auth_services import AuthService
 
 # Create your views here.
-# @require_http_methods(['POST'])
 @csrf_exempt
+@require_http_methods(['POST'])
 def login(request) -> JsonResponse:
     try:
         user_data = AuthService.login(request)
-        return ResponseProvider.success(message="Login successful", data=user_data)
+        return user_data
     except Exception as ex:
         return ResponseProvider.handle_exception(ex)
 
+@csrf_exempt
+@require_http_methods(['POST'])
 def logout(request) -> JsonResponse:
-    AuthService.logout(request.user)
-    return ResponseProvider.success(message="Logout successful")
+    try:
+        return  AuthService.logout()
+    except Exception as ex:
+        return ResponseProvider.handle_exception(ex)
+

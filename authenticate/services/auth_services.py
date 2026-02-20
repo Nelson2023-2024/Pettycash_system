@@ -1,17 +1,18 @@
 from django.db import transaction
+from django.http import JsonResponse
+
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
-from services.services import UserService
+from services.services import UserService, TransactionLogService
 from django.contrib.auth import get_user_model
-from django.utils import timezone
-import datetime
-import jwt
+from authenticate.services.token_service import TokenService
+from utils.response_provider import ResponseProvider
 
 User = get_user_model()
 
 class AuthService:
     @classmethod
-    def login(cls, request) -> dict:
+    def login(cls, request) -> JsonResponse:
         """
         Authenticate a user with email and password.
         update the last_login to now()
@@ -33,32 +34,49 @@ class AuthService:
         # Delegate persistence
         user = UserService().update_last_login(user)
 
-        # authenticate the user accessToken - 15 minutes refreshToken - 7 days
-        now = timezone.now()
+        # Log successful login
+        UserService().log_login(user,request)
 
-        payload = {
-            "user_id": str(user.id),
-            "email": user.email,
-            "role": user.role.code,
-            "exp": now + datetime.timedelta(minutes=30),
-            "iat": now,
-        }
-
-        access_token = jwt.encode(payload, 'ssefre', algorithm="HS256")
-
-        return {
+        user_data = {
             'id': str(user.id),
             'email': user.email,
             'fullname': user.first_name +" "+ user.last_name,
             'status':user.status.name,
             'role':user.role.name,
-            'token': access_token
         }
+        response = ResponseProvider.success(message="Login successful", data=user_data)
+
+        # generate token and set cookie
+        token = TokenService().generate_token(
+            user,
+            max_age=30*60,
+            response=response,
+            cookie_name='jwt'
+        )
+
+        return response
+
 
     @classmethod
-    def logout(cls, user) -> None:
+    def logout(cls) -> JsonResponse:
         """
         Logout the current user.
-        Extend this if you have tokens/sessions to invalidate.
+        Delete the cookie
+        """
+        response = ResponseProvider.success(message='Logout successful')
+        response.delete_cookie(key='jwt')
+        return response
+
+    @classmethod
+    def forgot_password(cls):
+        """
+        for 1 to reset their password they must 1st enter in their personal email
+        check if the email exists in the DB and is active if true:
+            generate an randoom 6 digit OTP
+            sent to their email
+            they get the OTP
+            enter it into a form field and its verified
+
         """
         pass
+        

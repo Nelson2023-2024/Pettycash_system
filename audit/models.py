@@ -10,9 +10,11 @@ from django.utils import timezone
 
 
 
+
 class EventTypes(GenericBaseModel):
     status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))
     is_active = models.BooleanField(default=True)
+    code = models.CharField(max_length=100, unique=True, null=True , blank=True,verbose_name=_('Code'))
 
     event_category = models.ForeignKey(
         Category,
@@ -20,6 +22,10 @@ class EventTypes(GenericBaseModel):
         verbose_name=_('Event Category'),
         on_delete=models.PROTECT
     )
+
+    def __str__(self):
+        #as each code is unique
+        return f"{self.code}"
 
     # USAGE:
     # EventTypes.objects.get(code="expense_approved").event_category.name  → "expense"
