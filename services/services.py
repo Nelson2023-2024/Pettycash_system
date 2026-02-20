@@ -92,7 +92,7 @@ class TransactionLogService(ServiceBase):
             event_code: str,
             triggered_by: User,
             entity,
-            status_code: str ='200',
+            status_code: str ='ACT',
             message: str = '',
             metadata: dict =None,
             ip_address: str = None
@@ -149,13 +149,92 @@ class NotificationService(ServiceBase):
 class PettyCashAccountService(ServiceBase):
     manager = PettyCashAccount.objects
 
-    def get_active_accounts(self):
-        return self.manager.filter(is_active=True)
+    def create_account(self, name, description, mpesa_phone_number, minimum_threshold, triggered_by: User,request=None):
+        account = self.manager.create(
+            name=name,
+            description=description,
+            mpesa_phone_number=mpesa_phone_number,
+            minimum_threshold=minimum_threshold
+        )
+        
+        try:
+            TransactionLogService().log(
+            entity=account,
+            event_code='petty_cash_account_created',
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            triggered_by=triggered_by,
+            message=f'Petty cash account "{account.name}" created',
+            metadata={
+                'account_id': str(account.id),
+                'account_name': account.name,
+                'minimum_threshold': str(minimum_threshold),
+                'mpesa_phone_number': mpesa_phone_number,
+                'created_by': triggered_by.email,
+            }
+        )
+        except Exception as e:
+            print(f"[TransactionLog ERROR] {e}")  # you'll see the real reason now
+        
+        return account
 
-    def get_below_threshold(self):
-        from django.db.models import F
-        return self.manager.filter(current_balance__lte=F('minimum_threshold'))
+    def get_by_id(self, account_id: str):
+        return self.manager.get(id=account_id, is_active=True)
 
+
+    def update_account(self, account_id: str, data: dict, triggered_by, request = None):
+        account = self.get_by_id(account_id)
+        
+         # Capture old values before update for audit trail
+        old_values = {}
+        for field, value in data.items():
+            # getattr(account, "name") returns "Original Name"
+            old_values[field] = str(getattr(account, field, None))
+
+
+        for field, value in data.items():
+                setattr(account, field, value)
+
+        account.save(update_fields=list(data.keys()))
+        
+        TransactionLogService.log(
+            event_code='petty_cash_account_updated',
+            triggered_by=triggered_by,
+            entity=account,
+            status_code='ACT',
+            message=f'Petty cash account "{account.name}" updated',
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            metadata={
+                'account_id': str(account.id),
+                'account_name': account.name,
+                'updated_by': triggered_by.email,
+                'changed_fields': list(data.keys()),
+                'old_values': old_values,        # what it was before
+                'new_values': {k: str(v) for k, v in data.items()},  # what it changed to
+            }
+        )
+        return account   
+
+    def deactivate_account(self, account_id: str, triggered_by, request=None):
+        account = self.manager.get(id=account_id)
+        account.is_active = False
+        account.save(update_fields=['is_active'])
+        
+        TransactionLogService().log(
+            entity=account,
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            message=f"Petty cash account {account.name}",
+            triggered_by=triggered_by,
+            status_code='INACT',
+            event_code='petty_cash_account_updated',
+            metadata={
+                'account_id': str(account.id),
+                'account_name': account.name,
+                'deactivated_by': triggered_by.email,
+                'action': 'deactivate',
+            }
+            
+        )
+        return account
 
 class ExpenseRequestService(ServiceBase):
     manager = ExpenseRequest.objects
