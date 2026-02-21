@@ -65,10 +65,18 @@ class DepartmentController:
     @classmethod
     def update_department(cls, request, deparment_id):
         data = get_clean_request_data(
+            request,
             required_fields={
                 "name",
             },
+            allowed_fields={"name", "code", "description", "line_manager_id"},
         )
+        if "line_manager_id" in data:
+            try:
+                UserService().get(id=data["line_manager_id"], is_active=True)
+            except User.DoesNotExist:
+                return ResponseProvider().not_found(message="Line manager not found")
+
         deparment_id = deparment_id
         department_name = data.get("name")
 
@@ -97,31 +105,6 @@ class DepartmentController:
 
         except Department.DoesNotExist:
             return ResponseProvider().not_found(message="Department does not exist")
-        
-    
-    
-    @classmethod
-    def assign_line_manager(cls, request, department_id):
-        try:
-            data = get_clean_request_data(request, required_fields={"manager_id"})
-
-            manager = UserService().get(id=data.get("manager_id"), is_active=True)
-
-            department = DepartmentService().assign_line_manager(
-            department_id=department_id,
-            manager=manager,
-            triggered_by=request.user,
-            request=request
-        )
-            return ResponseProvider().success(
-            message=f"Line manager assigned to {department.name} successfully",
-            data=cls._serilize(department)
-        )
-        except User.DoesNotExist:
-            return ResponseProvider().not_found(message="Manager not found")
-        except Department.DoesNotExist:
-            return ResponseProvider().not_found(message="Department not found")
-
 
     @staticmethod
     def _serilize(department) -> dict:

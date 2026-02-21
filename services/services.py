@@ -114,7 +114,7 @@ class DepartmentService(ServiceBase):
         return deparment
         
     
-    def update(self,department_id: str, data: dict,str, triggered_by: User, request=None):
+    def update(self,department_id: str, data: dict, triggered_by: User, request=None):
         department = self.get_by_id(department_id)
         
         # capture old values
@@ -186,38 +186,6 @@ class DepartmentService(ServiceBase):
         
         return department
         
-    def assign_line_manager(self, department_id: str, manager, str, triggered_by: User, request=None):
-        department = self.get_by_id(department_id)
-        old_manager =department.line_manager
-        department.line_manager = manager
-        department.save(update_fields=['line_manager'])
-        
-        metadata = {
-            'department_id': str(department.id),
-            'department_name': department.name,
-            'old_line_manager_id': str(old_manager.id) if old_manager else None,
-            'old_line_manager_name': old_manager.get_full_name() if old_manager else None,
-            'new_line_manager_id': str(manager.id),
-            'new_line_manager_name': manager.get_full_name(),
-            'assigned_by_id': str(triggered_by.id),
-            'assigned_by_email': triggered_by.email,
-            'assigned_by_role': triggered_by.role.name,
-            'request_ip': request.META.get('REMOTE_ADDR') if request else None,
-            'user_agent': request.META.get('HTTP_USER_AGENT') if request else None,
-            'action': 'assign_line_manager',
-            'assigned_at': timezone.now().isoformat(),
-        }
-        
-        TransactionLogService().log(
-            entity=department,
-            event_code='department_line_manager_assigned',
-            triggered_by=triggered_by,
-            ip_address=request.META.get('REMOTE_ADDR') if request else None,
-            message=f"Line manager assigned to {department.name} department",
-            metadata=metadata
-        )
-        
-        return department
 
 class EventTypeService(ServiceBase):
     manager = EventTypes.objects
