@@ -1,5 +1,6 @@
 
 from base.models import Category, Status
+from users.models import User
 
 # EXPENSEREQUEST
 def get_default_expense_category():
@@ -32,3 +33,17 @@ def get_default_pending_status():
         }
     )
     return status.id
+
+def get_default_finance_officer():
+    """
+    Auto-resolves a default Finance Officer for an expense request.
+    Returns the ID of the first active user with the FO role.
+    Returns None if no Finance Officer exists.
+    """
+    
+    officer = User.objects.filter(
+        role__code='FO',
+        is_active=True
+    ).first()
+    
+    return officer.id
