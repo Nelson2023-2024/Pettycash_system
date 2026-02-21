@@ -49,7 +49,7 @@ class AuthService:
         # generate token and set cookie
         token = TokenService().generate_token(
             user,
-            max_age=30*60,
+            max_age=7 * 24 * 60 * 60,
             response=response,
             cookie_name='jwt'
         )
