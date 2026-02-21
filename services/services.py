@@ -63,14 +63,161 @@ class UserService(ServiceBase):
             }
         )
 
+# -----------------------------------------------------------------------------
+# DEPARMENT SERVICE
+# -----------------------------------------------------------------------------
 class DepartmentService(ServiceBase):
     manager = Department.objects
 
-    def get_active_departments(self):
-        return self.manager.filter(is_active=True)
+    def create(self, name: str, description: str, code: str, line_manager=None, triggered_by: str = None, request=None):
+        department = self.manager.create(
+            name=name,
+            description=description,
+            code=code,
+            line_manager=line_manager
+        )
+        
+        TransactionLogService().log(
+            entity=department,
+            event_code='department_created',
+            triggered_by=triggered_by,
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            message=f"{name} department created successfully",
+            metadata={
+                'department_id': str(department.id),
+                'department_name': department.name,
+                'department_code': department.code,
+                'description': department.description,
+                'line_manager_id': str(line_manager.id) if line_manager else None,
+                'line_manager_name': line_manager.get_full_name() if line_manager else None,
+                'created_by_id': str(triggered_by.id) if triggered_by else None,
+                'created_by_email': triggered_by.email if triggered_by else None,
+                'created_by_role': triggered_by.role.name if triggered_by else None,
+                'request_ip': request.META.get('REMOTE_ADDR') if request else None,
+                'user_agent': request.META.get('HTTP_USER_AGENT') if request else None,
+                'created_at': timezone.now().isoformat(),
+        })
+        
+        return department
+    
+    def get_all(self):
+        departments = self.manager.filter(is_active=True).select_related('line_manager')
+        return departments
+    
+    def get_by_id(self, department_id: str):
+        department = self.manager.get(id=department_id, is_active=True)
+        return department
+    
+    def get_by_code(self, code: str):
+        deparment = self.manager.get(code=code, is_active=True)
+        
+        return deparment
+        
+    
+    def update(self,department_id: str, data: dict,str, triggered_by: User, request=None):
+        department = self.get_by_id(department_id)
+        
+        # capture old values
+        old_values = {}
+        for field in data.keys():
+            old_values[field] = str(getattr(department, field, None))
+        
+        new_values = {}
+        # new values
+        for field, value in data.items():
+            setattr(department, field, value)
+            new_values[field] = getattr(department,field)
+            
+        department.save(update_fields=list(data.keys()))
+        
+        # Log update
+        metadata = {
+            'department_id': str(department.id),
+            'department_name': department.name,
+            'updated_fields': list(data.keys()),
+            'old_values': old_values,
+            'new_values': new_values,
+            'updated_by_id': str(triggered_by.id),
+            'updated_by_email': triggered_by.email,
+            'updated_by_role': triggered_by.role.name,
+            'request_ip': request.META.get('REMOTE_ADDR') if request else None,
+            'user_agent': request.META.get('HTTP_USER_AGENT') if request else None,
+            'action': 'update',
+            'updated_at': timezone.now().isoformat(),
+        }
 
-    def get_by_manager(self, user_id):
-        return self.manager.filter(line_manager__id=user_id)
+        TransactionLogService().log(
+            entity=department,
+            event_code='department_updated',
+            triggered_by=triggered_by,
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            message=f"{department.name} department updated",
+            metadata=metadata
+        )
+        
+        return department
+    
+    def deactivate(self, department_id: str, triggered_by: User, request=None):
+        department = self.get_by_id(department_id)
+        department.is_active = False
+        department.save(update_fields=['is_active'])
+        
+        # Log deactivation
+        metadata = {
+            'department_id': str(department.id),
+            'department_name': department.name,
+            'deactivated_by_id': str(triggered_by.id),
+            'deactivated_by_email': triggered_by.email,
+            'deactivated_by_role': triggered_by.role.name,
+            'request_ip': request.META.get('REMOTE_ADDR') if request else None,
+            'user_agent': request.META.get('HTTP_USER_AGENT') if request else None,
+            'action': 'deactivate',
+            'deactivated_at': timezone.now().isoformat(),
+        }
+        
+        TransactionLogService().log(
+            entity=department,
+            event_code='department_deactivated',
+            triggered_by=triggered_by,
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            message=f"{department.name} department deactivated",
+            metadata=metadata
+        )
+        
+        return department
+        
+    def assign_line_manager(self, department_id: str, manager, str, triggered_by: User, request=None):
+        department = self.get_by_id(department_id)
+        old_manager =department.line_manager
+        department.line_manager = manager
+        department.save(update_fields=['line_manager'])
+        
+        metadata = {
+            'department_id': str(department.id),
+            'department_name': department.name,
+            'old_line_manager_id': str(old_manager.id) if old_manager else None,
+            'old_line_manager_name': old_manager.get_full_name() if old_manager else None,
+            'new_line_manager_id': str(manager.id),
+            'new_line_manager_name': manager.get_full_name(),
+            'assigned_by_id': str(triggered_by.id),
+            'assigned_by_email': triggered_by.email,
+            'assigned_by_role': triggered_by.role.name,
+            'request_ip': request.META.get('REMOTE_ADDR') if request else None,
+            'user_agent': request.META.get('HTTP_USER_AGENT') if request else None,
+            'action': 'assign_line_manager',
+            'assigned_at': timezone.now().isoformat(),
+        }
+        
+        TransactionLogService().log(
+            entity=department,
+            event_code='department_line_manager_assigned',
+            triggered_by=triggered_by,
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            message=f"Line manager assigned to {department.name} department",
+            metadata=metadata
+        )
+        
+        return department
 
 class EventTypeService(ServiceBase):
     manager = EventTypes.objects
@@ -146,6 +293,10 @@ class NotificationService(ServiceBase):
     def mark_as_read(self, uuid):
         return self.filter(id=uuid).update(is_read=True)
 
+
+# -----------------------------------------------------------------------------
+# PETTY CASH ACCOUNT SERVICE
+# -----------------------------------------------------------------------------
 class PettyCashAccountService(ServiceBase):
     manager = PettyCashAccount.objects
 
@@ -222,7 +373,7 @@ class PettyCashAccountService(ServiceBase):
         TransactionLogService().log(
             entity=account,
             ip_address=request.META.get('REMOTE_ADDR') if request else None,
-            message=f"Petty cash account {account.name}",
+            message=f"Petty cash account {account.name} deactivated",
             triggered_by=triggered_by,
             status_code='INACT',
             event_code='petty_cash_account_updated',
