@@ -3,6 +3,7 @@ from base.models import BaseModel,GenericBaseModel,Status, Category
 from department.models import Department
 from django.utils.translation import gettext_lazy as _
 from users.models import User
+from finance.default import get_default_pending_status, get_default_expense_category, get_default_finance_officer
 
 
 # Create your models here.
@@ -38,6 +39,7 @@ class ExpenseRequest(BaseModel):
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
+        default=get_default_expense_category, # auto resolves the category
         related_name='expense_requests',
         verbose_name=_('Category')
     )
@@ -52,40 +54,24 @@ class ExpenseRequest(BaseModel):
     assigned_to = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
+        default=get_default_finance_officer,
         related_name='assigned_expense_requests',
         verbose_name=_('Assigned To'),
         null=True, blank=True,  # optional at creation
     )
 
-    decision_by = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        related_name='decided_expense_requests',
-        verbose_name=_('Decision by')
-    )
-    decision_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_('Decision at')
-    )
+    #decision_by and decision_at —  moved to metadata
 
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
         related_name='expense_requests',
         null=True, blank=True,
+        default=get_default_pending_status,
         verbose_name='Status'
     )
-
-    department = models.ForeignKey(
-        Department,
-        on_delete=models.PROTECT,
-        null=True, blank=True,
-        related_name='expense_requests',
-        verbose_name=_('Department')
-    )
+    
+    # Removed: department (derive from employee.department)
 
     # core data
     title = models.CharField(max_length=100, blank=True, verbose_name=_('Title'))
