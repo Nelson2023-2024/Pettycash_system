@@ -1,7 +1,7 @@
 from functools import wraps
 from utils.response_provider import ResponseProvider
 
-def allowed_http_methods(allowed_methods=None):
+def allowed_http_methods(*allowed_methods):
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
