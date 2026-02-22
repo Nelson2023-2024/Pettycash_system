@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Manager
 from typing import Type
 
@@ -356,22 +357,176 @@ class PettyCashAccountService(ServiceBase):
         return account
 
 class ExpenseRequestService(ServiceBase):
-    manager = ExpenseRequest.objects
+    manager = ExpenseRequest.objects  
+      
+    def create(self,request, title:str, mpesa_phone: str, description: str, amount: float, employee: User, assigned_to: User, category: Category, expense_type: str, receipt_url: list=None):
+        
+        """
+        Creates a new expense request for the given employee.
+        Category, status, and assigned_to are auto-resolved via defaults in the models.
+        """
+        expense = self.manager.create(
+            employee=employee,
+            expense_type=expense_type,
+            assigned_to=assigned_to,
+            title=title,
+            mpesa_phone=mpesa_phone,
+            description=description,
+            amount=amount,
+            receipt_url=receipt_url or []
+        )
+        TransactionLogService.log(
+                entity=expense,
+                event_code='expense_created',
+                triggered_by=employee,
+                message=f'Expense request "{expense.title}" created',
+                ip_address=request.META.get('REMOTE_ADDR') if request else None,
+                metadata={
+                    'expense_id': str(expense.id),
+                    'title': expense.title,
+                    'amount': str(expense.amount),
+                    'expense_type': expense.expense_type,
+                    'mpesa_phone': expense.mpesa_phone,
+                    'description': expense.description,
+                    'employee_id': str(employee.id),
+                    'employee_email': employee.email,
+                    'assigned_to_id': str(assigned_to.id) if assigned_to else None,
+                    'assigned_to_email': assigned_to.email if assigned_to else None,
+                    'receipt_url': receipt_url or [],
+                    'action': 'create',
+                }
+        )
+        
+        return expense
+    
+    def get_all(self):
+        """
+        Retrieves all expense requests with their related employee, assigned user,
+        and status pre-fetched in a single optimized query via select_related.
 
-    def get_by_employee(self, user_id):
-        return self.manager.filter(employee__id=user_id)
+        Returns:
+            QuerySet: A queryset of all ExpenseRequest instances ordered by created_at (desc),
+            with employee, assigned_to, and status fields already joined —
+            avoiding N+1 queries when serializing.
+    """
+        return self.manager.select_related('employee','assigned_to','status').all()
+    
+    def get_my_expense_requests(self, authUser,):
+        """
+    Retrieves all expense requests belonging to the authenticated employee.
 
-    def get_by_status(self, status_code):
-        return self.manager.filter(status__code=status_code)
+    Args:
+        auth_user (User): The currently authenticated user making the request.
 
-    def get_by_department(self, department_id):
-        return self.manager.filter(department__id=department_id)
+    Returns:
+        QuerySet: ExpenseRequest instances where employee matches auth_user,
+        with assigned_to and status pre-fetched via select_related.
+    """
+        return self.manager.filter(employee=authUser).select_related('status','assigned_to')
+    
+    def update(self, expense_id: str, data: dict, triggered_by: User, request=None):
+        """
+        Updates an expense request with the provided fields.
+        Uses select_for_update to prevent race conditions on concurrent updates.
 
-    def get_assigned_to(self, user_id):
-        return self.manager.filter(assigned_to__id=user_id)
+        Args:
+            expense_id (str): The ID of the expense request to update.
+            data (dict): Dictionary of fields to update and their new values.
+                triggered_by (User): The user performing the update.
+        request: Optional HTTP request for logging IP and user agent.
 
-    def get_by_expense_type(self, expense_type):
-        return self.manager.filter(expense_type=expense_type)
+        Returns:
+            ExpenseRequest: The updated expense request instance.
+
+        Raises:
+            ExpenseRequest.DoesNotExist: If no matching expense request is found.
+        """
+        with transaction.atomic():
+            expense = (
+                self.manager.select_for_update().select_related('status').get(id=expense_id)
+            )
+            
+        old_values = {}
+        
+        for field in data.keys():
+            old_values[field] = str(getattr(expense, field, None))
+        
+        new_values = {}
+        for field, value in data.items():
+            setattr(expense, field, value)
+            new_values[field] = getattr(expense, field)
+            
+        TransactionLogService.log(
+                entity=expense,
+                event_code='expense_updated',
+                triggered_by=triggered_by,
+                message=f'Expense request "{expense.title}" updated',
+                ip_address=request.META.get('REMOTE_ADDR') if request else None,
+                metadata={
+                    'expense_id': str(expense.id),
+                    'title': expense.title,
+                    'updated_fields': list(data.keys()),
+                    'old_values': old_values,
+                    'new_values': new_values,
+                    'updated_by_id': str(triggered_by.id),
+                    'updated_by_email': triggered_by.email,
+                    'updated_by_role': triggered_by.role.name,
+                    'employee_id': str(expense.employee.id),
+                    'employee_email': expense.employee.email,
+                    'action': 'update',
+                }
+            )
+            
+        expense.save(update_fields=list(data.keys()) + ['updated_at'])
+                     
+    
+    def deactivate(self, request, expense_request_id, triggered_by: User):
+        """
+        Deactivates an expense request by setting its status to inactive and is_active -> False.
+
+        Args:
+            expense_request_id (UUID): The ID of the expense request to deactivate.
+
+        Returns:
+            ExpenseRequest: The updated expense request instance.
+
+        Raises:
+            ExpenseRequest.DoesNotExist: If no matching expense request is found.
+        """
+        expense = self.manager.select_related('status').get(id=expense_request_id)
+        inactive_status, _ = Status.objects.get_or_create(
+            code='INACT',
+            defaults={'name': 'Inactive', 'description': 'Deactivated record'}
+        )
+        
+        expense.status = inactive_status
+        expense.is_active = False
+        expense.save(update_fields=['is_active','status'])
+        
+        TransactionLogService.log(
+            entity=expense,
+            event_code='expense_updated',
+            triggered_by=triggered_by,
+            status_code='INACT',
+            message=f'Expense request "{expense.title}" deactivated',
+            ip_address=request.META.get('REMOTE_ADDR') if request else None,
+            metadata={
+                'expense_id': str(expense.id),
+                'title': expense.title,
+                'amount': str(expense.amount),
+                'expense_type': expense.expense_type,
+                'employee_id': str(expense.employee.id),
+                'employee_email': expense.employee.email,
+                'deactivated_by_id': str(triggered_by.id),
+                'deactivated_by_email': triggered_by.email,
+                'deactivated_by_role': triggered_by.role.name,
+                'action': 'deactivate',
+            }
+        )
+        
+        return expense
+    
+    
 
 
 class TopUpRequestService(ServiceBase):
