@@ -545,7 +545,7 @@ class ExpenseRequestService(ServiceBase):
             with employee, assigned_to, and status fields already joined —
             avoiding N+1 queries when serializing.
         """
-        return self.manager.select_related("employee", "assigned_to", "status").all()
+        return self.manager.filter(is_active=True).select_related("employee", "assigned_to", "status")
 
     def get_my_expense_requests(
         self,
@@ -561,7 +561,7 @@ class ExpenseRequestService(ServiceBase):
             QuerySet: ExpenseRequest instances where employee matches auth_user,
             with assigned_to and status pre-fetched via select_related.
         """
-        return self.manager.filter(employee=authUser).select_related(
+        return self.manager.filter(employee=authUser, is_active=True).select_related(
             "status", "assigned_to"
         )
 
@@ -589,15 +589,17 @@ class ExpenseRequestService(ServiceBase):
                 .get(id=expense_id)
             )
 
-        old_values = {}
+            old_values = {}
 
-        for field in data.keys():
-            old_values[field] = str(getattr(expense, field, None))
+            for field in data.keys():
+                old_values[field] = str(getattr(expense, field, None))
 
-        new_values = {}
-        for field, value in data.items():
-            setattr(expense, field, value)
-            new_values[field] = getattr(expense, field)
+            new_values = {}
+            for field, value in data.items():
+                setattr(expense, field, value)
+                new_values[field] = getattr(expense, field)
+            
+            expense.save(update_fields=list(data.keys()) + ["updated_at"])
 
         TransactionLogService.log(
             entity=expense,
@@ -620,7 +622,9 @@ class ExpenseRequestService(ServiceBase):
             },
         )
 
-        expense.save(update_fields=list(data.keys()) + ["updated_at"])
+        
+        
+        return expense
 
     def deactivate(self, request, expense_request_id, triggered_by: User):
         """
