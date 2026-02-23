@@ -2753,7 +2753,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class StatusService(ServiceBase):\n    manager = Status.objects\nclass CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"",
+        "peekOfCode": "class StatusService(ServiceBase):\n    manager = Status.objects\nclass CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\n# -----------------------------------------------------------------------------\n# USER SERVICE\n# -----------------------------------------------------------------------------\nclass UserService(ServiceBase):",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2762,7 +2762,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. ",
+        "peekOfCode": "class CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\n# -----------------------------------------------------------------------------\n# USER SERVICE\n# -----------------------------------------------------------------------------\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2771,7 +2771,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class RoleService(ServiceBase):\n    manager = Role.objects\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"",
+        "peekOfCode": "class RoleService(ServiceBase):\n    manager = Role.objects\n# -----------------------------------------------------------------------------\n# USER SERVICE\n# -----------------------------------------------------------------------------\nclass UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage",
         "detail": "services.services",
         "documentation": {}
     },

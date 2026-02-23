@@ -28,6 +28,9 @@ class RoleService(ServiceBase):
     manager = Role.objects
 
 
+# -----------------------------------------------------------------------------
+# USER SERVICE
+# -----------------------------------------------------------------------------
 class UserService(ServiceBase):
     manager = User.objects
 
@@ -299,6 +302,31 @@ class PettyCashAccountService(ServiceBase):
         triggered_by: User,
         request=None,
     ):
+        """
+                Creates a new petty cash account.
+        Guards against creating more than one active account if org policy requires it.
+
+        Args:
+            name (str): Name of the petty cash account.
+            description (str): Description of the account.
+            mpesa_phone_number (str): M-Pesa phone number for disbursements.
+            minimum_threshold (Decimal): The balance threshold that triggers an auto top-up.
+            triggered_by (User): The user creating the account.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            PettyCashAccount: The newly created petty cash account instance.
+
+        Raises:
+            ValueError: If an active petty cash account already exists.
+
+        """
+
+        existing = self.manager.filter(is_active=True).exists()
+        if existing:
+            raise ValueError(
+                "An active petty cash account already exists. Deactivate it before creating a new one."
+            )
         account = self.manager.create(
             name=name,
             description=description,
@@ -327,9 +355,56 @@ class PettyCashAccountService(ServiceBase):
         return account
 
     def get_by_id(self, account_id: str):
+        """
+        Retrieves a single active petty cash account by ID.
+
+        Args:
+            account_id (str): The UUID of the petty cash account.
+
+        Returns:
+            PettyCashAccount: The matching active account instance.
+
+        Raises:
+            PettyCashAccount.DoesNotExist: If no active account matches the given ID.
+        """
         return self.manager.get(id=account_id, is_active=True)
 
+    def get_active_accounts(self):
+        """
+        Retrieves all active petty cash accounts.
+
+        Returns:
+            QuerySet: PettyCashAccount instances where is_active is True.
+        """
+        return self.manager.filter(is_active=True)
+
+    def get_all(self):
+        """
+        Retrieves all petty cash accounts including inactive ones.
+
+        Returns:
+            QuerySet: All PettyCashAccount instances.
+
+        """
+        return self.manager.all()
+
     def update_account(self, account_id: str, data: dict, triggered_by, request=None):
+        """
+            Updates a petty cash account with the provided fields.
+
+        Args:
+            account_id (str): The UUID of the petty cash account to update.
+            data (dict): Dictionary of fields to update and their new values.
+            triggered_by (User): The user performing the update.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            PettyCashAccount: The updated petty cash account instance.
+
+        Raises:
+            PettyCashAccount.DoesNotExist: If no active account matches the given ID.
+
+        """
         account = self.get_by_id(account_id)
 
         # Capture old values before update for audit trail
@@ -364,6 +439,23 @@ class PettyCashAccountService(ServiceBase):
         return account
 
     def deactivate_account(self, account_id: str, triggered_by, request=None):
+        """
+            Soft deletes a petty cash account by setting is_active to False.
+        Uses the base manager to bypass the is_active filter so already
+        inactive accounts can still be found if needed.
+
+        Args:
+            account_id (str): The UUID of the petty cash account to deactivate.
+            triggered_by (User): The user performing the deactivation.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            PettyCashAccount: The updated petty cash account instance.
+
+        Raises:
+            PettyCashAccount.DoesNotExist: If no account matches the given ID.
+
+        """
         account = self.manager.get(id=account_id)
         account.is_active = False
         account.save(update_fields=["is_active"])
@@ -385,6 +477,10 @@ class PettyCashAccountService(ServiceBase):
         return account
 
 
+
+# -----------------------------------------------------------------------------
+# EXPENSE REQUEST SERVICE
+# -----------------------------------------------------------------------------
 class ExpenseRequestService(ServiceBase):
     manager = ExpenseRequest.objects
 
@@ -573,6 +669,9 @@ class ExpenseRequestService(ServiceBase):
         return expense
 
 
+# -----------------------------------------------------------------------------
+# TOPUP REQUEST SERVICE
+# -----------------------------------------------------------------------------
 class TopUpRequestService(ServiceBase):
     manager = TopUpRequest.objects
 
@@ -972,6 +1071,10 @@ class TopUpRequestService(ServiceBase):
         )
 
 
+
+# -----------------------------------------------------------------------------
+# DISBURSEMENT RECONSILIATION SERVICE
+# -----------------------------------------------------------------------------
 class DisbursementReconciliationService(ServiceBase):
     manager = DisbursementReconciliation.objects
 
