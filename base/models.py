@@ -7,6 +7,7 @@ class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Date modified'))
+    is_active = models.BooleanField(default=True, verbose_name=_('Is Active'))
 
     class Meta:
         abstract = True

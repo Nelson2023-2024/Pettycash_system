@@ -54,11 +54,12 @@ class PettyCashService:
         petty_cash = PettyCashAccountService().deactivate_account(account_id, triggered_by=request.user, request=request)
         return ResponseProvider.success(message=f"{petty_cash.name} deactivated successfully")
 
-    """
-        Converting a Django model → JSON-safe dictionary 
-    """
+
     @staticmethod
     def _serialize(petty_cash) -> dict:
+        """
+        Converting a Django model → JSON-safe dictionary 
+        """
         return {
             'id': str(petty_cash.id),
             'name': petty_cash.name,

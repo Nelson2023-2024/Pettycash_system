@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, PermissionDenied
 from django.db import IntegrityError, OperationalError, DataError
+from utils.exceptions import TransactionLogError
 
 
 class ResponseProvider:
@@ -51,6 +52,8 @@ class ResponseProvider:
         elif isinstance(ex, OperationalError):
             # e.g. DB connection issues, table doesn't exist
             return cls.service_unavailable(error="A database error occurred. Please try again later.")
+        elif isinstance(ex, TransactionLogError):
+            return cls.server_error(message='Logging Error', error=str(ex))
         else:
             return cls.server_error(error=str(ex))
 
