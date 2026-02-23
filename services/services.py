@@ -14,6 +14,7 @@ from audit.models import EventTypes, TransactionLogBase, Notifications
 from users.models import User, Role
 from services.serviceBase import ServiceBase
 from django.utils import timezone
+from utils.exceptions import TransactionLogError
 
 
 class StatusService(ServiceBase):
@@ -238,10 +239,11 @@ class TransactionLogService(ServiceBase):
         metadata: dict = None,
         ip_address: str = None,
     ) -> TransactionLogBase:
-        event_type = EventTypes.objects.get(code=event_code)
-        status = Status.objects.get(code=status_code)
+        try:
+            event_type = EventTypes.objects.get(code=event_code)
+            status = Status.objects.get(code=status_code)
 
-        return TransactionLogBase.objects.create(
+            return TransactionLogBase.objects.create(
             event_type=event_type,
             triggered_by=triggered_by,
             status=status,
@@ -250,7 +252,9 @@ class TransactionLogService(ServiceBase):
             entity_type=entity.__class__.__name__,  # "User", "ExpenseRequest" etc
             entity_id=str(entity.pk),
             user_ip_address=ip_address,
-        )
+            )
+        except Exception as e:
+            raise TransactionLogError(f"Failed to create transaction log for event '{event_code}': {str(e)}")
 
     @staticmethod
     def get_logs_for_entity(entity):
