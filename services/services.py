@@ -576,14 +576,400 @@ class ExpenseRequestService(ServiceBase):
 class TopUpRequestService(ServiceBase):
     manager = TopUpRequest.objects
 
-    def get_by_status(self, status_code):
-        return self.manager.filter(status__code=status_code)
+    def get_by_id(self, topup_id: str):
+        """Retrieves a single top-up request by ID."""
+        return self.manager.select_related(
+            "pettycash_account", "requested_by", "decision_by", "status"
+        ).get(id=topup_id)
 
-    def get_by_requester(self, user_id):
-        return self.manager.filter(requested_by__id=user_id)
+    def get_all(self):
+        """Retrieves all top-up requests with related fields pre-fetched."""
+        return self.manager.select_related(
+            "pettycash_account", "requested_by", "decision_by", "status"
+        ).all()
 
-    def get_auto_triggered(self):
-        return self.manager.filter(is_auto_triggered=True)
+    def get_by_account(self, account_id: str):
+        """Retrieves all top-up requests for a specific petty cash account."""
+        return self.manager.select_related(
+            "requested_by", "decision_by", "status", "event_type"
+        ).filter(pettycash_account__id=account_id)
+
+    def get_by_status(self, status_code: str):
+        """Retrieves all top-up requests matching a given status code."""
+        return self.manager.select_related(
+            "pettycash_account", "requested_by", "status", "event_type"
+        ).filter(status__code=status_code)
+
+    def get_authuser_top_up_requests(self, auth_user: User):
+        """Retrieves all top-up requests made by the authenticated user."""
+        return self.manager.select_related(
+            "pettycash_account", "status", "event_type"
+        ).filter(requested_by=auth_user)
+
+    def create_top_up_request(
+        self,
+        request,
+        pettycash_account_id,
+        requested_by: User,
+        request_reason: str,
+        amount: float,
+    ):
+        """
+        Creates a new top-up request for a petty cash account.
+
+        Args:
+            pettycash_account_id (str): The ID of the petty cash account to top up.
+            requested_by (User): The user requesting the top-up.
+            reason (str): Reason for the top-up request.
+            amount (float): The amount to top up.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            TopUpRequest: The newly created top-up request instance.
+        """
+        # retrieve the petty cash account
+        account = PettyCashAccountService().get_by_id(pettycash_account_id)
+
+        topup = self.manager.create(
+            pettycash_account=account,
+            amount=amount,
+            requested_by=requested_by,
+            request_reason=request_reason,
+            # status auto-resolves to 'pending' via model default
+            # event_type auto-resolves to 'topup_requested' via model default
+        )
+
+        TransactionLogService.log(
+            entity=topup,
+            event_code="topup_requested",
+            triggered_by=requested_by,
+            message=f'Top-up request of {amount} created for account "{account.name}"',
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "topup_id": str(topup.id),
+                "account_id": str(account.id),
+                "account_name": account.name,
+                "amount": str(amount),
+                "request_reason": request_reason,
+                "status": topup.status.name if topup.status else None,
+                "event_type": topup.event_type.code if topup.event_type else None,
+                "requested_by_id": str(requested_by.id),
+                "requested_by_email": requested_by.email,
+                "requested_by_role": requested_by.role.name,
+                "is_auto_triggered": topup.is_auto_triggered,
+                "action": "create",
+            },
+        )
+
+        return topup
+
+    def trigger_top_up_request(
+        self, account: PettyCashAccount, request=None
+    ) -> TopUpRequest:
+        """
+        Auto-triggers a top-up request when a petty cash account balance
+        drops below its minimum threshold. No user interaction required.
+
+        Called automatically after any balance deduction — not exposed as an API endpoint.
+
+        Args:
+            account (PettyCashAccount): The petty cash account to check.
+
+        Returns:
+            TopUpRequest: The newly created top-up request if triggered.
+            None: If balance is still above threshold or a pending request already exists.
+
+        """
+        # guard 1 — balance still above threshold, no action needed
+        if account.current_balance >= account.minimum_threshold:
+            return None
+
+        # guard 2 — a pending top-up already exists for this account, don't create a duplicate
+        already_pending = TopUpRequest.objects.filter(
+            pettycash_account=account, status__code="pending", is_active=True
+        ).exists()
+
+        if already_pending:
+            raise ValueError(
+                f"[AutoTopUp] Skipped — pending top-up already exists for '{account.name}'"
+            )
+
+        # auto-resolve the system user to act as requested_by
+        system_user = User.objects.filter(role__code="SYS").first()
+
+        if not system_user:
+            raise ValueError(
+                f"[AutoTopUp ERROR] No system user found — cannot auto-trigger top-up for '{account.name}'"
+            )
+
+        # calculate top-up amount to bring balance back above threshold
+        top_up_amount = account.minimum_threshold - account.current_balance
+
+        topup = self.manager.create(
+            pettycash_account=account,
+            requested_by=system_user,
+            request_reason=f"Auto-triggered: balance ({account.current_balance}) dropped below minimum threshold ({account.minimum_threshold})",
+            amount=top_up_amount,
+            is_auto_triggered=True,  # flag so you can distinguish in admin/reports
+            # status auto-resolves to 'pending' via model default
+            # event_type auto-resolves to 'topup_requested' via model default
+        )
+
+        TransactionLogService.log(
+            entity=topup,
+            event_code="topup_requested",
+            triggered_by=system_user,
+            message=f'Auto top-up of {top_up_amount} triggered for "{account.name}" — balance below threshold',
+            metadata={
+                "topup_id": str(topup.id),
+                "account_id": str(account.id),
+                "account_name": account.name,
+                "current_balance": str(account.current_balance),
+                "minimum_threshold": str(account.minimum_threshold),
+                "top_up_amount": str(top_up_amount),
+                "is_auto_triggered": True,
+                "action": "auto_trigger",
+            },
+        )
+
+        return topup
+
+    def decide_top_up_request(
+        self,
+        request,
+        topup_id: str,
+        decision: str,
+        triggered_by: User,
+        decision_reason: str,
+    ):
+        """
+        Approves or rejects a top-up request in a single method.
+
+        Args:
+            topup_id (str): The ID of the top-up request.
+            decision (str): Either 'approved' or 'rejected'.
+            triggered_by (User): The user making the decision.
+            reason (str, optional): Required when rejecting, optional for approval.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            TopUpRequest: The updated top-up request instance.
+
+        Raises:
+            ValueError: If decision is not 'approved' or 'rejected'.
+            TopUpRequest.DoesNotExist: If no matching top-up request is found.
+        """
+        topup = self.get_by_id(topup_id)
+        status = Status.objects.get(code=decision)
+        event_code = "topup_approved" if decision == "approved" else "topup_rejected"
+        event_type = EventTypes.objects.get(code=event_code)
+        decision_at = timezone.now()
+
+        topup.status = status
+        topup.event_type = event_type
+        topup.decision_by = triggered_by
+        topup.decision_reason = decision_reason
+        topup.metadata = {**topup.metadata, "decison_at": decision_at.isoformat()}
+        topup.save(
+            update_fields=[
+                "status_id",
+                "event_type_id",
+                "decision_by_id",
+                "decision_reason",
+                "metadata",
+                "updated_at",
+            ]
+        )
+
+        TransactionLogService.log(
+            entity=topup,
+            event_code=event_code,
+            triggered_by=triggered_by,
+            message=f'Top-up of {topup.amount} {decision} for "{topup.pettycash_account.name}"',
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "topup_id": str(topup.id),
+                "account_id": str(topup.pettycash_account.id),
+                "account_name": topup.pettycash_account.name,
+                "amount": str(topup.amount),
+                "decision": decision,
+                "decision_reason": decision_reason,
+                "decision_at": decision_at.isoformat(),
+                "request_reason": topup.request_reason,
+                "decided_by_id": str(triggered_by.id),
+                "decided_by_email": triggered_by.email,
+                "decided_by_role": triggered_by.role.name,
+                "action": decision,
+            },
+        )
+
+        return topup
+
+    def update_topup_request(
+        self, topup_id: str, data: dict, triggered_by: User, request=None
+    ):
+        """
+            Updates a top-up request with the provided fields.
+        Uses select_for_update to prevent race conditions on concurrent updates.
+
+        Args:
+            topup_id (str): The ID of the top-up request to update.
+            data (dict): Dictionary of fields to update and their new values.
+            triggered_by (User): The user performing the update.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            TopUpRequest: The updated top-up request instance.
+
+        Raises:
+            ValueError: If the top-up request is not in 'pending' status —
+                        only pending requests can be edited.
+            TopUpRequest.DoesNotExist: If no matching top-up request is found.
+        """
+        with transaction.atomic():
+            topup = (
+                self.manager.select_for_update()
+                .select_related(
+                    "pettycash_account", "requested_by", "status", "event_type"
+                )
+                .get(id=topup_id)
+            )
+
+            if topup.status.code != "pending":
+                raise ValueError(
+                    f"Cannot edit a top-up request that is already '{topup.status.name}'."
+                )
+
+            old_values = {
+                field: str(getattr(topup, field, None)) for field in data.keys()
+            }
+
+            for field, value in data.items():
+                setattr(topup, field, value)
+
+            new_values = {
+                field: str(getattr(topup, field, None)) for field in data.keys()
+            }
+
+            topup.save(update_fields=list(data.keys()) + ["updated_at"])
+
+            TransactionLogService.log(
+                entity=topup,
+                event_code="topup_requested",  # still in requested stage — no workflow change
+                triggered_by=triggered_by,
+                message=f'Top-up request "{topup.id}" updated',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "topup_id": str(topup.id),
+                    "account_id": str(topup.pettycash_account.id),
+                    "account_name": topup.pettycash_account.name,
+                    "changed_fields": list(data.keys()),
+                    "old_values": old_values,
+                    "new_values": new_values,
+                    "updated_by_id": str(triggered_by.id),
+                    "updated_by_email": triggered_by.email,
+                    "updated_by_role": triggered_by.role.name,
+                    "action": "update",
+                },
+            )
+
+    def deactivate_top_up_request(
+        self, topup_id: str, triggered_by: User, request=None
+    ):
+        """
+        Soft deletes a top-up request by setting is_active to False.
+
+        Args:
+            topup_id (str): The ID of the top-up request to deactivate.
+            triggered_by (User): The user performing the deactivation.
+            request: Optional HTTP request for logging IP and user agent.
+
+        Returns:
+            TopUpRequest: The updated top-up request instance.
+        """
+        topup = self.manager.get(id=topup_id)
+        inactive_status = Status.objects.get(code="INACT")
+        inactive_event = EventTypes.objects.get(code="topup_deactivated")
+
+        topup.is_active = False
+        topup.status = inactive_status
+        topup.event_type = inactive_event
+        topup.save(
+            update_fields=["is_active", "updated_at", "status_id", "event_type_id"]
+        )
+
+        TransactionLogService.log(
+            entity=topup,
+            event_code="topup_deactivated",
+            triggered_by=triggered_by,
+            status_code="INACT",
+            message=f'Top-up request "{topup.id}" deactivated',
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "topup_id": str(topup.id),
+                "account_id": str(topup.pettycash_account.id),
+                "account_name": topup.pettycash_account.name,
+                "changed_fields": ["is_active", "status"],
+                "old_values": {"is_active": True, "status.code": "active"},
+                "new_values": {"is_active": False, "status.code": "inactive"},
+                "deactivated_by_id": str(triggered_by.id),
+                "deactivated_by_email": triggered_by.email,
+                "deactivated_by_role": triggered_by.role.name,
+                "action": "deactivate",
+            },
+        )
+
+        return topup
+
+    def disburse_top_up_request(self, topup_id: str, triggered_by: User, request=None):
+        """
+            Disburses an approved top-up by crediting the petty cash account balance.
+        Automatically triggers another top-up check after balance changes.
+
+        Raises:
+            ValueError: If the top-up request is not in 'approved' status.
+        """
+        topup = self.get_by_id(topup_id)
+
+        if topup.status.code != "approved":
+            raise ValueError(
+                f"Cannot disburse a request that is '{topup.status.name}'. Must be 'approved'."
+            )
+
+        account = topup.pettycash_account
+        previous_balance = account.current_balance
+
+        # increment on the current balance the topup amount
+        account.current_balance += topup.amount
+        account.save(update_fields=["current_balance", "updated_at"])
+
+        complete_status = Status.objects.get(code="complete")
+        event_type = EventTypes.objects.get(code="topup_disbursed")
+
+        topup.status = complete_status
+        topup.event_type = event_type
+
+        topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
+
+        TransactionLogService.log(
+            entity=topup,
+            event_code="topup_disbursed",
+            triggered_by=triggered_by,
+            message=f'Top-up of {topup.amount} disbursed to "{account.name}"',
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "topup_id": str(topup.id),
+                "account_id": str(account.id),
+                "account_name": account.name,
+                "amount": str(topup.amount),
+                "previous_balance": str(previous_balance),
+                "new_balance": str(account.current_balance),
+                "disbursed_by_id": str(triggered_by.id),
+                "disbursed_by_email": triggered_by.email,
+                "disbursed_by_role": triggered_by.role.name,
+                "action": "disburse",
+            },
+        )
 
 
 class DisbursementReconciliationService(ServiceBase):
