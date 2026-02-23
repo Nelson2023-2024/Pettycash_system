@@ -51,7 +51,7 @@ class ExpenseRequestController:
             )
 
             expense = ExpenseRequestService().create(
-                title=data.get("titlee"),
+                title=data.get("title"),
                 mpesa_phone=data.get("mpesa_phone"),
                 description=data.get("description"),
                 amount=data.get("amount"),
@@ -66,8 +66,121 @@ class ExpenseRequestController:
         except Exception as ex:
             return ResponseProvider().handle_exception(ex)
 
+    @classmethod
+    def get_all_expense_requests(cls, request):
+        """
+        Retrieves all active expense requests.
+
+        Args:
+            request: The HTTP request object.
+
+        Returns:
+            JsonResponse: 200 with list of serialized expense requests.
+        """
+        try:
+            expenses = ExpenseRequestService().get_all()
+            return ResponseProvider.success(
+                data=[cls._serialize(expense) for expense in expenses]
+            )
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
+    @classmethod
+    def get_auth_user_expense_request(cls, request):
+        """
+        Retrieves all expense requests belonging to the authenticated employee.
+
+        Args:
+            request: The HTTP request object.
+
+        Returns:
+            JsonResponse: 200 with list of serialized expense requests.
+
+        """
+        try:
+            authUser = request.user
+            expenses = ExpenseRequestService().get_my_expense_requests(
+                authUser=authUser
+            )
+
+            return ResponseProvider().success(
+                data=[cls._serialize(expenses) for expense in expenses]
+            )
+
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
+    @classmethod
+    def update_expense_request(cls, request, expense_id):
+        """
+        Updates an existing expense request with the provided fields.
+
+        Args:
+            request: The HTTP request object.
+            expense_id (str): The ID of the expense request to update.
+
+        Returns:
+            JsonResponse: 200 with serialized updated expense on success.
+
+        """
+        data = get_clean_request_data(
+            request,
+            allowed_fields={
+                "expense_type",
+                "title",
+                "mpesa_phone",
+                "description",
+                "amount",
+                "receipt_url",
+            },
+        )
+        authUser = request.user
+        try:
+            expense = ExpenseRequestService().update(
+                triggered_by=authUser, request=request, expense_id=expense_id, data=data
+            )
+
+            return ResponseProvider().success(data=cls._serialize(expense))
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
+    @classmethod
+    def deactivate_auth_expense_request(cls, request, expense_request_id):
+        """
+            Deactivates an expense request by setting is_active to False.
+
+        Args:
+            request: The HTTP request object.
+            expense_request_id (str): The ID of the expense request to deactivate.
+
+        Returns:
+            JsonResponse: 200 with serialized deactivated expense on success.
+
+        """
+        data = get_clean_request_data(
+            request,
+            required_fields={"expense_request_id"},
+            allowed_fields={"expense_request_id"},
+        )
+        authUser = request.user
+
+        try:
+            expense = ExpenseRequestService().deactivate(
+                request=request,
+                expense_request_id=expense_request_id,
+                triggered_by=authUser,
+            )
+            return ResponseProvider().success(
+                message="Expense Request Deactivated", data=cls._serialize(expense)
+            )
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
     @staticmethod
     def _serialize(expense) -> dict:
+        """
+        Converting a Django model → JSON-safe dictionary
+        """
         return {
             "id": str(expense.id),
             "title": expense.title,
