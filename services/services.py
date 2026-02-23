@@ -687,31 +687,31 @@ class TopUpRequestService(ServiceBase):
         """Retrieves a single top-up request by ID."""
         return self.manager.select_related(
             "pettycash_account", "requested_by", "decision_by", "status"
-        ).get(id=topup_id)
+        ).get(id=topup_id, is_active=True)
 
     def get_all(self):
-        """Retrieves all top-up requests with related fields pre-fetched."""
+        """Retrieves all active top-up requests with related fields pre-fetched."""
         return self.manager.select_related(
             "pettycash_account", "requested_by", "decision_by", "status"
-        ).all()
+        ).filter(is_active=True)
 
     def get_by_account(self, account_id: str):
-        """Retrieves all top-up requests for a specific petty cash account."""
+        """Retrieves all active top-up requests for a specific petty cash account."""
         return self.manager.select_related(
             "requested_by", "decision_by", "status", "event_type"
-        ).filter(pettycash_account__id=account_id)
+        ).filter(pettycash_account__id=account_id, is_active=True)
 
     def get_by_status(self, status_code: str):
         """Retrieves all top-up requests matching a given status code."""
         return self.manager.select_related(
             "pettycash_account", "requested_by", "status", "event_type"
-        ).filter(status__code=status_code)
+        ).filter(status__code=status_code, is_active=True)
 
     def get_authuser_top_up_requests(self, auth_user: User):
         """Retrieves all top-up requests made by the authenticated user."""
         return self.manager.select_related(
             "pettycash_account", "status", "event_type"
-        ).filter(requested_by=auth_user)
+        ).filter(requested_by=auth_user, is_active=True)
 
     def create_top_up_request(
         self,
@@ -876,7 +876,7 @@ class TopUpRequestService(ServiceBase):
         topup.event_type = event_type
         topup.decision_by = triggered_by
         topup.decision_reason = decision_reason
-        topup.metadata = {**topup.metadata, "decison_at": decision_at.isoformat()}
+        topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
         topup.save(
             update_fields=[
                 "status_id",
@@ -1077,6 +1077,8 @@ class TopUpRequestService(ServiceBase):
                 "action": "disburse",
             },
         )
+        
+        return topup
 
 
 
