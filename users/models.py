@@ -109,7 +109,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         return self.first_name+" "+self.last_name
 
     class Meta:
-        db_table = 'user'
+        db_table = 'users'
         verbose_name = _('User')
         verbose_name_plural = _('Users')
         ordering = ['-created_at']

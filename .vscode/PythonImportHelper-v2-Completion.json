@@ -408,6 +408,14 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -497,6 +505,14 @@
     },
     {
         "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
         "importPath": "django.urls",
         "description": "django.urls",
         "isExtraImport": true,
@@ -882,14 +898,6 @@
         "documentation": {}
     },
     {
-        "label": "Role",
-        "importPath": "users.models",
-        "description": "users.models",
-        "isExtraImport": true,
-        "detail": "users.models",
-        "documentation": {}
-    },
-    {
         "label": "User",
         "importPath": "users.models",
         "description": "users.models",
@@ -914,11 +922,19 @@
         "documentation": {}
     },
     {
-        "label": "timezone",
-        "importPath": "django.utils",
-        "description": "django.utils",
+        "label": "Role",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.utils",
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
         "documentation": {}
     },
     {
@@ -935,6 +951,22 @@
         "description": "django.utils",
         "isExtraImport": true,
         "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
         "documentation": {}
     },
     {
@@ -1002,6 +1034,22 @@
         "documentation": {}
     },
     {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "ValidationError",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
         "label": "ValidationError",
         "importPath": "django.core.exceptions",
         "description": "django.core.exceptions",
@@ -1058,6 +1106,22 @@
         "documentation": {}
     },
     {
+        "label": "DepartmentService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "PettyCashAccountService",
         "importPath": "services.services",
         "description": "services.services",
@@ -1079,6 +1143,22 @@
         "description": "authenticate.services.token_service",
         "isExtraImport": true,
         "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
         "documentation": {}
     },
     {
@@ -1204,6 +1284,14 @@
         "documentation": {}
     },
     {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
         "label": "AuthService",
         "importPath": "authenticate.services.auth_services",
         "description": "authenticate.services.auth_services",
@@ -1274,6 +1362,54 @@
         "description": "department.models",
         "isExtraImport": true,
         "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "Department",
+        "importPath": "department.models",
+        "description": "department.models",
+        "isExtraImport": true,
+        "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "views",
+        "importPath": "department",
+        "description": "department",
+        "isExtraImport": true,
+        "detail": "department",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
+        "isExtraImport": true,
+        "detail": "utils.decorators.login_required",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
+        "isExtraImport": true,
+        "detail": "utils.decorators.login_required",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
         "documentation": {}
     },
     {
@@ -1354,22 +1490,6 @@
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "allowed_http_methods",
-        "importPath": "utils.decorators.allowed_http_methods",
-        "description": "utils.decorators.allowed_http_methods",
-        "isExtraImport": true,
-        "detail": "utils.decorators.allowed_http_methods",
-        "documentation": {}
-    },
-    {
-        "label": "login_required",
-        "importPath": "utils.decorators.login_required",
-        "description": "utils.decorators.login_required",
-        "isExtraImport": true,
-        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
@@ -1500,7 +1620,7 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n  path('auth/',include('authenticate.urls')),\n  path('finance/',include('finance.urls')),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n]",
         "detail": "api.urls",
         "documentation": {}
     },
@@ -1775,6 +1895,15 @@
         "documentation": {}
     },
     {
+        "label": "DepartmentController",
+        "kind": 6,
+        "importPath": "department.services.department_services",
+        "description": "department.services.department_services",
+        "peekOfCode": "class DepartmentController:\n    @classmethod\n    def create_department(cls, request) -> ResponseProvider:\n        data = get_clean_request_data(\n            request,\n            required_fields={\n                \"name\",\n                \"description\",\n                \"code\",\n            },",
+        "detail": "department.services.department_services",
+        "documentation": {}
+    },
+    {
         "label": "DepartmentConfig",
         "kind": 6,
         "importPath": "department.apps",
@@ -1790,6 +1919,69 @@
         "description": "department.models",
         "peekOfCode": "class Department(GenericBaseModel):\n    # e.g., 'FIN', 'HR', 'OPS'\n    code = models.CharField(max_length=20, unique=True, verbose_name=_('Code'))\n    is_active = models.BooleanField(default=True)\n    # Points to the Manager (from the users app)\n    line_manager = models.ForeignKey(\n        'users.User',\n        on_delete=models.SET_NULL,\n        null=True,\n        blank=True,",
         "detail": "department.models",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "department.urls",
+        "description": "department.urls",
+        "peekOfCode": "urlpatterns = [\n    path('', views.get_departments_view, name='get_departments'),\n    path('create/', views.create_department_view, name='create_department'),\n    path('<str:department_id>/', views.get_department_view, name='get_department'),\n    path('<str:department_id>/update/', views.update_department_view, name='update_department'),\n    path('<str:department_id>/deactivate/', views.deactivate_department_view, name='deactivate_department'),\n]",
+        "detail": "department.urls",
+        "documentation": {}
+    },
+    {
+        "label": "create_department_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def create_department_view(request):\n    try:\n        department = DepartmentController().create_department(request)\n        return department \n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods('GET')\n@login_required()\ndef get_departments_view(request):",
+        "detail": "department.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_departments_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def get_departments_view(request):\n    try:\n        departments = DepartmentController().get_departments(request)\n        return departments\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods('GET')\n@login_required()\ndef get_department_view(request,department_id):",
+        "detail": "department.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_department_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def get_department_view(request,department_id):\n    try:\n        department = DepartmentController().get_department(request, department_id)\n        return department\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods('PATCH')\n@login_required('ADM')\ndef update_department_view(request, department_id):",
+        "detail": "department.views",
+        "documentation": {}
+    },
+    {
+        "label": "update_department_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def update_department_view(request, department_id):\n    try:\n        return DepartmentController.update_department(request, department_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods('DELETE')\n@login_required('ADM')\ndef deactivate_department_view(request, department_id):\n    try:",
+        "detail": "department.views",
+        "documentation": {}
+    },
+    {
+        "label": "deactivate_department_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def deactivate_department_view(request, department_id):\n    try:\n        return DepartmentController.deactivate_department(request, department_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods('PATCH')\n@login_required('ADM')\ndef assign_line_manager_view(request, department_id):\n    try:",
+        "detail": "department.views",
+        "documentation": {}
+    },
+    {
+        "label": "assign_line_manager_view",
+        "kind": 2,
+        "importPath": "department.views",
+        "description": "department.views",
+        "peekOfCode": "def assign_line_manager_view(request, department_id):\n    try:\n        return DepartmentController.assign_line_manager(request, department_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)",
+        "detail": "department.views",
         "documentation": {}
     },
     {
@@ -2148,7 +2340,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class DepartmentService(ServiceBase):\n    manager = Department.objects\n    def get_active_departments(self):\n        return self.manager.filter(is_active=True)\n    def get_by_manager(self, user_id):\n        return self.manager.filter(line_manager__id=user_id)\nclass EventTypeService(ServiceBase):\n    manager = EventTypes.objects\n    def get_by_category(self, category_code):\n        return self.manager.filter(event_category__code=category_code)",
+        "peekOfCode": "class DepartmentService(ServiceBase):\n    manager = Department.objects\n    def create(self, name: str, description: str, code: str, line_manager=None, triggered_by: str = None, request=None):\n        department = self.manager.create(\n            name=name,\n            description=description,\n            code=code,\n            line_manager=line_manager\n        )\n        TransactionLogService().log(",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2175,7 +2367,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class NotificationService(ServiceBase):\n    manager = Notifications.objects\n    def get_unread(self, user_id):\n        return self.manager.filter(recipient__id=user_id, is_read=False)\n    def get_by_recipient(self, user_id):\n        return self.manager.filter(recipient__id=user_id)\n    def mark_as_read(self, uuid):\n        return self.filter(id=uuid).update(is_read=True)\nclass PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects",
+        "peekOfCode": "class NotificationService(ServiceBase):\n    manager = Notifications.objects\n    def get_unread(self, user_id):\n        return self.manager.filter(recipient__id=user_id, is_read=False)\n    def get_by_recipient(self, user_id):\n        return self.manager.filter(recipient__id=user_id)\n    def mark_as_read(self, uuid):\n        return self.filter(id=uuid).update(is_read=True)\n# -----------------------------------------------------------------------------\n# PETTY CASH ACCOUNT SERVICE",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2243,6 +2435,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0004_alter_user_table",
+        "description": "users.migrations.0004_alter_user_table",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0003_alter_role_options_alter_user_options_and_more'),\n    ]\n    operations = [\n        migrations.AlterModelTable(\n            name='user',\n            table='users',\n        ),\n    ]",
+        "detail": "users.migrations.0004_alter_user_table",
+        "documentation": {}
+    },
+    {
         "label": "CustomUserAdmin",
         "kind": 6,
         "importPath": "users.admin",
@@ -2292,7 +2493,7 @@
         "kind": 2,
         "importPath": "utils.decorators.allowed_http_methods",
         "description": "utils.decorators.allowed_http_methods",
-        "peekOfCode": "def allowed_http_methods(allowed_methods=None):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, *args, **kwargs):\n            if allowed_methods and request.method not in allowed_methods:\n                return ResponseProvider().bad_request(\n                    message='Method not allowed',\n                    error=f\"{request.method} method is not allowed. Allowed methods: {','.join(allowed_methods)}\"       \n                )\n            return func(request, *args, **kwargs)",
+        "peekOfCode": "def allowed_http_methods(*allowed_methods):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, *args, **kwargs):\n            if allowed_methods and request.method not in allowed_methods:\n                return ResponseProvider().bad_request(\n                    message='Method not allowed',\n                    error=f\"{request.method} method is not allowed. Allowed methods: {','.join(allowed_methods)}\"       \n                )\n            return func(request, *args, **kwargs)",
         "detail": "utils.decorators.allowed_http_methods",
         "documentation": {}
     },
