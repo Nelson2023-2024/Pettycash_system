@@ -3,7 +3,9 @@ from base.models import BaseModel,GenericBaseModel,Status, Category
 from department.models import Department
 from django.utils.translation import gettext_lazy as _
 from users.models import User
-from finance.default import get_default_pending_status, get_default_expense_category, get_default_finance_officer
+from finance.default import (get_default_expense_category, get_default_expense_submitted_event,
+    get_default_finance_officer, get_default_pending_status, get_default_topup_requested_event)
+from audit.models import EventTypes
 
 
 # Create your models here.
@@ -49,6 +51,15 @@ class ExpenseRequest(BaseModel):
         choices=ExpenseType.choices,
         default=ExpenseType.REIMBURSEMENT,
         verbose_name=_('Expense Type')
+    )
+    
+    event_type = models.ForeignKey(          # tracks current workflow stage
+        EventTypes,
+        on_delete=models.PROTECT,
+        related_name='expense_requests',
+        null=True, blank=True,
+        default=get_default_expense_submitted_event,   # auto-resolves to 'expense_submitted'
+        verbose_name=_('Event Type')
     )
 
     assigned_to = models.ForeignKey(
@@ -103,6 +114,7 @@ class TopUpRequest(BaseModel):
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
+        default=get_default_pending_status,
         related_name='topup_requests',
         verbose_name=_('Status')
     )
@@ -112,17 +124,30 @@ class TopUpRequest(BaseModel):
         related_name='requested_topups',
         verbose_name=_('Requested by')
     )
-    approved_by = models.ForeignKey(
+    decision_by = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name='approved_topups',
         null=True,
+        blank=True,
         default=None,
         verbose_name=_('Approved by')
     )
+    event_type = models.ForeignKey(          # tracks current workflow stage
+        EventTypes,
+        on_delete=models.PROTECT,
+        related_name='topup_requests',
+        null=True, blank=True,
+        default=get_default_topup_requested_event,     # auto-resolves to 'topup_requested'
+        verbose_name=_('Event Type')
+    )
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))
-    reason = models.CharField(max_length=100, blank=True, verbose_name=_('Reason'))
+     # reason for REQUESTING the top-up e.g. "Balance too low for upcoming expenses"
+    request_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Request Reason'))
+
+    # reason for the DECISION e.g. "Approved — end of month budget available" or "Rejected — insufficient budget"
+    decision_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Decision Reason'))
     amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name=_('Amount'))
     is_auto_triggered = models.BooleanField(default=False)
 
