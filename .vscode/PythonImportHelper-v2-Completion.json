@@ -224,6 +224,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -296,14 +312,6 @@
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
-        "isExtraImport": true,
-        "detail": "django.db",
-        "documentation": {}
-    },
-    {
         "label": "migrations",
         "importPath": "django.db",
         "description": "django.db",
@@ -313,22 +321,6 @@
     },
     {
         "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
-        "isExtraImport": true,
-        "detail": "django.db",
-        "documentation": {}
-    },
-    {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
-        "isExtraImport": true,
-        "detail": "django.db",
-        "documentation": {}
-    },
-    {
-        "label": "migrations",
         "importPath": "django.db",
         "description": "django.db",
         "isExtraImport": true,
@@ -392,6 +384,22 @@
         "documentation": {}
     },
     {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "migrations",
         "importPath": "django.db",
         "description": "django.db",
@@ -417,6 +425,166 @@
     },
     {
         "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "transaction",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "IntegrityError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "OperationalError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "DataError",
         "importPath": "django.db",
         "description": "django.db",
         "isExtraImport": true,
@@ -650,6 +818,22 @@
         "documentation": {}
     },
     {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
         "label": "TransactionLogBase",
         "importPath": "audit.models",
         "description": "audit.models",
@@ -659,6 +843,22 @@
     },
     {
         "label": "Notifications",
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "isExtraImport": true,
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "EventTypes",
+        "importPath": "audit.models",
+        "description": "audit.models",
+        "isExtraImport": true,
+        "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "EventTypes",
         "importPath": "audit.models",
         "description": "audit.models",
         "isExtraImport": true,
@@ -794,6 +994,22 @@
         "documentation": {}
     },
     {
+        "label": "Category",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "Status",
+        "importPath": "base.models",
+        "description": "base.models",
+        "isExtraImport": true,
+        "detail": "base.models",
+        "documentation": {}
+    },
+    {
         "label": "BaseModel",
         "importPath": "base.models",
         "description": "base.models",
@@ -863,6 +1079,22 @@
         "description": "base.models",
         "isExtraImport": true,
         "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
         "documentation": {}
     },
     {
@@ -1042,6 +1274,14 @@
         "documentation": {}
     },
     {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
+        "documentation": {}
+    },
+    {
         "label": "ValidationError",
         "importPath": "django.core.exceptions",
         "description": "django.core.exceptions",
@@ -1122,6 +1362,14 @@
         "documentation": {}
     },
     {
+        "label": "ExpenseRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "PettyCashAccountService",
         "importPath": "services.services",
         "description": "services.services",
@@ -1143,6 +1391,14 @@
         "description": "authenticate.services.token_service",
         "isExtraImport": true,
         "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
         "documentation": {}
     },
     {
@@ -1413,6 +1669,15 @@
         "documentation": {}
     },
     {
+        "label": "finance.models",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
         "label": "ExpenseRequest",
         "importPath": "finance.models",
         "description": "finance.models",
@@ -1474,6 +1739,55 @@
         "description": "finance.models",
         "isExtraImport": true,
         "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "finance.default",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_expense_category",
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "isExtraImport": true,
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_expense_submitted_event",
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "isExtraImport": true,
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_finance_officer",
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "isExtraImport": true,
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_pending_status",
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "isExtraImport": true,
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_topup_requested_event",
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "isExtraImport": true,
+        "detail": "finance.default",
         "documentation": {}
     },
     {
@@ -1679,6 +1993,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "audit.migrations.0007_notifications_is_active_transactionlogbase_is_active",
+        "description": "audit.migrations.0007_notifications_is_active_transactionlogbase_is_active",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0006_alter_eventtypes_code'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='notifications',\n            name='is_active',\n            field=models.BooleanField(default=True, verbose_name='Is Active'),\n        ),",
+        "detail": "audit.migrations.0007_notifications_is_active_transactionlogbase_is_active",
+        "documentation": {}
+    },
+    {
         "label": "AuditConfig",
         "kind": 6,
         "importPath": "audit.apps",
@@ -1814,6 +2137,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "base.migrations.0005_category_is_active_status_is_active",
+        "description": "base.migrations.0005_category_is_active_status_is_active",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0004_alter_status_table'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='category',\n            name='is_active',\n            field=models.BooleanField(default=True, verbose_name='Is Active'),\n        ),",
+        "detail": "base.migrations.0005_category_is_active_status_is_active",
+        "documentation": {}
+    },
+    {
         "label": "BaseConfig",
         "kind": 6,
         "importPath": "base.apps",
@@ -1827,7 +2159,7 @@
         "kind": 6,
         "importPath": "base.models",
         "description": "base.models",
-        "peekOfCode": "class BaseModel(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)\n    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))\n    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Date modified'))\n    class Meta:\n        abstract = True\nclass GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))\n    class Meta:",
+        "peekOfCode": "class BaseModel(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)\n    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))\n    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Date modified'))\n    is_active = models.BooleanField(default=True, verbose_name=_('Is Active'))\n    class Meta:\n        abstract = True\nclass GenericBaseModel(BaseModel):\n    name = models.CharField(max_length=100, verbose_name=_('Name'))\n    description = models.CharField(max_length=100, blank=True, verbose_name=_('Description'))",
         "detail": "base.models",
         "documentation": {}
     },
@@ -2003,6 +2335,69 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0003_remove_expenserequest_decision_at_and_more",
+        "description": "finance.migrations.0003_remove_expenserequest_decision_at_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0002_expenserequest_decision_at_and_more'),\n    ]\n    operations = [\n        migrations.RemoveField(\n            model_name='expenserequest',\n            name='decision_at',\n        ),\n        migrations.RemoveField(",
+        "detail": "finance.migrations.0003_remove_expenserequest_decision_at_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0004_alter_expenserequest_category",
+        "description": "finance.migrations.0004_alter_expenserequest_category",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0004_alter_status_table'),\n        ('finance', '0003_remove_expenserequest_decision_at_and_more'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='expenserequest',\n            name='category',\n            field=models.ForeignKey(default=finance.models.get_default_expense_category, on_delete=django.db.models.deletion.PROTECT, related_name='expense_requests', to='base.category', verbose_name='Category'),",
+        "detail": "finance.migrations.0004_alter_expenserequest_category",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0005_alter_expenserequest_assigned_to_and_more",
+        "description": "finance.migrations.0005_alter_expenserequest_assigned_to_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0004_alter_status_table'),\n        ('finance', '0004_alter_expenserequest_category'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='expenserequest',\n            name='assigned_to',",
+        "detail": "finance.migrations.0005_alter_expenserequest_assigned_to_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0006_disbursementreconciliation_is_active_and_more",
+        "description": "finance.migrations.0006_disbursementreconciliation_is_active_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0005_alter_expenserequest_assigned_to_and_more'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='disbursementreconciliation',\n            name='is_active',\n            field=models.BooleanField(default=True, verbose_name='Is Active'),\n        ),",
+        "detail": "finance.migrations.0006_disbursementreconciliation_is_active_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0007_alter_topuprequest_approved_by_and_more",
+        "description": "finance.migrations.0007_alter_topuprequest_approved_by_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('base', '0005_category_is_active_status_is_active'),\n        ('finance', '0006_disbursementreconciliation_is_active_and_more'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='topuprequest',\n            name='approved_by',",
+        "detail": "finance.migrations.0007_alter_topuprequest_approved_by_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0008_rename_approved_by_topuprequest_decision_by_and_more",
+        "description": "finance.migrations.0008_rename_approved_by_topuprequest_decision_by_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('audit', '0007_notifications_is_active_transactionlogbase_is_active'),\n        ('finance', '0007_alter_topuprequest_approved_by_and_more'),\n    ]\n    operations = [\n        migrations.RenameField(\n            model_name='topuprequest',\n            old_name='approved_by',\n            new_name='decision_by',",
+        "detail": "finance.migrations.0008_rename_approved_by_topuprequest_decision_by_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestController",
+        "kind": 6,
+        "importPath": "finance.services.expense_request_service",
+        "description": "finance.services.expense_request_service",
+        "peekOfCode": "class ExpenseRequestController:\n    @classmethod\n    def create_expense_request(cls, request):\n        \"\"\"\n        Handles the creation of a new expense request for the authenticated employee.\n        Validates and extracts required fields from the incoming request, delegates\n        persistence to ExpenseRequestService, and returns a structured JSON response.\n        Args:\n            request: The HTTP request object. Must contain the following in the body:\n                - expense_type (str): Type of expense — 'reimbursement' or 'disbursement'.",
+        "detail": "finance.services.expense_request_service",
+        "documentation": {}
+    },
+    {
         "label": "PettyCashService",
         "kind": 6,
         "importPath": "finance.services.pettycash_services",
@@ -2012,12 +2407,66 @@
         "documentation": {}
     },
     {
+        "label": "ExpenseRequestAdmin",
+        "kind": 6,
+        "importPath": "finance.admin",
+        "description": "finance.admin",
+        "peekOfCode": "class ExpenseRequestAdmin(admin.ModelAdmin):\n    \"\"\"\n    Admin configuration for ExpenseRequest.\n    Restricts the 'assigned_to' field to only show users with the\n    Finance Officer (FO) role, preventing incorrect assignments.\n    \"\"\"\n    def formfield_for_foreignkey(self, db_field, request, **kwargs):\n        if db_field.name == 'assigned_to':\n            kwargs['queryset'] = User.objects.filter(\n                role__code='FO',",
+        "detail": "finance.admin",
+        "documentation": {}
+    },
+    {
         "label": "FinanceConfig",
         "kind": 6,
         "importPath": "finance.apps",
         "description": "finance.apps",
         "peekOfCode": "class FinanceConfig(AppConfig):\n    name = 'finance'",
         "detail": "finance.apps",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_expense_category",
+        "kind": 2,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "peekOfCode": "def get_default_expense_category():\n    \"\"\"\n    Auto-resolves the default category for an expense request.\n    Returns the ID of the 'Expense Management' category,\n    creating it if it doesn't exist.\n    \"\"\"\n    category, _ = Category.objects.get_or_create(\n        code='expense',\n        defaults={\n            'name': 'Expense Management',",
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_pending_status",
+        "kind": 2,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "peekOfCode": "def get_default_pending_status():\n    \"\"\"\n    Auto-resolves the default status for an expense request.\n    Returns the ID of the 'Pending' status,\n    creating it if it doesn't exist.\n    \"\"\"\n    status, _ = Status.objects.get_or_create(\n        code='pending',\n        defaults={\n            'name': 'Pending',",
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_finance_officer",
+        "kind": 2,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "peekOfCode": "def get_default_finance_officer():\n    \"\"\"\n    Auto-resolves a default Finance Officer for an expense request.\n    Returns the ID of the first active user with the FO role.\n    Returns None if no Finance Officer exists.\n    \"\"\"\n    officer = User.objects.filter(\n        role__code='FO',\n        is_active=True\n    ).first()",
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_expense_submitted_event",
+        "kind": 2,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "peekOfCode": "def get_default_expense_submitted_event():\n    \"\"\"\n    Auto-resolves the default event type for a newly submitted expense request.\n    Returns the ID of the 'expense_submitted' event, creating it if it doesn't exist.\n    \"\"\"\n       # local import to avoid circular imports\n    category, _ = Category.objects.get_or_create(\n        code='expense',\n        defaults={\n            'name': 'Expense Management',",
+        "detail": "finance.default",
+        "documentation": {}
+    },
+    {
+        "label": "get_default_topup_requested_event",
+        "kind": 2,
+        "importPath": "finance.default",
+        "description": "finance.default",
+        "peekOfCode": "def get_default_topup_requested_event():\n    \"\"\"\n    Auto-resolves the default event type for a newly created top-up request.\n    Returns the ID of the 'topup_requested' event, creating it if it doesn't exist.\n    \"\"\"\n    category, _ = Category.objects.get_or_create(\n        code='topup',\n        defaults={\n            'name': 'Top Up',\n            'description': 'Petty cash top-up workflow'",
+        "detail": "finance.default",
         "documentation": {}
     },
     {
@@ -2331,7 +2780,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self,email):\n        return self.manager.get(email=email,is_active=True)",
+        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self, email):\n        return self.manager.get(email=email, is_active=True)",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2340,7 +2789,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class DepartmentService(ServiceBase):\n    manager = Department.objects\n    def create(self, name: str, description: str, code: str, line_manager=None, triggered_by: str = None, request=None):\n        department = self.manager.create(\n            name=name,\n            description=description,\n            code=code,\n            line_manager=line_manager\n        )\n        TransactionLogService().log(",
+        "peekOfCode": "class DepartmentService(ServiceBase):\n    manager = Department.objects\n    def create(\n        self,\n        name: str,\n        description: str,\n        code: str,\n        line_manager=None,\n        triggered_by: str = None,\n        request=None,",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2358,7 +2807,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    @staticmethod\n    def log(\n            event_code: str,\n            triggered_by: User,\n            entity,\n            status_code: str ='ACT',\n            message: str = '',\n            metadata: dict =None,",
+        "peekOfCode": "class TransactionLogService(ServiceBase):\n    manager = TransactionLogBase.objects\n    @staticmethod\n    def log(\n        event_code: str,\n        triggered_by: User,\n        entity,\n        status_code: str = \"ACT\",\n        message: str = \"\",\n        metadata: dict = None,",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2376,7 +2825,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects\n    def create_account(self, name, description, mpesa_phone_number, minimum_threshold, triggered_by: User,request=None):\n        account = self.manager.create(\n            name=name,\n            description=description,\n            mpesa_phone_number=mpesa_phone_number,\n            minimum_threshold=minimum_threshold\n        )\n        try:",
+        "peekOfCode": "class PettyCashAccountService(ServiceBase):\n    manager = PettyCashAccount.objects\n    def create_account(\n        self,\n        name,\n        description,\n        mpesa_phone_number,\n        minimum_threshold,\n        triggered_by: User,\n        request=None,",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2385,7 +2834,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class ExpenseRequestService(ServiceBase):\n    manager = ExpenseRequest.objects\n    def get_by_employee(self, user_id):\n        return self.manager.filter(employee__id=user_id)\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_department(self, department_id):\n        return self.manager.filter(department__id=department_id)\n    def get_assigned_to(self, user_id):\n        return self.manager.filter(assigned_to__id=user_id)",
+        "peekOfCode": "class ExpenseRequestService(ServiceBase):\n    manager = ExpenseRequest.objects\n    def create(\n        self,\n        request,\n        title: str,\n        mpesa_phone: str,\n        description: str,\n        amount: float,\n        employee: User,",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2394,7 +2843,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class TopUpRequestService(ServiceBase):\n    manager = TopUpRequest.objects\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_requester(self, user_id):\n        return self.manager.filter(requested_by__id=user_id)\n    def get_auto_triggered(self):\n        return self.manager.filter(is_auto_triggered=True)\nclass DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects",
+        "peekOfCode": "class TopUpRequestService(ServiceBase):\n    manager = TopUpRequest.objects\n    def get_by_id(self, topup_id: str):\n        \"\"\"Retrieves a single top-up request by ID.\"\"\"\n        return self.manager.select_related(\n            \"pettycash_account\", \"requested_by\", \"decision_by\", \"status\"\n        ).get(id=topup_id)\n    def get_all(self):\n        \"\"\"Retrieves all top-up requests with related fields pre-fetched.\"\"\"\n        return self.manager.select_related(",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2441,6 +2890,15 @@
         "description": "users.migrations.0004_alter_user_table",
         "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0003_alter_role_options_alter_user_options_and_more'),\n    ]\n    operations = [\n        migrations.AlterModelTable(\n            name='user',\n            table='users',\n        ),\n    ]",
         "detail": "users.migrations.0004_alter_user_table",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0005_role_is_active",
+        "description": "users.migrations.0005_role_is_active",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0004_alter_user_table'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='role',\n            name='is_active',\n            field=models.BooleanField(default=True, verbose_name='Is Active'),\n        ),",
+        "detail": "users.migrations.0005_role_is_active",
         "documentation": {}
     },
     {
@@ -2538,7 +2996,7 @@
         "kind": 6,
         "importPath": "utils.response_provider",
         "description": "utils.response_provider",
-        "peekOfCode": "class ResponseProvider:\n    @staticmethod\n    def _response(success: bool, code: str, message: str, status: int, data=None, error=None) -> JsonResponse:\n        if data is None: data ={}\n        return JsonResponse(\n            data={\n                'success': success,\n                'code': code,\n                'message': message,\n                'data': data,",
+        "peekOfCode": "class ResponseProvider:\n    @staticmethod\n    def _response(\n        success: bool, code: str, message: str, status: int, data=None, error=None\n    ) -> JsonResponse:\n        if data is None:\n            data = {}\n        return JsonResponse(\n            data={\n                \"success\": success,",
         "detail": "utils.response_provider",
         "documentation": {}
     },
