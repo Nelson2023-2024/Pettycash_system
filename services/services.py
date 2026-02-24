@@ -16,6 +16,11 @@ from services.serviceBase import ServiceBase
 from django.utils import timezone
 from utils.exceptions import TransactionLogError
 
+from django.db import transaction, IntegrityError
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class StatusService(ServiceBase):
     manager = Status.objects
@@ -244,17 +249,19 @@ class TransactionLogService(ServiceBase):
             status = Status.objects.get(code=status_code)
 
             return TransactionLogBase.objects.create(
-            event_type=event_type,
-            triggered_by=triggered_by,
-            status=status,
-            event_message=message,
-            metadata=metadata or {},
-            entity_type=entity.__class__.__name__,  # "User", "ExpenseRequest" etc
-            entity_id=str(entity.pk),
-            user_ip_address=ip_address,
+                event_type=event_type,
+                triggered_by=triggered_by,
+                status=status,
+                event_message=message,
+                metadata=metadata or {},
+                entity_type=entity.__class__.__name__,  # "User", "ExpenseRequest" etc
+                entity_id=str(entity.pk),
+                user_ip_address=ip_address,
             )
         except Exception as e:
-            raise TransactionLogError(f"Failed to create transaction log for event '{event_code}': {str(e)}")
+            raise TransactionLogError(
+                f"Failed to create transaction log for event '{event_code}': {str(e)}"
+            )
 
     @staticmethod
     def get_logs_for_entity(entity):
@@ -481,7 +488,6 @@ class PettyCashAccountService(ServiceBase):
         return account
 
 
-
 # -----------------------------------------------------------------------------
 # EXPENSE REQUEST SERVICE
 # -----------------------------------------------------------------------------
@@ -496,8 +502,6 @@ class ExpenseRequestService(ServiceBase):
         description: str,
         amount: float,
         employee: User,
-        assigned_to: User,
-        category: Category,
         expense_type: str,
         receipt_url: list = None,
     ):
@@ -508,7 +512,6 @@ class ExpenseRequestService(ServiceBase):
         expense = self.manager.create(
             employee=employee,
             expense_type=expense_type,
-            assigned_to=assigned_to,
             title=title,
             mpesa_phone=mpesa_phone,
             description=description,
@@ -517,7 +520,7 @@ class ExpenseRequestService(ServiceBase):
         )
         TransactionLogService.log(
             entity=expense,
-            event_code="expense_created",
+            event_code="expense_submitted",
             triggered_by=employee,
             message=f'Expense request "{expense.title}" created',
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
@@ -530,8 +533,6 @@ class ExpenseRequestService(ServiceBase):
                 "description": expense.description,
                 "employee_id": str(employee.id),
                 "employee_email": employee.email,
-                "assigned_to_id": str(assigned_to.id) if assigned_to else None,
-                "assigned_to_email": assigned_to.email if assigned_to else None,
                 "receipt_url": receipt_url or [],
                 "action": "create",
             },
@@ -549,7 +550,7 @@ class ExpenseRequestService(ServiceBase):
             with employee, assigned_to, and status fields already joined —
             avoiding N+1 queries when serializing.
         """
-        return self.manager.filter(is_active=True).select_related("employee", "assigned_to", "status")
+        return self.manager.filter(is_active=True).select_related("employee", "status")
 
     def get_my_expense_requests(
         self,
@@ -566,8 +567,17 @@ class ExpenseRequestService(ServiceBase):
             with assigned_to and status pre-fetched via select_related.
         """
         return self.manager.filter(employee=authUser, is_active=True).select_related(
-            "status", "assigned_to"
+            "status"
         )
+
+    def get_all_pending_for_fo(self):
+        """
+        Retrieves all active, pending expense requests visible to any Finance Officer.
+        No assignment check needed — role-based access is handled at the view/permission layer.
+        """
+        return self.manager.filter(
+            is_active=True, status__code="pending"
+        ).select_related("employee", "status")
 
     def update(self, expense_id: str, data: dict, triggered_by: User, request=None):
         """
@@ -588,7 +598,7 @@ class ExpenseRequestService(ServiceBase):
         """
         with transaction.atomic():
             expense = (
-                self.manager.select_for_update()
+                self.manager.select_for_update(of=('self',)) # Lock only the main table row — not the joined tables.
                 .select_related("status")
                 .get(id=expense_id)
             )
@@ -602,7 +612,7 @@ class ExpenseRequestService(ServiceBase):
             for field, value in data.items():
                 setattr(expense, field, value)
                 new_values[field] = getattr(expense, field)
-            
+
             expense.save(update_fields=list(data.keys()) + ["updated_at"])
 
         TransactionLogService.log(
@@ -626,8 +636,6 @@ class ExpenseRequestService(ServiceBase):
             },
         )
 
-        
-        
         return expense
 
     def deactivate(self, request, expense_request_id, triggered_by: User):
@@ -845,7 +853,7 @@ class TopUpRequestService(ServiceBase):
         self,
         request,
         topup_id: str,
-        decision: str,
+        decision: str, # 'approved' or 'rejected'
         triggered_by: User,
         decision_reason: str,
     ):
@@ -866,52 +874,62 @@ class TopUpRequestService(ServiceBase):
             ValueError: If decision is not 'approved' or 'rejected'.
             TopUpRequest.DoesNotExist: If no matching top-up request is found.
         """
-        topup = self.get_by_id(topup_id)
-        status = Status.objects.get(code=decision)
-        event_code = "topup_approved" if decision == "approved" else "topup_rejected"
-        event_type = EventTypes.objects.get(code=event_code)
-        decision_at = timezone.now()
+        try:
+            with transaction.atomic():
+                topup = (
+                TopUpRequest.objects.select_for_update()
+                .select_related("status")
+                .get(id=topup_id, is_active=True)
+            )
 
-        topup.status = status
-        topup.event_type = event_type
-        topup.decision_by = triggered_by
-        topup.decision_reason = decision_reason
-        topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
-        topup.save(
-            update_fields=[
-                "status_id",
-                "event_type_id",
-                "decision_by_id",
-                "decision_reason",
-                "metadata",
-                "updated_at",
-            ]
-        )
+            # Idempotency check
+            if topup.status.code == decision:
+                return topup
 
-        TransactionLogService.log(
-            entity=topup,
-            event_code=event_code,
-            triggered_by=triggered_by,
-            message=f'Top-up of {topup.amount} {decision} for "{topup.pettycash_account.name}"',
-            ip_address=request.META.get("REMOTE_ADDR") if request else None,
-            metadata={
-                "topup_id": str(topup.id),
-                "account_id": str(topup.pettycash_account.id),
-                "account_name": topup.pettycash_account.name,
-                "amount": str(topup.amount),
-                "decision": decision,
-                "decision_reason": decision_reason,
-                "decision_at": decision_at.isoformat(),
-                "request_reason": topup.request_reason,
-                "decided_by_id": str(triggered_by.id),
-                "decided_by_email": triggered_by.email,
-                "decided_by_role": triggered_by.role.name,
-                "action": decision,
-            },
-        )
+            status = Status.objects.get(code=decision)
+            event_code = "topup_approved" if decision == "approved" else "topup_rejected"
+            event_type = EventTypes.objects.get(code=event_code)
+            decision_at = timezone.now()
 
-        return topup
+            topup.status = status
+            topup.event_type = event_type
+            topup.decision_by = triggered_by
+            topup.decision_reason = decision_reason or ''
+            topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
+            topup.save(
+                update_fields=[
+                    "status_id",
+                    "event_type_id",
+                    "decision_by_id",
+                    "decision_reason",
+                    "metadata",
+                    "updated_at",
+                ]
+            )
 
+            TransactionLogService.log(
+                entity=topup,
+                event_code=event_code,
+                triggered_by=triggered_by,
+                status_code=decision,   # or a relevant status
+                message=f'Top-up request {decision} for {topup.amount}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "topup_id": str(topup.id),
+                    "account_id": str(topup.pettycash_account.id),
+                    "decision_reason": decision_reason,
+                    "decision_at": decision_at.isoformat(),
+                }
+            )
+
+            return topup
+        except IntegrityError as e:
+            logger.error(f"IntegrityError in decide_top_up_request: {e}", exc_info=True)
+            # Re-raise as a more specific exception or let the controller handle it
+            raise
+
+
+   
     def update_topup_request(
         self, topup_id: str, data: dict, triggered_by: User, request=None
     ):
@@ -935,7 +953,7 @@ class TopUpRequestService(ServiceBase):
         """
         with transaction.atomic():
             topup = (
-                self.manager.select_for_update()
+                self.manager.select_for_update(of=('self',))
                 .select_related(
                     "pettycash_account", "requested_by", "status", "event_type"
                 )
@@ -1037,6 +1055,9 @@ class TopUpRequestService(ServiceBase):
             ValueError: If the top-up request is not in 'approved' status.
         """
         topup = self.get_by_id(topup_id)
+         # If already complete – just return (idempotent)
+        if topup.status.code == "complete":
+            return topup
 
         if topup.status.code != "approved":
             raise ValueError(
@@ -1077,9 +1098,8 @@ class TopUpRequestService(ServiceBase):
                 "action": "disburse",
             },
         )
-        
-        return topup
 
+        return topup
 
 
 # -----------------------------------------------------------------------------
