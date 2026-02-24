@@ -137,7 +137,7 @@ def disburse_topup_view(request, topup_id: str) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
-@login_required("FO")  # only requester role can edit their own pending request
+@login_required("FO","ADM")  # only requester role can edit their own pending request
 def update_topup_view(request, topup_id: str) -> JsonResponse:
     return TopUpRequestController().update(request, topup_id)
 

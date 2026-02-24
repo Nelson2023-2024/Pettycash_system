@@ -91,8 +91,7 @@ class ExpenseRequest(BaseModel):
         ordering = ['-created_at']
 
     def __str__(self):
-        assigned = self.assigned_to.email if self.assigned_to else "Unassigned"
-        return f"{self.title or 'No Title'} - {self.employee.email} | {assigned}"
+         return f"{self.title or 'No Title'} - {self.employee.email}"
 
 
 class TopUpRequest(BaseModel):
@@ -135,7 +134,7 @@ class TopUpRequest(BaseModel):
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))
      # reason for REQUESTING the top-up e.g. "Balance too low for upcoming expenses"
-    request_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Request Reason'))
+    request_reason = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Request Reason'))
 
     # reason for the DECISION e.g. "Approved — end of month budget available" or "Rejected — insufficient budget"
     decision_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Decision Reason'))
