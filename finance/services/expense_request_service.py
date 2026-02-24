@@ -47,7 +47,6 @@ class ExpenseRequestController:
                     "mpesa_phone",
                     "description",
                     "amount",
-                    "receipt_url",
                 },
             )
 
@@ -62,6 +61,12 @@ class ExpenseRequestController:
                     f"Allowed values are: {', '.join(valid_expense_types)}"
                 )
 
+            receipt = request.FILES.get("receipt")
+
+            # Reimbursement must have a receipt at submission — disbursement submits later
+            if expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT and not receipt:
+                raise ValueError("A receipt is required for reimbursement requests.")
+
             expense = ExpenseRequestService().create(
                 request=request,
                 title=data.get("title"),
@@ -70,7 +75,7 @@ class ExpenseRequestController:
                 amount=data.get("amount"),
                 employee=request.user,
                 expense_type=data.get("expense_type"),
-                receipt_url=data.get("receipt_url"),
+                receipt=receipt,
             )
 
             return ResponseProvider().success(
@@ -160,7 +165,7 @@ class ExpenseRequestController:
                         f"Invalid expense_type '{data['expense_type']}'. "
                         f"Allowed values are: {', '.join(valid_expense_types)}"
                     )
-                    
+
             expense = ExpenseRequestService().update(
                 triggered_by=authUser, request=request, expense_id=expense_id, data=data
             )

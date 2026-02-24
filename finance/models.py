@@ -80,7 +80,7 @@ class ExpenseRequest(BaseModel):
     mpesa_phone = models.CharField(max_length=20, blank=True, verbose_name=_('M-Pesa Phone'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
     amount = models.DecimalField(max_digits=8, decimal_places=2, verbose_name=_('Amount'))
-    receipt_url = models.JSONField(default=list, blank=True, verbose_name=_('Receipt URLs'))
+    receipt = models.FileField(upload_to='receipts/%Y/%m/%d/',null=True, blank=True, verbose_name=_('Receipt'))
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))  # store approved_by, timestamps, comments, etc.
 
@@ -215,6 +215,13 @@ class DisbursementReconciliation(BaseModel):
         null=True,
         blank=True,
         verbose_name='Surplus Returned'
+    )
+    
+    receipt = models.FileField(
+        upload_to='reconciliation_receipts/%Y/%m/%d/',
+        null=True,
+        blank=True,
+        verbose_name='Receipt'
     )
 
     comments = models.TextField(
