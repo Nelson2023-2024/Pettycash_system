@@ -3,8 +3,7 @@ from base.models import BaseModel,GenericBaseModel,Status, Category
 from department.models import Department
 from django.utils.translation import gettext_lazy as _
 from users.models import User
-from finance.default import (get_default_expense_category, get_default_expense_submitted_event,
-    get_default_finance_officer, get_default_pending_status, get_default_topup_requested_event)
+from finance.default import (get_default_expense_category, get_default_expense_submitted_event, get_default_pending_status, get_default_topup_requested_event)
 from audit.models import EventTypes
 
 
@@ -62,15 +61,7 @@ class ExpenseRequest(BaseModel):
         verbose_name=_('Event Type')
     )
 
-    assigned_to = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        default=get_default_finance_officer,
-        related_name='assigned_expense_requests',
-        verbose_name=_('Assigned To'),
-        null=True, blank=True,  # optional at creation
-    )
-
+    # REMOVED: assigned_to — FOs see all requests via role-based filtering in the service layer.
     #decision_by and decision_at —  moved to metadata
 
     status = models.ForeignKey(
