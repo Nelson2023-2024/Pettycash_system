@@ -480,6 +480,70 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "DataError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "IntegrityError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "OperationalError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -489,6 +553,22 @@
     },
     {
         "label": "transaction",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "transaction",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "IntegrityError",
         "importPath": "django.db",
         "description": "django.db",
         "isExtraImport": true,
@@ -720,43 +800,123 @@
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.http",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.http",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.http",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.http",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "QueryDict",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
         "documentation": {}
     },
     {
@@ -834,6 +994,14 @@
         "documentation": {}
     },
     {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
         "label": "TransactionLogBase",
         "importPath": "audit.models",
         "description": "audit.models",
@@ -1194,59 +1362,43 @@
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
         "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
-        "label": "QueryDict",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
-        "documentation": {}
-    },
-    {
-        "label": "JsonResponse",
-        "importPath": "django.http",
-        "description": "django.http",
-        "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "utils.common",
         "documentation": {}
     },
     {
@@ -1378,6 +1530,14 @@
         "documentation": {}
     },
     {
+        "label": "TopUpRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "get_user_model",
         "importPath": "django.contrib.auth",
         "description": "django.contrib.auth",
@@ -1391,6 +1551,14 @@
         "description": "authenticate.services.token_service",
         "isExtraImport": true,
         "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
         "documentation": {}
     },
     {
@@ -1524,30 +1692,6 @@
         "documentation": {}
     },
     {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
         "label": "AuthService",
         "importPath": "authenticate.services.auth_services",
         "description": "authenticate.services.auth_services",
@@ -1653,27 +1797,27 @@
         "documentation": {}
     },
     {
-        "label": "allowed_http_methods",
-        "importPath": "utils.decorators.allowed_http_methods",
-        "description": "utils.decorators.allowed_http_methods",
-        "isExtraImport": true,
-        "detail": "utils.decorators.allowed_http_methods",
-        "documentation": {}
-    },
-    {
-        "label": "allowed_http_methods",
-        "importPath": "utils.decorators.allowed_http_methods",
-        "description": "utils.decorators.allowed_http_methods",
-        "isExtraImport": true,
-        "detail": "utils.decorators.allowed_http_methods",
-        "documentation": {}
-    },
-    {
         "label": "finance.models",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "finance.models",
         "description": "finance.models",
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
+        "detail": "finance.models",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequest",
+        "importPath": "finance.models",
+        "description": "finance.models",
+        "isExtraImport": true,
         "detail": "finance.models",
         "documentation": {}
     },
@@ -1767,14 +1911,6 @@
         "documentation": {}
     },
     {
-        "label": "get_default_finance_officer",
-        "importPath": "finance.default",
-        "description": "finance.default",
-        "isExtraImport": true,
-        "detail": "finance.default",
-        "documentation": {}
-    },
-    {
         "label": "get_default_pending_status",
         "importPath": "finance.default",
         "description": "finance.default",
@@ -1791,6 +1927,15 @@
         "documentation": {}
     },
     {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
         "label": "Any",
         "importPath": "typing",
         "description": "typing",
@@ -1804,6 +1949,22 @@
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestController",
+        "importPath": "finance.services.expense_request_service",
+        "description": "finance.services.expense_request_service",
+        "isExtraImport": true,
+        "detail": "finance.services.expense_request_service",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestController",
+        "importPath": "finance.services.topup_request_service",
+        "description": "finance.services.topup_request_service",
+        "isExtraImport": true,
+        "detail": "finance.services.topup_request_service",
         "documentation": {}
     },
     {
@@ -1844,6 +2005,22 @@
         "description": "services.serviceBase",
         "isExtraImport": true,
         "detail": "services.serviceBase",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogError",
+        "importPath": "utils.exceptions",
+        "description": "utils.exceptions",
+        "isExtraImport": true,
+        "detail": "utils.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogError",
+        "importPath": "utils.exceptions",
+        "description": "utils.exceptions",
+        "isExtraImport": true,
+        "detail": "utils.exceptions",
         "documentation": {}
     },
     {
@@ -1934,8 +2111,17 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"health/\", health_check, name='health'),\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n]",
         "detail": "api.urls",
+        "documentation": {}
+    },
+    {
+        "label": "health_check",
+        "kind": 2,
+        "importPath": "api.views",
+        "description": "api.views",
+        "peekOfCode": "def health_check(request):\n    \"\"\"\n    Simple health check endpoint.\n    Returns HTTP 200 with status OK.\n    \"\"\"\n    return JsonResponse({\"status\": \"ok\"})",
+        "detail": "api.views",
         "documentation": {}
     },
     {
@@ -2389,6 +2575,33 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0009_remove_expenserequest_assigned_to_and_more",
+        "description": "finance.migrations.0009_remove_expenserequest_assigned_to_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0008_rename_approved_by_topuprequest_decision_by_and_more'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.RemoveField(\n            model_name='expenserequest',\n            name='assigned_to',\n        ),",
+        "detail": "finance.migrations.0009_remove_expenserequest_assigned_to_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0010_remove_expenserequest_assigned_to",
+        "description": "finance.migrations.0010_remove_expenserequest_assigned_to",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0009_remove_expenserequest_assigned_to_and_more'),\n    ]\n    operations = [\n        migrations.RemoveField(\n            model_name='expenserequest',\n            name='assigned_to',\n        ),\n    ]",
+        "detail": "finance.migrations.0010_remove_expenserequest_assigned_to",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0011_alter_topuprequest_request_reason",
+        "description": "finance.migrations.0011_alter_topuprequest_request_reason",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0010_remove_expenserequest_assigned_to'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='topuprequest',\n            name='request_reason',\n            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Request Reason'),\n        ),",
+        "detail": "finance.migrations.0011_alter_topuprequest_request_reason",
+        "documentation": {}
+    },
+    {
         "label": "ExpenseRequestController",
         "kind": 6,
         "importPath": "finance.services.expense_request_service",
@@ -2404,6 +2617,24 @@
         "description": "finance.services.pettycash_services",
         "peekOfCode": "class PettyCashService:\n    @classmethod\n    def create_petty_cash_account(cls,request) -> ResponseProvider:\n        data = get_clean_request_data(request, required_fields={'name', 'description', 'mpesa_phone_number', 'minimum_threshold'})\n        name = data.get('name')\n        description = data.get('description')\n        mpesa_phone_number = data.get('mpesa_phone_number')\n        minimum_threshold=data.get('minimum_threshold')\n        petty_cash = PettyCashAccountService().create_account(\n            name,",
         "detail": "finance.services.pettycash_services",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestController",
+        "kind": 6,
+        "importPath": "finance.services.topup_request_service",
+        "description": "finance.services.topup_request_service",
+        "peekOfCode": "class TopUpRequestController:\n    @classmethod\n    def create(cls, request, pettycash_account_id: str) -> ResponseProvider:\n        \"\"\"\n        Handles creation of a new top-up request for a petty cash account.\n        Args:\n            request: HTTP request. Body must contain:\n                - amount (float): The amount to top up.\n                - request_reason (str): Reason for the top-up request.\n            pettycash_account_id (str): The ID of the petty cash account to top up.",
+        "detail": "finance.services.topup_request_service",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "finance.services.topup_request_service",
+        "description": "finance.services.topup_request_service",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass TopUpRequestController:\n    @classmethod\n    def create(cls, request, pettycash_account_id: str) -> ResponseProvider:\n        \"\"\"\n        Handles creation of a new top-up request for a petty cash account.\n        Args:\n            request: HTTP request. Body must contain:\n                - amount (float): The amount to top up.\n                - request_reason (str): Reason for the top-up request.",
+        "detail": "finance.services.topup_request_service",
         "documentation": {}
     },
     {
@@ -2443,11 +2674,11 @@
         "documentation": {}
     },
     {
-        "label": "get_default_finance_officer",
+        "label": "get_default_finance_officers",
         "kind": 2,
         "importPath": "finance.default",
         "description": "finance.default",
-        "peekOfCode": "def get_default_finance_officer():\n    \"\"\"\n    Auto-resolves a default Finance Officer for an expense request.\n    Returns the ID of the first active user with the FO role.\n    Returns None if no Finance Officer exists.\n    \"\"\"\n    officer = User.objects.filter(\n        role__code='FO',\n        is_active=True\n    ).first()",
+        "peekOfCode": "def get_default_finance_officers():\n    \"\"\"\n    Auto-resolves a default Finance Officer for an expense request.\n    Returns the ID of the first active user with the FO role.\n    Returns None if no Finance Officer exists.\n    \"\"\"\n    officer = User.objects.filter(\n        role__code='FO',\n        is_active=True\n    )",
         "detail": "finance.default",
         "documentation": {}
     },
@@ -2510,7 +2741,7 @@
         "kind": 5,
         "importPath": "finance.urls",
         "description": "finance.urls",
-        "peekOfCode": "urlpatterns = [\n  path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),\n  path('petty_cash/', get_all_petty_cash_view, name='get-all-petty-cash-accounts'),\n  path('petty_cash/<str:account_id>/', get_petty_cash_view, name='get-petty-cash-account'),\n  path('petty_cash/<str:account_id>/update/', update_petty_cash_view, name='update-petty-cash-account'),\n  path('petty_cash/<str:account_id>/deactivate/', deactivate_petty_cash_view, name='deactivate-petty-cash-account'),\n]",
+        "peekOfCode": "urlpatterns = [\n  path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),\n  path('petty_cash/', get_all_petty_cash_view, name='get-all-petty-cash-accounts'),\n  path('petty_cash/<str:account_id>/', get_petty_cash_view, name='get-petty-cash-account'),\n  path('petty_cash/<str:account_id>/update/', update_petty_cash_view, name='update-petty-cash-account'),\n  path('petty_cash/<str:account_id>/deactivate/', deactivate_petty_cash_view, name='deactivate-petty-cash-account'),\n  # ── expense requests ─────────────────────────────────────\n  path('expense/create/', create_expense_view, name='create-expense-request'),\n  path('expense/', list_all_expenses_view, name='list-all-expense-requests'),\n  path('expense/mine/', list_my_expenses_view, name='list-my-expense-requests'),",
         "detail": "finance.urls",
         "documentation": {}
     },
@@ -2519,7 +2750,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def create_petty_cash_view(request) -> ResponseProvider | Any:\n    try:\n        return PettyCashService.create_petty_cash_account(request)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['GET'])\n@login_required('ADM', 'CFO','FO')\ndef get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "peekOfCode": "def create_petty_cash_view(request) -> ResponseProvider | Any:\n    try:\n        return PettyCashService().create_petty_cash_account(request)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\",\"ADM\")\ndef get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2528,7 +2759,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.get_petty_cash_account(account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['GET'])\n@login_required('ADM','CFO','FO')\ndef get_all_petty_cash_view(request) -> JsonResponse:\n    try:",
+        "peekOfCode": "def get_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService().get_petty_cash_account(account_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\",\"ADM\")\ndef get_all_petty_cash_view(request) -> JsonResponse:\n    try:",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2537,7 +2768,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def get_all_petty_cash_view(request) -> JsonResponse:\n    try:\n        return PettyCashService.get_all_petty_cash_accounts()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['PATCH'])\n@login_required('ADM','CFO')\ndef update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "peekOfCode": "def get_all_petty_cash_view(request) -> JsonResponse:\n    try:\n        return PettyCashService().get_all_petty_cash_accounts()\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"ADM\", \"CFO\",\"ADM\")\ndef update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2546,7 +2777,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.update_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(['DELETE'])\n@login_required('ADM','CFO')\ndef deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
+        "peekOfCode": "def update_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService().update_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\",\"ADM\")\ndef deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2555,7 +2786,115 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService.deactivate_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)",
+        "peekOfCode": "def deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:\n    try:\n        return PettyCashService().deactivate_petty_cash_account(request, account_id)\n    except Exception as ex:\n        return ResponseProvider().handle_exception(ex)\n# ── EXPENSE REQUESTS ─────────────────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"EMP\", \"FO\",\"ADM\")  # employees and FO can submit expenses\ndef create_expense_view(request) -> JsonResponse:",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "create_expense_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def create_expense_view(request) -> JsonResponse:\n    return ExpenseRequestController().create_expense_request(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef list_all_expenses_view(request) -> JsonResponse:\n    return ExpenseRequestController().get_all_expense_requests(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_all_expenses_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_all_expenses_view(request) -> JsonResponse:\n    return ExpenseRequestController().get_all_expense_requests(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef list_my_expenses_view(request) -> JsonResponse:\n    return ExpenseRequestController().get_auth_user_expense_request(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\",\"ADM\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_expenses_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_my_expenses_view(request) -> JsonResponse:\n    return ExpenseRequestController().get_auth_user_expense_request(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\",\"ADM\")\ndef update_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().update_expense_request(request, expense_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"EMP\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "update_expense_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def update_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().update_expense_request(request, expense_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"EMP\")\ndef deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n# ── TOP UP REQUESTS ──────────────────────────────────────────",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "deactivate_expense_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n# ── TOP UP REQUESTS ──────────────────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"FO\",\"ADM\")  # only Finance Officer can request top-ups\ndef create_topup_view(request, pettycash_account_id: str) -> JsonResponse:\n    return TopUpRequestController().create(request, pettycash_account_id)",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "create_topup_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def create_topup_view(request, pettycash_account_id: str) -> JsonResponse:\n    return TopUpRequestController().create(request, pettycash_account_id)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef list_all_topups_view(request) -> JsonResponse:\n    return TopUpRequestController().list_all(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_all_topups_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_all_topups_view(request) -> JsonResponse:\n    return TopUpRequestController().list_all(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef list_my_topups_view(request) -> JsonResponse:\n    return TopUpRequestController().list_auth_user_requests(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"CFO\",\"ADM\")  # only CFO can approve/reject",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_topups_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_my_topups_view(request) -> JsonResponse:\n    return TopUpRequestController().list_auth_user_requests(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"CFO\",\"ADM\")  # only CFO can approve/reject\ndef decide_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().decide(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"CFO\",\"ADM\")  # Finance Officer disburses after CFO approves",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "decide_topup_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def decide_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().decide(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"CFO\",\"ADM\")  # Finance Officer disburses after CFO approves\ndef disburse_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().disburse(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\",\"ADM\")  # only requester role can edit their own pending request",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "disburse_topup_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def disburse_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().disburse(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\",\"ADM\")  # only requester role can edit their own pending request\ndef update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "update_topup_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "deactivate_topup_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2843,7 +3182,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class TopUpRequestService(ServiceBase):\n    manager = TopUpRequest.objects\n    def get_by_id(self, topup_id: str):\n        \"\"\"Retrieves a single top-up request by ID.\"\"\"\n        return self.manager.select_related(\n            \"pettycash_account\", \"requested_by\", \"decision_by\", \"status\"\n        ).get(id=topup_id)\n    def get_all(self):\n        \"\"\"Retrieves all top-up requests with related fields pre-fetched.\"\"\"\n        return self.manager.select_related(",
+        "peekOfCode": "class TopUpRequestService(ServiceBase):\n    manager = TopUpRequest.objects\n    def get_by_id(self, topup_id: str):\n        \"\"\"Retrieves a single top-up request by ID.\"\"\"\n        return self.manager.select_related(\n            \"pettycash_account\", \"requested_by\", \"decision_by\", \"status\"\n        ).get(id=topup_id, is_active=True)\n    def get_all(self):\n        \"\"\"Retrieves all active top-up requests with related fields pre-fetched.\"\"\"\n        return self.manager.select_related(",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2853,6 +3192,15 @@
         "importPath": "services.services",
         "description": "services.services",
         "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_by_status(self, status_code):\n        return self.manager.filter(status__code=status_code)\n    def get_by_submitter(self, user_id):\n        return self.manager.filter(submitted_by__id=user_id)\n    def get_by_expense_request(self, expense_request_id):\n        return self.manager.filter(expense_request__id=expense_request_id).first()",
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "services.services",
+        "description": "services.services",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass StatusService(ServiceBase):\n    manager = Status.objects\nclass CategoryService(ServiceBase):\n    manager = Category.objects\nclass RoleService(ServiceBase):\n    manager = Role.objects\n# -----------------------------------------------------------------------------\n# USER SERVICE\n# -----------------------------------------------------------------------------",
         "detail": "services.services",
         "documentation": {}
     },
@@ -2989,6 +3337,15 @@
         "description": "utils.common",
         "peekOfCode": "def get_clean_request_data(\n    request,\n    required_fields: set = None,\n    allowed_fields: set = None,\n) -> dict:\n    \"\"\"\n    One-shot helper: parse the request then clean the result.\n    Use this in views.\n    required_fields — fields that must be present or we reject the request. e.g. you can't submit an expense without amount.\n    allowed_fields — fields that are permitted to be processed. Anything outside this list gets silently dropped even if the user sends it.",
         "detail": "utils.common",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogError",
+        "kind": 6,
+        "importPath": "utils.exceptions",
+        "description": "utils.exceptions",
+        "peekOfCode": "class TransactionLogError(Exception):\n    \"\"\"\n    Raised when a transaction log entry fails to be created.\n    Signals an internal logging failure without affecting the main operation.\n    \"\"\"\n    pass",
+        "detail": "utils.exceptions",
         "documentation": {}
     },
     {
