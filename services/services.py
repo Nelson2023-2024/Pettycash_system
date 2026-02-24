@@ -503,7 +503,7 @@ class ExpenseRequestService(ServiceBase):
         amount: float,
         employee: User,
         expense_type: str,
-        receipt_url: list = None,
+        receipt=None,
     ):
         """
         Creates a new expense request for the given employee.
@@ -516,7 +516,7 @@ class ExpenseRequestService(ServiceBase):
             mpesa_phone=mpesa_phone,
             description=description,
             amount=amount,
-            receipt_url=receipt_url or [],
+            receipt=receipt,
         )
         TransactionLogService.log(
             entity=expense,
@@ -533,7 +533,6 @@ class ExpenseRequestService(ServiceBase):
                 "description": expense.description,
                 "employee_id": str(employee.id),
                 "employee_email": employee.email,
-                "receipt_url": receipt_url or [],
                 "action": "create",
             },
         )
@@ -598,7 +597,9 @@ class ExpenseRequestService(ServiceBase):
         """
         with transaction.atomic():
             expense = (
-                self.manager.select_for_update(of=('self',)) # Lock only the main table row — not the joined tables.
+                self.manager.select_for_update(
+                    of=("self",)
+                )  # Lock only the main table row — not the joined tables.
                 .select_related("status")
                 .get(id=expense_id)
             )
@@ -853,7 +854,7 @@ class TopUpRequestService(ServiceBase):
         self,
         request,
         topup_id: str,
-        decision: str, # 'approved' or 'rejected'
+        decision: str,  # 'approved' or 'rejected'
         triggered_by: User,
         decision_reason: str,
     ):
@@ -877,24 +878,26 @@ class TopUpRequestService(ServiceBase):
         try:
             with transaction.atomic():
                 topup = (
-                TopUpRequest.objects.select_for_update()
-                .select_related("status")
-                .get(id=topup_id, is_active=True)
-            )
+                    TopUpRequest.objects.select_for_update()
+                    .select_related("status")
+                    .get(id=topup_id, is_active=True)
+                )
 
             # Idempotency check
             if topup.status.code == decision:
                 return topup
 
             status = Status.objects.get(code=decision)
-            event_code = "topup_approved" if decision == "approved" else "topup_rejected"
+            event_code = (
+                "topup_approved" if decision == "approved" else "topup_rejected"
+            )
             event_type = EventTypes.objects.get(code=event_code)
             decision_at = timezone.now()
 
             topup.status = status
             topup.event_type = event_type
             topup.decision_by = triggered_by
-            topup.decision_reason = decision_reason or ''
+            topup.decision_reason = decision_reason or ""
             topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
             topup.save(
                 update_fields=[
@@ -911,15 +914,15 @@ class TopUpRequestService(ServiceBase):
                 entity=topup,
                 event_code=event_code,
                 triggered_by=triggered_by,
-                status_code=decision,   # or a relevant status
-                message=f'Top-up request {decision} for {topup.amount}',
+                status_code=decision,  # or a relevant status
+                message=f"Top-up request {decision} for {topup.amount}",
                 ip_address=request.META.get("REMOTE_ADDR") if request else None,
                 metadata={
                     "topup_id": str(topup.id),
                     "account_id": str(topup.pettycash_account.id),
                     "decision_reason": decision_reason,
                     "decision_at": decision_at.isoformat(),
-                }
+                },
             )
 
             return topup
@@ -928,8 +931,6 @@ class TopUpRequestService(ServiceBase):
             # Re-raise as a more specific exception or let the controller handle it
             raise
 
-
-   
     def update_topup_request(
         self, topup_id: str, data: dict, triggered_by: User, request=None
     ):
@@ -953,7 +954,7 @@ class TopUpRequestService(ServiceBase):
         """
         with transaction.atomic():
             topup = (
-                self.manager.select_for_update(of=('self',))
+                self.manager.select_for_update(of=("self",))
                 .select_related(
                     "pettycash_account", "requested_by", "status", "event_type"
                 )
@@ -1055,7 +1056,7 @@ class TopUpRequestService(ServiceBase):
             ValueError: If the top-up request is not in 'approved' status.
         """
         topup = self.get_by_id(topup_id)
-         # If already complete – just return (idempotent)
+        # If already complete – just return (idempotent)
         if topup.status.code == "complete":
             return topup
 

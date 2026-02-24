@@ -520,6 +520,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "DataError",
         "importPath": "django.db",
         "description": "django.db",
@@ -2631,6 +2647,15 @@
         "description": "finance.migrations.0011_alter_topuprequest_request_reason",
         "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0010_remove_expenserequest_assigned_to'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='topuprequest',\n            name='request_reason',\n            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Request Reason'),\n        ),",
         "detail": "finance.migrations.0011_alter_topuprequest_request_reason",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "finance.migrations.0012_remove_expenserequest_receipt_url_and_more",
+        "description": "finance.migrations.0012_remove_expenserequest_receipt_url_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('finance', '0011_alter_topuprequest_request_reason'),\n    ]\n    operations = [\n        migrations.RemoveField(\n            model_name='expenserequest',\n            name='receipt_url',\n        ),\n        migrations.AddField(",
+        "detail": "finance.migrations.0012_remove_expenserequest_receipt_url_and_more",
         "documentation": {}
     },
     {
