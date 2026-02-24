@@ -640,6 +640,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -935,6 +951,14 @@
         "importPath": "uuid",
         "description": "uuid",
         "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
         "documentation": {}
     },
     {
@@ -1984,6 +2008,14 @@
         "documentation": {}
     },
     {
+        "label": "static",
+        "importPath": "django.conf.urls.static",
+        "description": "django.conf.urls.static",
+        "isExtraImport": true,
+        "detail": "django.conf.urls.static",
+        "documentation": {}
+    },
+    {
         "label": "get_wsgi_application",
         "importPath": "django.core.wsgi",
         "description": "django.core.wsgi",
@@ -3020,7 +3052,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'\nMEDIA_URL='media/' # When accessing files in browser, use this URL prefix\nMEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -3029,7 +3061,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "TIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "TIME_ZONE = 'Africa/Nairobi'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'\nMEDIA_URL='media/' # When accessing files in browser, use this URL prefix\nMEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -3038,7 +3070,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'\nMEDIA_URL='media/' # When accessing files in browser, use this URL prefix\nMEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -3047,7 +3079,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/6.0/howto/static-files/\nSTATIC_URL = 'static/'\nMEDIA_URL='media/' # When accessing files in browser, use this URL prefix\nMEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -3056,7 +3088,7 @@
         "kind": 5,
         "importPath": "pettycash_system.settings",
         "description": "pettycash_system.settings",
-        "peekOfCode": "STATIC_URL = 'static/'",
+        "peekOfCode": "STATIC_URL = 'static/'\nMEDIA_URL='media/' # When accessing files in browser, use this URL prefix\nMEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder",
         "detail": "pettycash_system.settings",
         "documentation": {}
     },
@@ -3065,7 +3097,7 @@
         "kind": 5,
         "importPath": "pettycash_system.urls",
         "description": "pettycash_system.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/v1/', include('api.urls')),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"admin/\", admin.site.urls),\n    path(\"api/v1/\", include(\"api.urls\")),\n]\nurlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
         "detail": "pettycash_system.urls",
         "documentation": {}
     },
@@ -3250,6 +3282,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0006_alter_user_avatar_url",
+        "description": "users.migrations.0006_alter_user_avatar_url",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0005_role_is_active'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='user',\n            name='avatar_url',\n            field=models.ImageField(blank=True, null=True, upload_to='avatars/'),\n        ),",
+        "detail": "users.migrations.0006_alter_user_avatar_url",
+        "documentation": {}
+    },
+    {
         "label": "CustomUserAdmin",
         "kind": 6,
         "importPath": "users.admin",
@@ -3290,7 +3331,7 @@
         "kind": 6,
         "importPath": "users.models",
         "description": "users.models",
-        "peekOfCode": "class User(BaseModel, AbstractBaseUser, PermissionsMixin):\n    email = models.EmailField(unique=True, verbose_name=_('Email'))\n    first_name = models.CharField(max_length=150, blank=True, verbose_name=_('First name'))\n    last_name = models.CharField(max_length=150, blank=True, verbose_name=_('Last name'))\n    other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))\n    phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))\n    national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))\n    avatar_url = models.CharField(max_length=500, blank=True, null=True)\n    last_login = models.DateTimeField(blank=True, null=True)\n    is_active = models.BooleanField(default=True)",
+        "peekOfCode": "class User(BaseModel, AbstractBaseUser, PermissionsMixin):\n    email = models.EmailField(unique=True, verbose_name=_('Email'))\n    first_name = models.CharField(max_length=150, blank=True, verbose_name=_('First name'))\n    last_name = models.CharField(max_length=150, blank=True, verbose_name=_('Last name'))\n    other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))\n    phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))\n    national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))\n    avatar_url = models.ImageField(upload_to='avatars/', blank=True, null=True)\n    last_login = models.DateTimeField(blank=True, null=True)\n    is_active = models.BooleanField(default=True)",
         "detail": "users.models",
         "documentation": {}
     },

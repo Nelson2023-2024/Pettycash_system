@@ -68,7 +68,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     other_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('Other name'))
     phone_number = models.CharField(max_length=20, blank=True, verbose_name=_('Phone Number'))
     national_id = models.CharField(max_length=150, blank=True, null=True, verbose_name=_('National Identity Number'))
-    avatar_url = models.CharField(max_length=500, blank=True, null=True)
+    avatar_url = models.ImageField(upload_to='avatars/', blank=True, null=True)
 
     last_login = models.DateTimeField(blank=True, null=True)
 
