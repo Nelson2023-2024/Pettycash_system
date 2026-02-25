@@ -685,6 +685,135 @@ class ExpenseRequestService(ServiceBase):
 
         return expense
 
+    def approve_or_reject(
+        self,
+        request,
+        expense_id: str,
+        decision: str,
+        triggered_by: User,
+        reason: str = None,
+    ):
+        """
+        action: 'approve' or 'reject'
+        FO approves or rejects a pending expense request.
+        """
+
+        with transaction.atomic():
+            expense = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status")
+                .get(id=expense_id, is_active=True)
+            )
+
+            if expense.status.code != "pending":
+                raise ValueError(
+                    f"Only pending requests can be approved or rejected. Current status: {expense.status.code}"
+                )
+
+            new_status = Status.objects.get(code=decision)  # 'approved' or 'rejected'
+            event_code = (
+                f"expense_{decision}"  # 'expense_approved' or 'expense_rejected'
+            )
+
+            expense.status = new_status
+
+            expense.metadata.update(
+                {
+                    "decision": decision,
+                    "decision_by": str(triggered_by.id),
+                    "decision_by_email": triggered_by.email,
+                    "decision_at": timezone.now().isoformat(),
+                    "decision_reason": reason or "",
+                }
+            )
+
+            expense.save(update_fields=["status", "metadata", "updated_at"])
+
+            TransactionLogService.log(
+                entity=expense,
+                event_code=event_code,
+                triggered_by=triggered_by,
+                message=f'Expense request "{expense.title}" {decision} by {triggered_by.email}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "expense_id": str(expense.id),
+                    "title": expense.title,
+                    "amount": str(expense.amount),
+                    "expense_type": expense.expense_type,
+                    "decision": decision,
+                    "decision_reason": reason or "",
+                    "decision_by_id": str(triggered_by.id),
+                    "decision_by_email": triggered_by.email,
+                    "employee_id": str(expense.employee.id),
+                    "employee_email": expense.employee.email,
+                    "action": decision,
+                },
+            )
+
+            return expense
+
+    def disburse(self, request, expense_id: str, triggered_by: User):
+        """
+        Marks an approved expense request as disbursed.
+            - Reimbursement: disbursed = completed, no reconciliation needed.
+            - Disbursement: disbursed = cash sent, reconciliation record auto-created.
+        """
+        with transaction.atomic():
+            expense = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "employee")
+                .get(id=expense_id, is_active=True)
+            )
+
+            if expense.status.code != "approved":
+                raise ValueError(
+                    f"Only approved requests can be disbursed. Current status: {expense.status.code}"
+                )
+
+            disbursed_status = Status.objects.get(code="disbursed")
+            expense.status = disbursed_status
+            expense.metadata.update(
+                {
+                    "disbursed_by": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_at": timezone.now().isoformat(),
+                }
+            )
+
+            expense.save(update_fields=["status", "metadata", "updated_at"])
+
+            # Only disbursement-type needs reconciliation — reimbursement already had receipt at submission
+            if expense.expense_type == ExpenseRequest.ExpenseType.DISBURSEMENT:
+                DisbursementReconciliation.objects.create(
+                    expense_request=expense,
+                    submitted_by=expense.employee,
+                    status=Status.objects.get(code="pending"),
+                    total_amount=expense.amount,
+                )
+
+            TransactionLogService.log(
+                entity=expense,
+                event_code="expense_disbursed",
+                triggered_by=triggered_by,
+                message=f'Expense request "{expense.title}" disbursed by {triggered_by.email}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "expense_id": str(expense.id),
+                    "title": expense.title,
+                    "amount": str(expense.amount),
+                    "expense_type": expense.expense_type,
+                    "disbursed_by_id": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "employee_id": str(expense.employee.id),
+                    "employee_email": expense.employee.email,
+                    "action": "disburse",
+                },
+            )
+
+            return expense
+        # REIMBURSEMENT: submitted → pending → approved → disbursed ✅ (closed)
+        # DISBURSEMENT:  submitted → pending → approved → disbursed → reconciliation pending → under_review → completed ✅
+
 
 # -----------------------------------------------------------------------------
 # TOPUP REQUEST SERVICE
