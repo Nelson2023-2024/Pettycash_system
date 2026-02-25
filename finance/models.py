@@ -195,12 +195,6 @@ class DisbursementReconciliation(BaseModel):
         verbose_name='Status'
     )
 
-    total_amount = models.DecimalField(
-        max_digits=15,
-        decimal_places=2,
-        verbose_name='Total Amount'
-    )
-
     reconciled_amount = models.DecimalField(
         max_digits=15,
         decimal_places=2,
@@ -208,12 +202,13 @@ class DisbursementReconciliation(BaseModel):
         blank=True,
         verbose_name='Reconciled Amount'
     )
-
+    
     surplus_returned = models.DecimalField(
         max_digits=15,
         decimal_places=2,
         null=True,
         blank=True,
+        default=0,
         verbose_name='Surplus Returned'
     )
     
@@ -225,13 +220,13 @@ class DisbursementReconciliation(BaseModel):
     )
 
     comments = models.TextField(
-        blank=True,
+        blank=True, null=True,
         verbose_name='Comments'
     )
 
     metadata = models.JSONField(
         default=dict,
-        blank=True,
+        blank=True, null=True,
         verbose_name='Metadata'
     )
 
