@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Manager
+from django.db.models import Manager, QuerySet
 from typing import Type
 
 from finance.models import (
@@ -288,14 +288,129 @@ class TransactionLogService(ServiceBase):
 class NotificationService(ServiceBase):
     manager = Notifications.objects
 
-    def get_unread(self, user_id):
-        return self.manager.filter(recipient__id=user_id, is_read=False)
+    @staticmethod
+    def notify(
+        transaction_log, recipient, channel: str = Notifications.Channel.IN_APP
+    ) -> Notifications:
+        """
+         Creates a single notification tied to a transaction log.
+        This is the core reusable method called from any service after
+        a TransactionLogService.log() call.
 
-    def get_by_recipient(self, user_id):
-        return self.manager.filter(recipient__id=user_id)
+        Args:
+            transaction_log: The TransactionLogBase instance just created.
+            recipient (User): The user who should receive the notification.
+            channel (str): Delivery channel — in_app, sms, or email. Defaults to in_app.
 
-    def mark_as_read(self, uuid):
-        return self.filter(id=uuid).update(is_read=True)
+        Returns:
+            Notifications: The created notification instance.
+
+        """
+        return Notifications.objects.create(
+            transaction_log=transaction_log, recipient=recipient, channel=channel
+        )
+
+    @staticmethod
+    def notify_many(
+        transaction_log, recipient, channel: str = Notifications.Channel.IN_APP
+    ):
+        """
+        Creates notifications for multiple recipients from a single transaction log.
+        Uses bulk_create for efficiency.
+        For example, when an expense is submitted, notify all Finance Officers at once.
+
+        Args:
+            transaction_log: The TransactionLogBase instance just created.
+            recipients (list[User]): List of users to notify.
+            channel (str): Delivery channel for all recipients. Defaults to in_app.
+
+        Returns:
+            list[Notifications]: The created notification instances.
+
+        :param transaction_log:
+        :param recipient:
+        :param channel:
+        :return:
+        """
+        return Notifications.objects.bulk_create(
+            [
+                Notifications(
+                    transaction_log=transaction_log,
+                    recipient=recipient,
+                    channel=channel,
+                )
+            ]
+        )
+
+    def list_auth_user_notifications(self, auth_user: User):
+        """
+
+        Retrieves all notifications for the authenticated user ordered by
+        most recent first, with transaction log and event type pre-fetched.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            QuerySet: All Notifications for the user with related fields joined.
+
+        """
+        return self.manager.filter(id=auth_user).select_related(
+            "transaction_log__event_type", "transaction_log__triggered_by"
+        )
+
+    def get_unread_count(self, auth_user: User):
+        """
+        Returns the count of unread notifications for the authenticated user.
+        Used for the notification badge/counter in the UI.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            int: Number of unread notifications.
+        """
+        return self.manager.filter(id=auth_user, is_read=False).count()
+
+    def mark_as_read(self, notification_id: str, auth_user: User):
+        """
+        Marks a single notification as read.
+        Scoped to the authenticated user to prevent one user marking
+        another user's notifications as read.
+
+        Args:
+            notification_id (str): The UUID of the notification to mark as read.
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            Notifications: The updated notification instance.
+
+        Raises:
+            Notifications.DoesNotExist: If no matching notification found for this user.
+        """
+        notification = self.manager.get(
+            id=notification_id, is_read=False, recipient=auth_user
+        )
+        notification.is_read = True
+        notification.save(update_fields=["is_read", "read_at"])
+        return notification
+
+    def get_mark_all_as_read(self, auth_user: User):
+        """
+          Marks all unread notifications as read for the authenticated user.
+        Uses bulk update for efficiency — bypasses model save() so read_at
+        is set explicitly here rather than relying on the model.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            int: Number of notifications updated.
+
+        """
+        return self.manager.filter(recipient=auth_user, is_read=False).update(
+            is_read=True, read_at=timezone.now()
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -1250,10 +1365,9 @@ class DisbursementReconciliationService(ServiceBase):
             QuerySet: DisbursementReconciliation instances where submitted_by matches
             auth_user and status is pending, with expense_request and status pre-fetched.
         """
-        return (
-            self.manager.filter(submitted_by=auth_user, status__code="pending")
-            .select_related("expense_request", "status")
-        )
+        return self.manager.filter(
+            submitted_by=auth_user, status__code="pending"
+        ).select_related("expense_request", "status")
 
     def get_all_under_review(self):
         """
@@ -1264,9 +1378,8 @@ class DisbursementReconciliationService(ServiceBase):
             QuerySet: DisbursementReconciliation instances with status under_review,
             with expense_request, submitted_by, and status pre-fetched.
         """
-        return (
-            self.manager.filter(status__code="under_review")
-            .select_related("expense_request", "submitted_by", "status")
+        return self.manager.filter(status__code="under_review").select_related(
+            "expense_request", "submitted_by", "status"
         )
 
     def get_by_id(self, reconciliation_id: str):
@@ -1283,11 +1396,9 @@ class DisbursementReconciliationService(ServiceBase):
         Raises:
             DisbursementReconciliation.DoesNotExist: If no matching record is found.
         """
-        return (
-            self.manager.select_related("expense_request", "submitted_by", "approved_by", "status")
-            .get(id=reconciliation_id)
-        )
-
+        return self.manager.select_related(
+            "expense_request", "submitted_by", "approved_by", "status"
+        ).get(id=reconciliation_id)
 
     def submit_receipt(
         self,
