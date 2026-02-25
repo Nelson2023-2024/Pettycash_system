@@ -339,6 +339,7 @@ class NotificationService(ServiceBase):
                     recipient=recipient,
                     channel=channel,
                 )
+                for recipient in recipient
             ]
         )
 
@@ -356,7 +357,9 @@ class NotificationService(ServiceBase):
 
         """
         return self.manager.filter(id=auth_user).select_related(
-            "transaction_log__event_type", "transaction_log__triggered_by"
+            "transaction_log__event_type__event_category",  # → event code + category
+            "transaction_log__triggered_by",  # → sender
+            "transaction_log__status",  # → log status
         )
 
     def get_unread_count(self, auth_user: User):
@@ -1353,32 +1356,33 @@ class TopUpRequestService(ServiceBase):
 class DisbursementReconciliationService(ServiceBase):
     manager = DisbursementReconciliation.objects
 
-    def get_my_pending(self, auth_user: User):
+    def get_my_reconciliations(self, auth_user: User):
         """
-        Retrieves all pending reconciliations for the authenticated employee.
-        These are disbursements where the employee has not yet submitted receipts.
+        Retrieves all reconciliations belonging to the authenticated employee
+        regardless of status — so the employee has a full view of their
+        reconciliation history in one call.
 
         Args:
             auth_user (User): The currently authenticated employee.
 
         Returns:
-            QuerySet: DisbursementReconciliation instances where submitted_by matches
-            auth_user and status is pending, with expense_request and status pre-fetched.
+            QuerySet[DisbursementReconciliation]: All reconciliations for this
+            employee with expense_request and status pre-fetched.
         """
-        return self.manager.filter(
-            submitted_by=auth_user, status__code="pending"
-        ).select_related("expense_request", "status")
+        return self.manager.filter(submitted_by=auth_user).select_related(
+            "expense_request", "status"
+        )
 
-    def get_all_under_review(self):
+    def get_all_reconciliations(self):
         """
-        Retrieves all reconciliations that have been submitted by employees
-        and are awaiting Finance Officer review.
+        Retrieves all reconciliations across all employees.
+        Intended for Finance Officer use — gives full system-wide visibility.
 
         Returns:
-            QuerySet: DisbursementReconciliation instances with status under_review,
-            with expense_request, submitted_by, and status pre-fetched.
+            QuerySet[DisbursementReconciliation]: All reconciliations with
+            expense_request, submitted_by, and status pre-fetched.
         """
-        return self.manager.filter(status__code="under_review").select_related(
+        return self.manager.all().select_related(
             "expense_request", "submitted_by", "status"
         )
 
@@ -1403,7 +1407,7 @@ class DisbursementReconciliationService(ServiceBase):
     def submit_receipt(
         self,
         request,
-        reconsiliation_id: str,
+        reconciliation_id: str,
         submitted_by: User,
         comments: str,
         reconciled_amount: float,
@@ -1440,7 +1444,7 @@ class DisbursementReconciliationService(ServiceBase):
             reconciliation = (
                 self.manager.select_for_update(of=("self",))
                 .select_related("status", "expense_request", "submitted_by")
-                .get(id=reconsiliation_id, is_active=True)
+                .get(id=reconciliation_id, is_active=True)
             )
 
             if reconciliation.status.code != "pending":
@@ -1538,8 +1542,6 @@ class DisbursementReconciliationService(ServiceBase):
 
 
         """
-        if decision not in ["completed", "rejected"]:
-            raise ValueError("Decision must be 'completed' or 'rejected'.")
 
         with transaction.atomic():
             reconciliation = (
@@ -1629,9 +1631,7 @@ class DisbursementReconciliationService(ServiceBase):
         TransactionLogService.log(
             entity=reconciliation,
             event_code=(
-                "expense_completed"
-                if decision == "completed"
-                else "expense_reconciliation_submitted"
+                "expense_completed" if decision == "completed" else "expense_rejected"
             ),
             triggered_by=triggered_by,
             message=f"Reconciliation {decision} by {triggered_by.email} for expense {reconciliation.expense_request.id}",
@@ -1646,6 +1646,30 @@ class DisbursementReconciliationService(ServiceBase):
                 "employee_email": reconciliation.submitted_by.email,
                 "comments": comments or "",
                 "action": decision,
+                # old and new values — only meaningful on rejection since
+                # completion does not clear any fields
+                **(
+                    {
+                        "old_values": {
+                            "reconciled_amount": str(reconciliation.reconciled_amount),
+                            "surplus_returned": str(reconciliation.surplus_returned),
+                            "receipt": (
+                                reconciliation.receipt.name
+                                if reconciliation.receipt
+                                else None
+                            ),
+                            "comments": reconciliation.comments,
+                        },
+                        "new_values": {
+                            "reconciled_amount": None,
+                            "surplus_returned": None,
+                            "receipt": None,
+                            "comments": comments or "",
+                        },
+                    }
+                    if decision == "rejected"
+                    else {}
+                ),
             },
         )
         return reconciliation
