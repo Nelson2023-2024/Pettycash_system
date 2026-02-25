@@ -800,22 +800,6 @@
         "documentation": {}
     },
     {
-        "label": "include",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
         "label": "path",
         "importPath": "django.urls",
         "description": "django.urls",
@@ -840,11 +824,43 @@
         "documentation": {}
     },
     {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
         "label": "include",
         "importPath": "django.urls",
         "description": "django.urls",
         "isExtraImport": true,
         "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
         "documentation": {}
     },
     {
@@ -941,6 +957,22 @@
         "description": "django.views.decorators.csrf",
         "isExtraImport": true,
         "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
         "documentation": {}
     },
     {
@@ -1058,6 +1090,174 @@
         "documentation": {}
     },
     {
+        "label": "NotificationService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DepartmentService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliationService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccountService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
         "label": "TransactionLogBase",
         "importPath": "audit.models",
         "description": "audit.models",
@@ -1418,35 +1618,43 @@
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "NotificationController",
+        "importPath": "audit.services.notification_service",
+        "description": "audit.services.notification_service",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "audit.services.notification_service",
+        "documentation": {}
+    },
+    {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
         "documentation": {}
     },
     {
@@ -1538,62 +1746,6 @@
         "documentation": {}
     },
     {
-        "label": "UserService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "TransactionLogService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "DepartmentService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "UserService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "ExpenseRequestService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "PettyCashAccountService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "TopUpRequestService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
         "label": "get_user_model",
         "importPath": "django.contrib.auth",
         "description": "django.contrib.auth",
@@ -1607,86 +1759,6 @@
         "description": "authenticate.services.token_service",
         "isExtraImport": true,
         "detail": "authenticate.services.token_service",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
         "documentation": {}
     },
     {
@@ -1753,6 +1825,30 @@
         "description": "authenticate.services.auth_services",
         "isExtraImport": true,
         "detail": "authenticate.services.auth_services",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
@@ -1834,22 +1930,6 @@
         "description": "department",
         "isExtraImport": true,
         "detail": "department",
-        "documentation": {}
-    },
-    {
-        "label": "login_required",
-        "importPath": "utils.decorators.login_required",
-        "description": "utils.decorators.login_required",
-        "isExtraImport": true,
-        "detail": "utils.decorators.login_required",
-        "documentation": {}
-    },
-    {
-        "label": "login_required",
-        "importPath": "utils.decorators.login_required",
-        "description": "utils.decorators.login_required",
-        "isExtraImport": true,
-        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
@@ -2024,6 +2104,14 @@
         "documentation": {}
     },
     {
+        "label": "DisbursementReconciliationController",
+        "importPath": "finance.services.disbursment_reconciliation_service",
+        "description": "finance.services.disbursment_reconciliation_service",
+        "isExtraImport": true,
+        "detail": "finance.services.disbursment_reconciliation_service",
+        "documentation": {}
+    },
+    {
         "label": "get_asgi_application",
         "importPath": "django.core.asgi",
         "description": "django.core.asgi",
@@ -2183,7 +2271,7 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n    path(\"health/\", health_check, name='health'),\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"health/\", health_check, name='health'),\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n    path(\"audit/\", include(\"audit.urls\")),\n]",
         "detail": "api.urls",
         "documentation": {}
     },
@@ -2260,6 +2348,15 @@
         "documentation": {}
     },
     {
+        "label": "NotificationController",
+        "kind": 6,
+        "importPath": "audit.services.notification_service",
+        "description": "audit.services.notification_service",
+        "peekOfCode": "class NotificationController:\n    @classmethod\n    def get_my_notifications(cls, request):\n        \"\"\"\n        Retrieves all notifications for the authenticated user ordered by\n        most recent first, with full transaction log context pre-fetched.\n        Args:\n            request: The HTTP request object.\n        Returns:\n            JsonResponse: 200 with list of serialized notifications.",
+        "detail": "audit.services.notification_service",
+        "documentation": {}
+    },
+    {
         "label": "AuditConfig",
         "kind": 6,
         "importPath": "audit.apps",
@@ -2293,6 +2390,51 @@
         "description": "audit.models",
         "peekOfCode": "class Notifications(BaseModel):\n    updated_at = None\n    transaction_log = models.ForeignKey(\n        TransactionLogBase,\n        on_delete=models.PROTECT,  # You cannot delete a log if notifications reference it\n        related_name=\"notifications\",  # → log.notifications.all()\n    )\n    recipient = models.ForeignKey(\n        User,\n        on_delete=models.PROTECT,  #  You cannot delete a user if notifications exist",
         "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "audit.urls",
+        "description": "audit.urls",
+        "peekOfCode": "urlpatterns = [\n    # ── notifications ────────────────────────────────────────\n    path('notifications/', list_my_notifications_view, name='list-my-notifications'),\n    path('notifications/unread/count/', get_unread_count_view, name='get-unread-count'),\n    path('notifications/<str:notification_id>/read/', mark_notification_as_read_view, name='mark-notification-as-read'),\n    path('notifications/read/all/', mark_all_notifications_as_read_view, name='mark-all-notifications-as-read'),\n]",
+        "detail": "audit.urls",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_notifications_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def list_my_notifications_view(request) -> JsonResponse:\n    return NotificationController().get_my_notifications(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef get_unread_count_view(request) -> JsonResponse:\n    return NotificationController().get_unread_count(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_unread_count_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def get_unread_count_view(request) -> JsonResponse:\n    return NotificationController().get_unread_count(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef mark_notification_as_read_view(request, notification_id: str) -> JsonResponse:\n    return NotificationController().mark_notification_as_read(request, notification_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "mark_notification_as_read_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def mark_notification_as_read_view(request, notification_id: str) -> JsonResponse:\n    return NotificationController().mark_notification_as_read(request, notification_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef mark_all_notifications_as_read_view(request) -> JsonResponse:\n    return NotificationController().mark_all_notifications_as_read(request)",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "mark_all_notifications_as_read_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def mark_all_notifications_as_read_view(request) -> JsonResponse:\n    return NotificationController().mark_all_notifications_as_read(request)",
+        "detail": "audit.views",
         "documentation": {}
     },
     {
@@ -2692,6 +2834,15 @@
         "documentation": {}
     },
     {
+        "label": "DisbursementReconciliationController",
+        "kind": 6,
+        "importPath": "finance.services.disbursment_reconciliation_service",
+        "description": "finance.services.disbursment_reconciliation_service",
+        "peekOfCode": "class DisbursementReconciliationController:\n    @classmethod\n    def get_my_reconciliations(cls, request):\n        \"\"\"\n        Retrieves all reconciliations for the authenticated employee\n        regardless of status — full history in one call.\n        Args:\n            request: The HTTP request object.\n        Returns:\n            JsonResponse: 200 with list of serialized reconciliations.",
+        "detail": "finance.services.disbursment_reconciliation_service",
+        "documentation": {}
+    },
+    {
         "label": "ExpenseRequestController",
         "kind": 6,
         "importPath": "finance.services.expense_request_service",
@@ -2975,7 +3126,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
+        "peekOfCode": "def update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)\n# ── DISBURSEMENT RECONCILIATION ──────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"GET\")",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2984,7 +3135,52 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
+        "peekOfCode": "def deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)\n# ── DISBURSEMENT RECONCILIATION ──────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"ADM\")\ndef list_my_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_my_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_reconciliations_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_my_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_my_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef list_all_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_all_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_all_reconciliations_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_all_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_all_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"EMP\", \"ADM\")  # only the employee submits their own receipt",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_reconciliation_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"EMP\", \"ADM\")  # only the employee submits their own receipt\ndef submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\", \"CFO\", \"ADM\")  # only FO/CFO can review",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "submit_reconciliation_receipt_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\", \"CFO\", \"ADM\")  # only FO/CFO can review\ndef review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "review_reconciliation_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -3281,7 +3477,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_my_pending(self, auth_user: User):\n        \"\"\"\n        Retrieves all pending reconciliations for the authenticated employee.\n        These are disbursements where the employee has not yet submitted receipts.\n        Args:\n            auth_user (User): The currently authenticated employee.\n        Returns:\n            QuerySet: DisbursementReconciliation instances where submitted_by matches",
+        "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_my_reconciliations(self, auth_user: User):\n        \"\"\"\n        Retrieves all reconciliations belonging to the authenticated employee\n        regardless of status — so the employee has a full view of their\n        reconciliation history in one call.\n        Args:\n            auth_user (User): The currently authenticated employee.\n        Returns:",
         "detail": "services.services",
         "documentation": {}
     },
