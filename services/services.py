@@ -1238,11 +1238,303 @@ class TopUpRequestService(ServiceBase):
 class DisbursementReconciliationService(ServiceBase):
     manager = DisbursementReconciliation.objects
 
-    def get_by_status(self, status_code):
-        return self.manager.filter(status__code=status_code)
+    def get_my_pending(self, auth_user: User):
+        """
+        Retrieves all pending reconciliations for the authenticated employee.
+        These are disbursements where the employee has not yet submitted receipts.
 
-    def get_by_submitter(self, user_id):
-        return self.manager.filter(submitted_by__id=user_id)
+        Args:
+            auth_user (User): The currently authenticated employee.
 
-    def get_by_expense_request(self, expense_request_id):
-        return self.manager.filter(expense_request__id=expense_request_id).first()
+        Returns:
+            QuerySet: DisbursementReconciliation instances where submitted_by matches
+            auth_user and status is pending, with expense_request and status pre-fetched.
+        """
+        return (
+            self.manager.filter(submitted_by=auth_user, status__code="pending")
+            .select_related("expense_request", "status")
+        )
+
+    def get_all_under_review(self):
+        """
+        Retrieves all reconciliations that have been submitted by employees
+        and are awaiting Finance Officer review.
+
+        Returns:
+            QuerySet: DisbursementReconciliation instances with status under_review,
+            with expense_request, submitted_by, and status pre-fetched.
+        """
+        return (
+            self.manager.filter(status__code="under_review")
+            .select_related("expense_request", "submitted_by", "status")
+        )
+
+    def get_by_id(self, reconciliation_id: str):
+        """
+        Retrieves a single reconciliation record by its ID.
+        Used for detail views on both the employee and FO side.
+
+        Args:
+            reconciliation_id (str): The UUID of the reconciliation record.
+
+        Returns:
+            DisbursementReconciliation: The matching instance with related fields pre-fetched.
+
+        Raises:
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+        """
+        return (
+            self.manager.select_related("expense_request", "submitted_by", "approved_by", "status")
+            .get(id=reconciliation_id)
+        )
+
+
+    def submit_receipt(
+        self,
+        request,
+        reconsiliation_id: str,
+        submitted_by: User,
+        comments: str,
+        reconciled_amount: float,
+        surplus_returned: float,
+        receipt=None,
+    ):
+        """
+
+
+             Employee submits receipts after cash has been disbursed.
+        Employee reports how much they spent (reconciled_amount) and
+        how much they are returning (surplus_returned) if they didn't use it all.
+        Transitions reconciliation status from pending -> under_review.
+
+        Args:
+            request: The HTTP request object for IP logging.
+            reconciliation_id (str): The UUID of the reconciliation to update.
+            receipt: The uploaded receipt file.
+            submitted_by (User): The employee submitting the receipts.
+            reconciled_amount (Decimal): Amount the employee actually spent, backed by the receipt.
+            surplus_returned (Decimal, optional): Cash being returned if less than disbursed amount was spent.
+            comments (str, optional): Any notes from the employee about the expense.
+
+        Returns:
+            DisbursementReconciliation: The updated reconciliation instance.
+
+        Raises:
+            ValueError: If the reconciliation is not in pending status.
+            ValueError: If reconciled_amount exceeds the original disbursed amount.
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+        """
+
+        with transaction.atomic():
+            reconciliation = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "expense_request", "submitted_by")
+                .get(id=reconsiliation_id, is_active=True)
+            )
+
+            if reconciliation.status.code != "pending":
+                raise ValueError(
+                    f"Receipts already submitted. Current status: {reconciliation.status.code}"
+                )
+
+            disbursed_amount = reconciliation.expense_request.amount
+
+            if reconciled_amount > disbursed_amount:
+                raise ValueError(
+                    f"Reconciled amount {reconciled_amount} cannot exceed "
+                    f"the disbursed amount of {disbursed_amount}."
+                )
+
+            under_review_status = Status.objects.get(code="under_review")
+            reconciliation.status = under_review_status
+            reconciliation.comments = comments
+            reconciliation.receipt = receipt
+            reconciliation.surplus_returned = surplus_returned
+            reconciliation.reconciled_amount = reconciled_amount
+            reconciliation.save(
+                update_fields=[
+                    "receipt",
+                    "reconciled_amount",
+                    "surplus_returned",
+                    "comments",
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+            TransactionLogService.log(
+                entity=reconciliation,
+                event_code="expense_reconciliation_submitted",
+                triggered_by=submitted_by,
+                message=f"Reconciliation receipts submitted for expense {reconciliation.expense_request.id}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "reconciliation_id": str(reconciliation.id),
+                    "expense_request_id": str(reconciliation.expense_request.id),
+                    "disbursed_amount": str(disbursed_amount),
+                    "reconciled_amount": str(reconciled_amount),
+                    "surplus_returned": str(surplus_returned or 0),
+                    "submitted_by_id": str(submitted_by.id),
+                    "submitted_by_email": submitted_by.email,
+                    "action": "submit_receipts",
+                },
+            )
+
+            return reconciliation
+
+    def review(
+        self,
+        request,
+        reconciliation_id: str,
+        decision: str,
+        triggered_by: User,
+        comments: str = None,
+    ):
+        """
+             Finance Officer reviews a submitted reconciliation and either approves or rejects it.
+
+        On approval (completed):
+            - Reconciliation status moves to completed.
+            - Parent expense request is also marked as completed.
+
+        On rejection (rejected):
+            - Reconciliation status moves back to pending.
+            - Employee will be expected to resubmit with corrections.
+            - reconciled_amount and surplus_returned are cleared back to null
+              since the submission was not accepted.
+            - receipt is cleared so the employee must re-upload.
+
+        Note:
+            'rejected' here is NOT terminal — it sends the reconciliation back
+            to the employee for correction and resubmission. Terminal rejection
+            only happens at the expense request level before any cash goes out.
+
+        Args:
+            request: The HTTP request object for IP logging.
+            reconciliation_id (str): The UUID of the reconciliation to review.
+            decision (str): 'completed' to approve or 'rejected' to send back to employee.
+            triggered_by (User): The Finance Officer performing the review.
+            comments (str, optional): FO feedback. Should always be provided on rejection
+                so the employee knows what to fix.
+
+        Returns:
+            DisbursementReconciliation: The updated reconciliation instance.
+
+        Raises:
+            ValueError: If decision is not 'completed' or 'rejected'.
+            ValueError: If reconciliation is not currently under_review.
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+
+
+        """
+        if decision not in ["completed", "rejected"]:
+            raise ValueError("Decision must be 'completed' or 'rejected'.")
+
+        with transaction.atomic():
+            reconciliation = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "submitted_by", "expense_request")
+                .get(id=reconciliation_id, is_active=True)
+            )
+
+            if reconciliation.status.code != "under_review":
+                raise ValueError(
+                    f"Only under_review reconciliations can be reviewed. "
+                    f"Current status: {reconciliation.status.code}"
+                )
+
+            if decision == "completed":
+                new_status = Status.boject.get(code="completed")
+                reconciliation.status = new_status
+                reconciliation.approved_by = (triggered_by,)
+                reconciliation.approved_at = timezone.now().isoformat()
+                reconciliation.comments = comments
+                reconciliation.metadata.update(
+                    {
+                        "reviewed_by": str(triggered_by.id),
+                        "reviewed_by_email": triggered_by.email,
+                        "reviewed_at": timezone.now().isoformat(),
+                        "decision": decision,
+                        "comments": comments or "",
+                    }
+                )
+                reconciliation.save(
+                    update_fields=[
+                        "status",
+                        "approved_by",
+                        "approved_at",
+                        "comments",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
+
+                # close the parent expense request
+
+                expense = reconciliation.expense_request
+                expense.status = new_status
+                expense.metadata.update(
+                    {
+                        "completed_by": str(triggered_by.id),
+                        "completed_by_email": triggered_by.email,
+                        "completed_at": timezone.now().isoformat(),
+                    }
+                )
+
+                expense.save(update_fields=["status", "metadata", "updated_at"])
+            else:
+                pendind_status = Status.objects.get(code="pending")
+                reconciliation.status = pendind_status
+                reconciliation.approved_by = None
+                reconciliation.approved_at = None
+                reconciliation.reconciled_amount = (
+                    None  # clear — employee must resubmit
+                )
+                reconciliation.surplus_returned = None  # clear — employee must resubmit
+                reconciliation.receipt = None  # clear — employee must re-upload
+                reconciliation.comments = comments or ""
+                reconciliation.metadata.update(
+                    {
+                        "reviewed_by": str(triggered_by.id),
+                        "reviewed_by_email": triggered_by.email,
+                        "reviewed_at": timezone.now().isoformat(),
+                        "decision": decision,
+                        "rejection_reason": comments or "",
+                    }
+                )
+                reconciliation.save(
+                    update_fields=[
+                        "status",
+                        "approved_by",
+                        "approved_at",
+                        "reconciled_amount",
+                        "surplus_returned",
+                        "receipt",
+                        "comments",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
+        TransactionLogService.log(
+            entity=reconciliation,
+            event_code=(
+                "expense_completed"
+                if decision == "completed"
+                else "expense_reconciliation_submitted"
+            ),
+            triggered_by=triggered_by,
+            message=f"Reconciliation {decision} by {triggered_by.email} for expense {reconciliation.expense_request.id}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "reconciliation_id": str(reconciliation.id),
+                "expense_request_id": str(reconciliation.expense_request.id),
+                "decision": decision,
+                "reviewed_by_id": str(triggered_by.id),
+                "reviewed_by_email": triggered_by.email,
+                "employee_id": str(reconciliation.submitted_by.id),
+                "employee_email": reconciliation.submitted_by.email,
+                "comments": comments or "",
+                "action": decision,
+            },
+        )
+        return reconciliation
