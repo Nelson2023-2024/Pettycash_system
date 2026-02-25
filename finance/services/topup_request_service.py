@@ -1,7 +1,10 @@
+from django.db import DataError, IntegrityError,OperationalError
 from finance.models import TopUpRequest
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
 from services.services import TopUpRequestService
+import logging
+logger = logging.getLogger(__name__)
 
 
 class TopUpRequestController:
@@ -21,13 +24,14 @@ class TopUpRequestController:
             JsonResponse: 201 on success, 400/500 on failure.
         """
 
-        data = get_clean_request_data(
-            request,
-            required_fields={"amount", "request_reason"},
-            allowed_fields={"amount", "request_reason"},
-        )
-
         try:
+
+            data = get_clean_request_data(
+                request,
+                required_fields={"amount", "request_reason"},
+                allowed_fields={"amount", "request_reason"},
+            )
+
             topup = TopUpRequestService().create_top_up_request(
                 request=request,
                 pettycash_account_id=pettycash_account_id,
@@ -88,45 +92,39 @@ class TopUpRequestController:
 
     @classmethod
     def decide(cls, request, topup_id: str):
-        """
-        Approves or rejects a top-up request.
-
-        Args:
-            request: HTTP request. Body must contain:
-                - decision (str): Either 'approved' or 'rejected'.
-                - decision_reason (str, optional): Reason for the decision.
-            topup_id (str): The ID of the top-up request.
-
-        Returns:
-            JsonResponse: 200 on success, 400/500 on failure.
-        """
-        data = get_clean_request_data(
+        try:
+            data = get_clean_request_data(
             request,
             required_fields={"decision"},
             allowed_fields={"decision", "decision_reason"},
         )
 
-        try:
             decision = data.get("decision")
-
-            VALID_DECISIONS = {"approve", "reject"}
+            VALID_DECISIONS = {"approved", "rejected"}
 
             if decision not in VALID_DECISIONS:
                 raise ValueError(
-                    f"Invalid decision '{decision}'. Must be one of {VALID_DECISIONS}."
-                )
+                f"Invalid decision '{decision}'. Must be one of {VALID_DECISIONS}."
+            )
 
             topup = TopUpRequestService().decide_top_up_request(
-                topup_id=topup_id,
-                decision=decision,
-                decision_reason=data.get("decision_reason"),
-                triggered_by=request.user,
-                request=request,
-            )
+            topup_id=topup_id,
+            decision=decision,
+            decision_reason=data.get("decision_reason"),
+            triggered_by=request.user,
+            request=request,
+        )
             return ResponseProvider().success(
-                message=f"Top-up request {data.get('decision')} successfully",
-                data=cls._serialize(topup),
-            )
+            message=f"Top-up request {decision} successfully",
+            data=cls._serialize(topup),
+        )
+
+        except IntegrityError as e:
+        # Log the full error for debugging
+            logger.error(f"IntegrityError in decide endpoint: {e}", exc_info=True)
+            return ResponseProvider().conflict(
+            error="This top‑up request cannot be decided twice or a related record conflicts."
+        )
         except Exception as ex:
             return ResponseProvider().handle_exception(ex)
 

@@ -1,30 +1,29 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from base.models import GenericBaseModel,BaseModel,Status,Category
+from base.models import GenericBaseModel, BaseModel, Status, Category
 from users.models import User
 from django.utils import timezone
 
 
-
-
-
-
-
 class EventTypes(GenericBaseModel):
-    status_code = models.CharField(max_length=30, blank=True,verbose_name=_('Status Code'))
+    status_code = models.CharField(
+        max_length=30, blank=True, verbose_name=_("Status Code")
+    )
     is_active = models.BooleanField(default=True)
-    code = models.CharField(max_length=100, unique=True, null=True , blank=True,verbose_name=_('Code'))
+    code = models.CharField(
+        max_length=100, unique=True, null=True, blank=True, verbose_name=_("Code")
+    )
 
     event_category = models.ForeignKey(
         Category,
-        related_name='event_types',
-        verbose_name=_('Event Category'),
-        on_delete=models.PROTECT
+        related_name="event_types",
+        verbose_name=_("Event Category"),
+        on_delete=models.PROTECT,
     )
 
     def __str__(self):
-        #as each code is unique
+        # as each code is unique
         return f"{self.code}"
 
     # USAGE:
@@ -32,9 +31,9 @@ class EventTypes(GenericBaseModel):
     # EventCategory.objects.get(name="expense").event_types.all()    → QuerySet
 
     class Meta:
-        db_table = 'event_types'
-        verbose_name = _('Event Type')
-        verbose_name_plural = _('Event Types')
+        db_table = "event_types"
+        verbose_name = _("Event Type")
+        verbose_name_plural = _("Event Types")
 
 
 # Create your models here.
@@ -42,34 +41,39 @@ class TransactionLogBase(BaseModel):
     updated_at = None
 
     user_ip_address = models.GenericIPAddressField(
-        editable=False,
-        null=True,
-        blank=True,
-        verbose_name=_("User IP Address")
+        editable=False, null=True, blank=True, verbose_name=_("User IP Address")
     )
     event_type = models.ForeignKey(
         EventTypes,
         on_delete=models.PROTECT,
-        related_name='transaction_logs',
-        verbose_name=_('Event Type')
+        related_name="transaction_logs",
+        verbose_name=_("Event Type"),
     )
 
-    event_message = models.CharField(max_length=255,blank=True, verbose_name=_('Event Message'))
-    status = models.ForeignKey(Status, max_length=20, on_delete=models.PROTECT, verbose_name=_('Status'))
+    event_message = models.CharField(
+        max_length=255, blank=True, verbose_name=_("Event Message")
+    )
+    status = models.ForeignKey(
+        Status, max_length=20, on_delete=models.PROTECT, verbose_name=_("Status")
+    )
 
     triggered_by = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL, #If a user is deleted: The triggered_by becomes NULL The triggered_by becomes NULL
-        null=True, blank=True,
-        related_name='transaction_logs',
-        verbose_name=_('User')
+        on_delete=models.SET_NULL,  # If a user is deleted: The triggered_by becomes NULL The triggered_by becomes NULL
+        null=True,
+        blank=True,
+        related_name="transaction_logs",
+        verbose_name=_("User"),
     )
 
-
-    metadata = models.JSONField(null=True, blank=True, verbose_name=_('Metadata'))
-    entity_type = models.CharField(max_length=50,blank=True, verbose_name=_('Entity Type'))
-    entity_id = models.CharField(max_length=100, blank=True, verbose_name=_('Entity ID'))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
+    metadata = models.JSONField(null=True, blank=True, verbose_name=_("Metadata"))
+    entity_type = models.CharField(
+        max_length=50, blank=True, verbose_name=_("Entity Type")
+    )
+    entity_id = models.CharField(
+        max_length=100, blank=True, verbose_name=_("Entity ID")
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
 
     # USAGE:
     # log.event_type.code          → "expense_approved"
@@ -79,21 +83,17 @@ class TransactionLogBase(BaseModel):
     # user.triggered_logs.count()  → how many events this user has triggered
 
     class Meta:
-        verbose_name = _('TransactionLog')
-        verbose_name_plural = _('TransactionLogs')
-        ordering = ['-created_at']
-        db_table = 'transaction_logs'
+        verbose_name = _("TransactionLog")
+        verbose_name_plural = _("TransactionLogs")
+        ordering = ["-created_at"]
+        db_table = "transaction_logs"
         indexes = [
-            models.Index(fields=['entity_type','entity_id']),
-            models.Index(fields=['triggered_by'])
+            models.Index(fields=["entity_type", "entity_id"]),
+            models.Index(fields=["triggered_by"]),
         ]
 
     def __str__(self):
         return f"{self.event_type} - {self.status}"
-
-
-
-
 
 
 class Notifications(BaseModel):
@@ -101,26 +101,29 @@ class Notifications(BaseModel):
 
     transaction_log = models.ForeignKey(
         TransactionLogBase,
-        on_delete=models.PROTECT, # You cannot delete a log if notifications reference it
-        related_name='notifications'  # → log.notifications.all()
+        on_delete=models.PROTECT,  # You cannot delete a log if notifications reference it
+        related_name="notifications",  # → log.notifications.all()
     )
 
     recipient = models.ForeignKey(
         User,
-        on_delete=models.PROTECT, #  You cannot delete a user if notifications exist
-        related_name='notifications' # → user.notifications.all()   ← the user's inbox
+        on_delete=models.PROTECT,  #  You cannot delete a user if notifications exist
+        related_name="notifications",  # → user.notifications.all()   ← the user's inbox
     )
 
     class Channel(models.TextChoices):
-        IN_APP = "in_app", _('In App')
-        SMS = 'sms', _('SMS')
-        EMAIL = 'email', _('Email')
+        IN_APP = "in_app", _("In App")
+        SMS = "sms", _("SMS")
+        EMAIL = "email", _("Email")
 
-
-
-    channel = models.CharField(max_length=20,choices=Channel, default=Channel.IN_APP, verbose_name=_('Channel'))
-    is_read = models.BooleanField(default=False,verbose_name=_('Is read'))
-    read_at = models.DateTimeField(null=True,blank=True,verbose_name=_('Read at'))
+    channel = models.CharField(
+        max_length=20,
+        choices=Channel,
+        default=Channel.IN_APP,
+        verbose_name=_("Channel"),
+    )
+    is_read = models.BooleanField(default=False, verbose_name=_("Is read"))
+    read_at = models.DateTimeField(null=True, blank=True, verbose_name=_("Read at"))
 
     # USAGE:
     # user.notifications.filter(is_read=False)
@@ -146,8 +149,6 @@ class Notifications(BaseModel):
         return f"{self.recipient.email} | {event} | Entity: {entity} | {status}"
 
     class Meta:
-        db_table = 'notifications'
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['is_read', 'recipient', 'transaction_log'])
-        ]
+        db_table = "notifications"
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["is_read", "recipient", "transaction_log"])]

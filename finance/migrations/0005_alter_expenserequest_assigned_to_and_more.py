@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='expenserequest',
             name='assigned_to',
-            field=models.ForeignKey(blank=True, default=finance.default.get_default_finance_officer, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='assigned_expense_requests', to=settings.AUTH_USER_MODEL, verbose_name='Assigned To'),
+            field=models.ForeignKey(blank=True, default=finance.default.get_default_finance_officers, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='assigned_expense_requests', to=settings.AUTH_USER_MODEL, verbose_name='Assigned To'),
         ),
         migrations.AlterField(
             model_name='expenserequest',

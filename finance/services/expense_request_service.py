@@ -1,6 +1,7 @@
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
 from services.services import ExpenseRequestService
+from finance.models import ExpenseRequest
 
 
 class ExpenseRequestController:
@@ -46,17 +47,35 @@ class ExpenseRequestController:
                     "mpesa_phone",
                     "description",
                     "amount",
-                    "receipt_url",
                 },
             )
 
+            # ADDED: validate expense_type against the allowed choices before hitting the service
+            expense_type = data.get("expense_type")
+            valid_expense_types = [
+                choice.value for choice in ExpenseRequest.ExpenseType
+            ]
+            if expense_type not in valid_expense_types:
+                raise ValueError(
+                    f"Invalid expense_type '{expense_type}'. "
+                    f"Allowed values are: {', '.join(valid_expense_types)}"
+                )
+
+            receipt = request.FILES.get("receipt")
+
+            # Reimbursement must have a receipt at submission — disbursement submits later
+            if expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT and not receipt:
+                raise ValueError("A receipt is required for reimbursement requests.")
+
             expense = ExpenseRequestService().create(
+                request=request,
                 title=data.get("title"),
                 mpesa_phone=data.get("mpesa_phone"),
                 description=data.get("description"),
                 amount=data.get("amount"),
                 employee=request.user,
-                receipt_url=data.get("receipt_url"),
+                expense_type=data.get("expense_type"),
+                receipt=receipt,
             )
 
             return ResponseProvider().success(
@@ -104,7 +123,7 @@ class ExpenseRequestController:
             )
 
             return ResponseProvider().success(
-                data=[cls._serialize(expenses) for expense in expenses]
+                data=[cls._serialize(expense) for expense in expenses]
             )
 
         except Exception as ex:
@@ -136,6 +155,17 @@ class ExpenseRequestController:
         )
         authUser = request.user
         try:
+            # ADDED: validate expense_type on update too, but only if it was provided
+            if "expense_type" in data:
+                valid_expense_types = [
+                    choice.value for choice in ExpenseRequest.ExpenseType
+                ]
+                if data["expense_type"] not in valid_expense_types:
+                    raise ValueError(
+                        f"Invalid expense_type '{data['expense_type']}'. "
+                        f"Allowed values are: {', '.join(valid_expense_types)}"
+                    )
+
             expense = ExpenseRequestService().update(
                 triggered_by=authUser, request=request, expense_id=expense_id, data=data
             )
@@ -157,11 +187,6 @@ class ExpenseRequestController:
             JsonResponse: 200 with serialized deactivated expense on success.
 
         """
-        data = get_clean_request_data(
-            request,
-            required_fields={"expense_request_id"},
-            allowed_fields={"expense_request_id"},
-        )
         authUser = request.user
 
         try:
@@ -187,7 +212,6 @@ class ExpenseRequestController:
             "amount": expense.amount,
             "expense_type": expense.expense_type,
             "description": expense.description,
-            "status": expense.expense.status.name if expense.status else None,
-            "assigned_to": expense.assigned_to.email if expense.assigned_to else None,
+            "status": expense.status.name if expense.status else None,
             "created_at": expense.created_at.isoformat(),
         }

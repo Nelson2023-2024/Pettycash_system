@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Manager
+from django.db.models import Manager, QuerySet
 from typing import Type
 
 from finance.models import (
@@ -15,6 +15,11 @@ from users.models import User, Role
 from services.serviceBase import ServiceBase
 from django.utils import timezone
 from utils.exceptions import TransactionLogError
+
+from django.db import transaction, IntegrityError
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class StatusService(ServiceBase):
@@ -244,17 +249,19 @@ class TransactionLogService(ServiceBase):
             status = Status.objects.get(code=status_code)
 
             return TransactionLogBase.objects.create(
-            event_type=event_type,
-            triggered_by=triggered_by,
-            status=status,
-            event_message=message,
-            metadata=metadata or {},
-            entity_type=entity.__class__.__name__,  # "User", "ExpenseRequest" etc
-            entity_id=str(entity.pk),
-            user_ip_address=ip_address,
+                event_type=event_type,
+                triggered_by=triggered_by,
+                status=status,
+                event_message=message,
+                metadata=metadata or {},
+                entity_type=entity.__class__.__name__,  # "User", "ExpenseRequest" etc
+                entity_id=str(entity.pk),
+                user_ip_address=ip_address,
             )
         except Exception as e:
-            raise TransactionLogError(f"Failed to create transaction log for event '{event_code}': {str(e)}")
+            raise TransactionLogError(
+                f"Failed to create transaction log for event '{event_code}': {str(e)}"
+            )
 
     @staticmethod
     def get_logs_for_entity(entity):
@@ -281,14 +288,132 @@ class TransactionLogService(ServiceBase):
 class NotificationService(ServiceBase):
     manager = Notifications.objects
 
-    def get_unread(self, user_id):
-        return self.manager.filter(recipient__id=user_id, is_read=False)
+    @staticmethod
+    def notify(
+        transaction_log, recipient, channel: str = Notifications.Channel.IN_APP
+    ) -> Notifications:
+        """
+         Creates a single notification tied to a transaction log.
+        This is the core reusable method called from any service after
+        a TransactionLogService.log() call.
 
-    def get_by_recipient(self, user_id):
-        return self.manager.filter(recipient__id=user_id)
+        Args:
+            transaction_log: The TransactionLogBase instance just created.
+            recipient (User): The user who should receive the notification.
+            channel (str): Delivery channel — in_app, sms, or email. Defaults to in_app.
 
-    def mark_as_read(self, uuid):
-        return self.filter(id=uuid).update(is_read=True)
+        Returns:
+            Notifications: The created notification instance.
+
+        """
+        return Notifications.objects.create(
+            transaction_log=transaction_log, recipient=recipient, channel=channel
+        )
+
+    @staticmethod
+    def notify_many(
+        transaction_log, recipient, channel: str = Notifications.Channel.IN_APP
+    ):
+        """
+        Creates notifications for multiple recipients from a single transaction log.
+        Uses bulk_create for efficiency.
+        For example, when an expense is submitted, notify all Finance Officers at once.
+
+        Args:
+            transaction_log: The TransactionLogBase instance just created.
+            recipients (list[User]): List of users to notify.
+            channel (str): Delivery channel for all recipients. Defaults to in_app.
+
+        Returns:
+            list[Notifications]: The created notification instances.
+
+        :param transaction_log:
+        :param recipient:
+        :param channel:
+        :return:
+        """
+        return Notifications.objects.bulk_create(
+            [
+                Notifications(
+                    transaction_log=transaction_log,
+                    recipient=recipient,
+                    channel=channel,
+                )
+                for recipient in recipient
+            ]
+        )
+
+    def list_auth_user_notifications(self, auth_user: User):
+        """
+
+        Retrieves all notifications for the authenticated user ordered by
+        most recent first, with transaction log and event type pre-fetched.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            QuerySet: All Notifications for the user with related fields joined.
+
+        """
+        return self.manager.filter(id=auth_user).select_related(
+            "transaction_log__event_type__event_category",  # → event code + category
+            "transaction_log__triggered_by",  # → sender
+            "transaction_log__status",  # → log status
+        )
+
+    def get_unread_count(self, auth_user: User):
+        """
+        Returns the count of unread notifications for the authenticated user.
+        Used for the notification badge/counter in the UI.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            int: Number of unread notifications.
+        """
+        return self.manager.filter(id=auth_user, is_read=False).count()
+
+    def mark_as_read(self, notification_id: str, auth_user: User):
+        """
+        Marks a single notification as read.
+        Scoped to the authenticated user to prevent one user marking
+        another user's notifications as read.
+
+        Args:
+            notification_id (str): The UUID of the notification to mark as read.
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            Notifications: The updated notification instance.
+
+        Raises:
+            Notifications.DoesNotExist: If no matching notification found for this user.
+        """
+        notification = self.manager.get(
+            id=notification_id, is_read=False, recipient=auth_user
+        )
+        notification.is_read = True
+        notification.save(update_fields=["is_read", "read_at"])
+        return notification
+
+    def get_mark_all_as_read(self, auth_user: User):
+        """
+          Marks all unread notifications as read for the authenticated user.
+        Uses bulk update for efficiency — bypasses model save() so read_at
+        is set explicitly here rather than relying on the model.
+
+        Args:
+            auth_user (User): The currently authenticated user.
+
+        Returns:
+            int: Number of notifications updated.
+
+        """
+        return self.manager.filter(recipient=auth_user, is_read=False).update(
+            is_read=True, read_at=timezone.now()
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -481,7 +606,6 @@ class PettyCashAccountService(ServiceBase):
         return account
 
 
-
 # -----------------------------------------------------------------------------
 # EXPENSE REQUEST SERVICE
 # -----------------------------------------------------------------------------
@@ -496,10 +620,8 @@ class ExpenseRequestService(ServiceBase):
         description: str,
         amount: float,
         employee: User,
-        assigned_to: User,
-        category: Category,
         expense_type: str,
-        receipt_url: list = None,
+        receipt=None,
     ):
         """
         Creates a new expense request for the given employee.
@@ -508,16 +630,15 @@ class ExpenseRequestService(ServiceBase):
         expense = self.manager.create(
             employee=employee,
             expense_type=expense_type,
-            assigned_to=assigned_to,
             title=title,
             mpesa_phone=mpesa_phone,
             description=description,
             amount=amount,
-            receipt_url=receipt_url or [],
+            receipt=receipt,
         )
         TransactionLogService.log(
             entity=expense,
-            event_code="expense_created",
+            event_code="expense_submitted",
             triggered_by=employee,
             message=f'Expense request "{expense.title}" created',
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
@@ -530,9 +651,6 @@ class ExpenseRequestService(ServiceBase):
                 "description": expense.description,
                 "employee_id": str(employee.id),
                 "employee_email": employee.email,
-                "assigned_to_id": str(assigned_to.id) if assigned_to else None,
-                "assigned_to_email": assigned_to.email if assigned_to else None,
-                "receipt_url": receipt_url or [],
                 "action": "create",
             },
         )
@@ -549,7 +667,7 @@ class ExpenseRequestService(ServiceBase):
             with employee, assigned_to, and status fields already joined —
             avoiding N+1 queries when serializing.
         """
-        return self.manager.filter(is_active=True).select_related("employee", "assigned_to", "status")
+        return self.manager.filter(is_active=True).select_related("employee", "status")
 
     def get_my_expense_requests(
         self,
@@ -566,8 +684,17 @@ class ExpenseRequestService(ServiceBase):
             with assigned_to and status pre-fetched via select_related.
         """
         return self.manager.filter(employee=authUser, is_active=True).select_related(
-            "status", "assigned_to"
+            "status"
         )
+
+    def get_all_pending_for_fo(self):
+        """
+        Retrieves all active, pending expense requests visible to any Finance Officer.
+        No assignment check needed — role-based access is handled at the view/permission layer.
+        """
+        return self.manager.filter(
+            is_active=True, status__code="pending"
+        ).select_related("employee", "status")
 
     def update(self, expense_id: str, data: dict, triggered_by: User, request=None):
         """
@@ -588,7 +715,9 @@ class ExpenseRequestService(ServiceBase):
         """
         with transaction.atomic():
             expense = (
-                self.manager.select_for_update()
+                self.manager.select_for_update(
+                    of=("self",)
+                )  # Lock only the main table row — not the joined tables.
                 .select_related("status")
                 .get(id=expense_id)
             )
@@ -602,7 +731,7 @@ class ExpenseRequestService(ServiceBase):
             for field, value in data.items():
                 setattr(expense, field, value)
                 new_values[field] = getattr(expense, field)
-            
+
             expense.save(update_fields=list(data.keys()) + ["updated_at"])
 
         TransactionLogService.log(
@@ -626,8 +755,6 @@ class ExpenseRequestService(ServiceBase):
             },
         )
 
-        
-        
         return expense
 
     def deactivate(self, request, expense_request_id, triggered_by: User):
@@ -675,6 +802,135 @@ class ExpenseRequestService(ServiceBase):
         )
 
         return expense
+
+    def approve_or_reject(
+        self,
+        request,
+        expense_id: str,
+        decision: str,
+        triggered_by: User,
+        reason: str = None,
+    ):
+        """
+        action: 'approve' or 'reject'
+        FO approves or rejects a pending expense request.
+        """
+
+        with transaction.atomic():
+            expense = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status")
+                .get(id=expense_id, is_active=True)
+            )
+
+            if expense.status.code != "pending":
+                raise ValueError(
+                    f"Only pending requests can be approved or rejected. Current status: {expense.status.code}"
+                )
+
+            new_status = Status.objects.get(code=decision)  # 'approved' or 'rejected'
+            event_code = (
+                f"expense_{decision}"  # 'expense_approved' or 'expense_rejected'
+            )
+
+            expense.status = new_status
+
+            expense.metadata.update(
+                {
+                    "decision": decision,
+                    "decision_by": str(triggered_by.id),
+                    "decision_by_email": triggered_by.email,
+                    "decision_at": timezone.now().isoformat(),
+                    "decision_reason": reason or "",
+                }
+            )
+
+            expense.save(update_fields=["status", "metadata", "updated_at"])
+
+            TransactionLogService.log(
+                entity=expense,
+                event_code=event_code,
+                triggered_by=triggered_by,
+                message=f'Expense request "{expense.title}" {decision} by {triggered_by.email}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "expense_id": str(expense.id),
+                    "title": expense.title,
+                    "amount": str(expense.amount),
+                    "expense_type": expense.expense_type,
+                    "decision": decision,
+                    "decision_reason": reason or "",
+                    "decision_by_id": str(triggered_by.id),
+                    "decision_by_email": triggered_by.email,
+                    "employee_id": str(expense.employee.id),
+                    "employee_email": expense.employee.email,
+                    "action": decision,
+                },
+            )
+
+            return expense
+
+    def disburse(self, request, expense_id: str, triggered_by: User):
+        """
+        Marks an approved expense request as disbursed.
+            - Reimbursement: disbursed = completed, no reconciliation needed.
+            - Disbursement: disbursed = cash sent, reconciliation record auto-created.
+        """
+        with transaction.atomic():
+            expense = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "employee")
+                .get(id=expense_id, is_active=True)
+            )
+
+            if expense.status.code != "approved":
+                raise ValueError(
+                    f"Only approved requests can be disbursed. Current status: {expense.status.code}"
+                )
+
+            disbursed_status = Status.objects.get(code="disbursed")
+            expense.status = disbursed_status
+            expense.metadata.update(
+                {
+                    "disbursed_by": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_at": timezone.now().isoformat(),
+                }
+            )
+
+            expense.save(update_fields=["status", "metadata", "updated_at"])
+
+            # Only disbursement-type needs reconciliation — reimbursement already had receipt at submission
+            if expense.expense_type == ExpenseRequest.ExpenseType.DISBURSEMENT:
+                DisbursementReconciliation.objects.create(
+                    expense_request=expense,
+                    submitted_by=expense.employee,
+                    status=Status.objects.get(code="pending"),
+                    total_amount=expense.amount,
+                )
+
+            TransactionLogService.log(
+                entity=expense,
+                event_code="expense_disbursed",
+                triggered_by=triggered_by,
+                message=f'Expense request "{expense.title}" disbursed by {triggered_by.email}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "expense_id": str(expense.id),
+                    "title": expense.title,
+                    "amount": str(expense.amount),
+                    "expense_type": expense.expense_type,
+                    "disbursed_by_id": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "employee_id": str(expense.employee.id),
+                    "employee_email": expense.employee.email,
+                    "action": "disburse",
+                },
+            )
+
+            return expense
+        # REIMBURSEMENT: submitted → pending → approved → disbursed ✅ (closed)
+        # DISBURSEMENT:  submitted → pending → approved → disbursed → reconciliation pending → under_review → completed ✅
 
 
 # -----------------------------------------------------------------------------
@@ -845,7 +1101,7 @@ class TopUpRequestService(ServiceBase):
         self,
         request,
         topup_id: str,
-        decision: str,
+        decision: str,  # 'approved' or 'rejected'
         triggered_by: User,
         decision_reason: str,
     ):
@@ -866,51 +1122,61 @@ class TopUpRequestService(ServiceBase):
             ValueError: If decision is not 'approved' or 'rejected'.
             TopUpRequest.DoesNotExist: If no matching top-up request is found.
         """
-        topup = self.get_by_id(topup_id)
-        status = Status.objects.get(code=decision)
-        event_code = "topup_approved" if decision == "approved" else "topup_rejected"
-        event_type = EventTypes.objects.get(code=event_code)
-        decision_at = timezone.now()
+        try:
+            with transaction.atomic():
+                topup = (
+                    TopUpRequest.objects.select_for_update()
+                    .select_related("status")
+                    .get(id=topup_id, is_active=True)
+                )
 
-        topup.status = status
-        topup.event_type = event_type
-        topup.decision_by = triggered_by
-        topup.decision_reason = decision_reason
-        topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
-        topup.save(
-            update_fields=[
-                "status_id",
-                "event_type_id",
-                "decision_by_id",
-                "decision_reason",
-                "metadata",
-                "updated_at",
-            ]
-        )
+            # Idempotency check
+            if topup.status.code == decision:
+                return topup
 
-        TransactionLogService.log(
-            entity=topup,
-            event_code=event_code,
-            triggered_by=triggered_by,
-            message=f'Top-up of {topup.amount} {decision} for "{topup.pettycash_account.name}"',
-            ip_address=request.META.get("REMOTE_ADDR") if request else None,
-            metadata={
-                "topup_id": str(topup.id),
-                "account_id": str(topup.pettycash_account.id),
-                "account_name": topup.pettycash_account.name,
-                "amount": str(topup.amount),
-                "decision": decision,
-                "decision_reason": decision_reason,
-                "decision_at": decision_at.isoformat(),
-                "request_reason": topup.request_reason,
-                "decided_by_id": str(triggered_by.id),
-                "decided_by_email": triggered_by.email,
-                "decided_by_role": triggered_by.role.name,
-                "action": decision,
-            },
-        )
+            status = Status.objects.get(code=decision)
+            event_code = (
+                "topup_approved" if decision == "approved" else "topup_rejected"
+            )
+            event_type = EventTypes.objects.get(code=event_code)
+            decision_at = timezone.now()
 
-        return topup
+            topup.status = status
+            topup.event_type = event_type
+            topup.decision_by = triggered_by
+            topup.decision_reason = decision_reason or ""
+            topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
+            topup.save(
+                update_fields=[
+                    "status_id",
+                    "event_type_id",
+                    "decision_by_id",
+                    "decision_reason",
+                    "metadata",
+                    "updated_at",
+                ]
+            )
+
+            TransactionLogService.log(
+                entity=topup,
+                event_code=event_code,
+                triggered_by=triggered_by,
+                status_code=decision,  # or a relevant status
+                message=f"Top-up request {decision} for {topup.amount}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "topup_id": str(topup.id),
+                    "account_id": str(topup.pettycash_account.id),
+                    "decision_reason": decision_reason,
+                    "decision_at": decision_at.isoformat(),
+                },
+            )
+
+            return topup
+        except IntegrityError as e:
+            logger.error(f"IntegrityError in decide_top_up_request: {e}", exc_info=True)
+            # Re-raise as a more specific exception or let the controller handle it
+            raise
 
     def update_topup_request(
         self, topup_id: str, data: dict, triggered_by: User, request=None
@@ -935,7 +1201,7 @@ class TopUpRequestService(ServiceBase):
         """
         with transaction.atomic():
             topup = (
-                self.manager.select_for_update()
+                self.manager.select_for_update(of=("self",))
                 .select_related(
                     "pettycash_account", "requested_by", "status", "event_type"
                 )
@@ -1037,6 +1303,9 @@ class TopUpRequestService(ServiceBase):
             ValueError: If the top-up request is not in 'approved' status.
         """
         topup = self.get_by_id(topup_id)
+        # If already complete – just return (idempotent)
+        if topup.status.code == "complete":
+            return topup
 
         if topup.status.code != "approved":
             raise ValueError(
@@ -1077,9 +1346,8 @@ class TopUpRequestService(ServiceBase):
                 "action": "disburse",
             },
         )
-        
-        return topup
 
+        return topup
 
 
 # -----------------------------------------------------------------------------
@@ -1088,11 +1356,320 @@ class TopUpRequestService(ServiceBase):
 class DisbursementReconciliationService(ServiceBase):
     manager = DisbursementReconciliation.objects
 
-    def get_by_status(self, status_code):
-        return self.manager.filter(status__code=status_code)
+    def get_my_reconciliations(self, auth_user: User):
+        """
+        Retrieves all reconciliations belonging to the authenticated employee
+        regardless of status — so the employee has a full view of their
+        reconciliation history in one call.
 
-    def get_by_submitter(self, user_id):
-        return self.manager.filter(submitted_by__id=user_id)
+        Args:
+            auth_user (User): The currently authenticated employee.
 
-    def get_by_expense_request(self, expense_request_id):
-        return self.manager.filter(expense_request__id=expense_request_id).first()
+        Returns:
+            QuerySet[DisbursementReconciliation]: All reconciliations for this
+            employee with expense_request and status pre-fetched.
+        """
+        return self.manager.filter(submitted_by=auth_user).select_related(
+            "expense_request", "status"
+        )
+
+    def get_all_reconciliations(self):
+        """
+        Retrieves all reconciliations across all employees.
+        Intended for Finance Officer use — gives full system-wide visibility.
+
+        Returns:
+            QuerySet[DisbursementReconciliation]: All reconciliations with
+            expense_request, submitted_by, and status pre-fetched.
+        """
+        return self.manager.all().select_related(
+            "expense_request", "submitted_by", "status"
+        )
+
+    def get_by_id(self, reconciliation_id: str):
+        """
+        Retrieves a single reconciliation record by its ID.
+        Used for detail views on both the employee and FO side.
+
+        Args:
+            reconciliation_id (str): The UUID of the reconciliation record.
+
+        Returns:
+            DisbursementReconciliation: The matching instance with related fields pre-fetched.
+
+        Raises:
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+        """
+        return self.manager.select_related(
+            "expense_request", "submitted_by", "approved_by", "status"
+        ).get(id=reconciliation_id)
+
+    def submit_receipt(
+        self,
+        request,
+        reconciliation_id: str,
+        submitted_by: User,
+        comments: str,
+        reconciled_amount: float,
+        surplus_returned: float,
+        receipt=None,
+    ):
+        """
+
+
+             Employee submits receipts after cash has been disbursed.
+        Employee reports how much they spent (reconciled_amount) and
+        how much they are returning (surplus_returned) if they didn't use it all.
+        Transitions reconciliation status from pending -> under_review.
+
+        Args:
+            request: The HTTP request object for IP logging.
+            reconciliation_id (str): The UUID of the reconciliation to update.
+            receipt: The uploaded receipt file.
+            submitted_by (User): The employee submitting the receipts.
+            reconciled_amount (Decimal): Amount the employee actually spent, backed by the receipt.
+            surplus_returned (Decimal, optional): Cash being returned if less than disbursed amount was spent.
+            comments (str, optional): Any notes from the employee about the expense.
+
+        Returns:
+            DisbursementReconciliation: The updated reconciliation instance.
+
+        Raises:
+            ValueError: If the reconciliation is not in pending status.
+            ValueError: If reconciled_amount exceeds the original disbursed amount.
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+        """
+
+        with transaction.atomic():
+            reconciliation = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "expense_request", "submitted_by")
+                .get(id=reconciliation_id, is_active=True)
+            )
+
+            if reconciliation.status.code != "pending":
+                raise ValueError(
+                    f"Receipts already submitted. Current status: {reconciliation.status.code}"
+                )
+
+            disbursed_amount = reconciliation.expense_request.amount
+
+            if reconciled_amount > disbursed_amount:
+                raise ValueError(
+                    f"Reconciled amount {reconciled_amount} cannot exceed "
+                    f"the disbursed amount of {disbursed_amount}."
+                )
+
+            under_review_status = Status.objects.get(code="under_review")
+            reconciliation.status = under_review_status
+            reconciliation.comments = comments
+            reconciliation.receipt = receipt
+            reconciliation.surplus_returned = surplus_returned
+            reconciliation.reconciled_amount = reconciled_amount
+            reconciliation.save(
+                update_fields=[
+                    "receipt",
+                    "reconciled_amount",
+                    "surplus_returned",
+                    "comments",
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+            TransactionLogService.log(
+                entity=reconciliation,
+                event_code="expense_reconciliation_submitted",
+                triggered_by=submitted_by,
+                message=f"Reconciliation receipts submitted for expense {reconciliation.expense_request.id}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "reconciliation_id": str(reconciliation.id),
+                    "expense_request_id": str(reconciliation.expense_request.id),
+                    "disbursed_amount": str(disbursed_amount),
+                    "reconciled_amount": str(reconciled_amount),
+                    "surplus_returned": str(surplus_returned or 0),
+                    "submitted_by_id": str(submitted_by.id),
+                    "submitted_by_email": submitted_by.email,
+                    "action": "submit_receipts",
+                },
+            )
+
+            return reconciliation
+
+    def review(
+        self,
+        request,
+        reconciliation_id: str,
+        decision: str,
+        triggered_by: User,
+        comments: str = None,
+    ):
+        """
+             Finance Officer reviews a submitted reconciliation and either approves or rejects it.
+
+        On approval (completed):
+            - Reconciliation status moves to completed.
+            - Parent expense request is also marked as completed.
+
+        On rejection (rejected):
+            - Reconciliation status moves back to pending.
+            - Employee will be expected to resubmit with corrections.
+            - reconciled_amount and surplus_returned are cleared back to null
+              since the submission was not accepted.
+            - receipt is cleared so the employee must re-upload.
+
+        Note:
+            'rejected' here is NOT terminal — it sends the reconciliation back
+            to the employee for correction and resubmission. Terminal rejection
+            only happens at the expense request level before any cash goes out.
+
+        Args:
+            request: The HTTP request object for IP logging.
+            reconciliation_id (str): The UUID of the reconciliation to review.
+            decision (str): 'completed' to approve or 'rejected' to send back to employee.
+            triggered_by (User): The Finance Officer performing the review.
+            comments (str, optional): FO feedback. Should always be provided on rejection
+                so the employee knows what to fix.
+
+        Returns:
+            DisbursementReconciliation: The updated reconciliation instance.
+
+        Raises:
+            ValueError: If decision is not 'completed' or 'rejected'.
+            ValueError: If reconciliation is not currently under_review.
+            DisbursementReconciliation.DoesNotExist: If no matching record is found.
+
+
+        """
+
+        with transaction.atomic():
+            reconciliation = (
+                self.manager.select_for_update(of=("self",))
+                .select_related("status", "submitted_by", "expense_request")
+                .get(id=reconciliation_id, is_active=True)
+            )
+
+            if reconciliation.status.code != "under_review":
+                raise ValueError(
+                    f"Only under_review reconciliations can be reviewed. "
+                    f"Current status: {reconciliation.status.code}"
+                )
+
+            if decision == "completed":
+                new_status = Status.boject.get(code="completed")
+                reconciliation.status = new_status
+                reconciliation.approved_by = (triggered_by,)
+                reconciliation.approved_at = timezone.now().isoformat()
+                reconciliation.comments = comments
+                reconciliation.metadata.update(
+                    {
+                        "reviewed_by": str(triggered_by.id),
+                        "reviewed_by_email": triggered_by.email,
+                        "reviewed_at": timezone.now().isoformat(),
+                        "decision": decision,
+                        "comments": comments or "",
+                    }
+                )
+                reconciliation.save(
+                    update_fields=[
+                        "status",
+                        "approved_by",
+                        "approved_at",
+                        "comments",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
+
+                # close the parent expense request
+
+                expense = reconciliation.expense_request
+                expense.status = new_status
+                expense.metadata.update(
+                    {
+                        "completed_by": str(triggered_by.id),
+                        "completed_by_email": triggered_by.email,
+                        "completed_at": timezone.now().isoformat(),
+                    }
+                )
+
+                expense.save(update_fields=["status", "metadata", "updated_at"])
+            else:
+                pendind_status = Status.objects.get(code="pending")
+                reconciliation.status = pendind_status
+                reconciliation.approved_by = None
+                reconciliation.approved_at = None
+                reconciliation.reconciled_amount = (
+                    None  # clear — employee must resubmit
+                )
+                reconciliation.surplus_returned = None  # clear — employee must resubmit
+                reconciliation.receipt = None  # clear — employee must re-upload
+                reconciliation.comments = comments or ""
+                reconciliation.metadata.update(
+                    {
+                        "reviewed_by": str(triggered_by.id),
+                        "reviewed_by_email": triggered_by.email,
+                        "reviewed_at": timezone.now().isoformat(),
+                        "decision": decision,
+                        "rejection_reason": comments or "",
+                    }
+                )
+                reconciliation.save(
+                    update_fields=[
+                        "status",
+                        "approved_by",
+                        "approved_at",
+                        "reconciled_amount",
+                        "surplus_returned",
+                        "receipt",
+                        "comments",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
+        TransactionLogService.log(
+            entity=reconciliation,
+            event_code=(
+                "expense_completed" if decision == "completed" else "expense_rejected"
+            ),
+            triggered_by=triggered_by,
+            message=f"Reconciliation {decision} by {triggered_by.email} for expense {reconciliation.expense_request.id}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "reconciliation_id": str(reconciliation.id),
+                "expense_request_id": str(reconciliation.expense_request.id),
+                "decision": decision,
+                "reviewed_by_id": str(triggered_by.id),
+                "reviewed_by_email": triggered_by.email,
+                "employee_id": str(reconciliation.submitted_by.id),
+                "employee_email": reconciliation.submitted_by.email,
+                "comments": comments or "",
+                "action": decision,
+                # old and new values — only meaningful on rejection since
+                # completion does not clear any fields
+                **(
+                    {
+                        "old_values": {
+                            "reconciled_amount": str(reconciliation.reconciled_amount),
+                            "surplus_returned": str(reconciliation.surplus_returned),
+                            "receipt": (
+                                reconciliation.receipt.name
+                                if reconciliation.receipt
+                                else None
+                            ),
+                            "comments": reconciliation.comments,
+                        },
+                        "new_values": {
+                            "reconciled_amount": None,
+                            "surplus_returned": None,
+                            "receipt": None,
+                            "comments": comments or "",
+                        },
+                    }
+                    if decision == "rejected"
+                    else {}
+                ),
+            },
+        )
+        return reconciliation

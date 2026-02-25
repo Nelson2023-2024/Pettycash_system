@@ -3,8 +3,7 @@ from base.models import BaseModel,GenericBaseModel,Status, Category
 from department.models import Department
 from django.utils.translation import gettext_lazy as _
 from users.models import User
-from finance.default import (get_default_expense_category, get_default_expense_submitted_event,
-    get_default_finance_officer, get_default_pending_status, get_default_topup_requested_event)
+from finance.default import (get_default_expense_category, get_default_expense_submitted_event, get_default_pending_status, get_default_topup_requested_event)
 from audit.models import EventTypes
 
 
@@ -62,15 +61,7 @@ class ExpenseRequest(BaseModel):
         verbose_name=_('Event Type')
     )
 
-    assigned_to = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        default=get_default_finance_officer,
-        related_name='assigned_expense_requests',
-        verbose_name=_('Assigned To'),
-        null=True, blank=True,  # optional at creation
-    )
-
+    # REMOVED: assigned_to — FOs see all requests via role-based filtering in the service layer.
     #decision_by and decision_at —  moved to metadata
 
     status = models.ForeignKey(
@@ -89,7 +80,7 @@ class ExpenseRequest(BaseModel):
     mpesa_phone = models.CharField(max_length=20, blank=True, verbose_name=_('M-Pesa Phone'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
     amount = models.DecimalField(max_digits=8, decimal_places=2, verbose_name=_('Amount'))
-    receipt_url = models.JSONField(default=list, blank=True, verbose_name=_('Receipt URLs'))
+    receipt = models.FileField(upload_to='receipts/%Y/%m/%d/',null=True, blank=True, verbose_name=_('Receipt'))
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))  # store approved_by, timestamps, comments, etc.
 
@@ -100,8 +91,7 @@ class ExpenseRequest(BaseModel):
         ordering = ['-created_at']
 
     def __str__(self):
-        assigned = self.assigned_to.email if self.assigned_to else "Unassigned"
-        return f"{self.title or 'No Title'} - {self.employee.email} | {assigned}"
+         return f"{self.title or 'No Title'} - {self.employee.email}"
 
 
 class TopUpRequest(BaseModel):
@@ -144,7 +134,7 @@ class TopUpRequest(BaseModel):
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))
      # reason for REQUESTING the top-up e.g. "Balance too low for upcoming expenses"
-    request_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Request Reason'))
+    request_reason = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Request Reason'))
 
     # reason for the DECISION e.g. "Approved — end of month budget available" or "Rejected — insufficient budget"
     decision_reason = models.CharField(max_length=255, blank=True, verbose_name=_('Decision Reason'))
@@ -205,12 +195,6 @@ class DisbursementReconciliation(BaseModel):
         verbose_name='Status'
     )
 
-    total_amount = models.DecimalField(
-        max_digits=15,
-        decimal_places=2,
-        verbose_name='Total Amount'
-    )
-
     reconciled_amount = models.DecimalField(
         max_digits=15,
         decimal_places=2,
@@ -218,23 +202,31 @@ class DisbursementReconciliation(BaseModel):
         blank=True,
         verbose_name='Reconciled Amount'
     )
-
+    
     surplus_returned = models.DecimalField(
         max_digits=15,
         decimal_places=2,
         null=True,
         blank=True,
+        default=0,
         verbose_name='Surplus Returned'
+    )
+    
+    receipt = models.FileField(
+        upload_to='reconciliation_receipts/%Y/%m/%d/',
+        null=True,
+        blank=True,
+        verbose_name='Receipt'
     )
 
     comments = models.TextField(
-        blank=True,
+        blank=True, null=True,
         verbose_name='Comments'
     )
 
     metadata = models.JSONField(
         default=dict,
-        blank=True,
+        blank=True, null=True,
         verbose_name='Metadata'
     )
 

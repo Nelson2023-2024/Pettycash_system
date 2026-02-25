@@ -1,8 +1,10 @@
 from django.urls import path, include
 from .views import (create_expense_view, create_petty_cash_view, create_topup_view,
   deactivate_expense_view, deactivate_petty_cash_view, deactivate_topup_view, decide_topup_view,
-  disburse_topup_view, get_all_petty_cash_view, get_petty_cash_view, list_all_expenses_view,
-  list_all_topups_view, list_my_expenses_view, list_my_topups_view, update_expense_view,
+  disburse_topup_view, get_all_petty_cash_view, get_petty_cash_view, get_reconciliation_view,
+  list_all_expenses_view, list_all_reconciliations_view, list_all_topups_view,
+  list_my_expenses_view, list_my_reconciliations_view, list_my_topups_view,
+  review_reconciliation_view, submit_reconciliation_receipt_view, update_expense_view,
   update_petty_cash_view, update_topup_view)
 
 urlpatterns = [
@@ -27,4 +29,11 @@ urlpatterns = [
   path('topup/<str:topup_id>/disburse/', disburse_topup_view, name='disburse-topup-request'),
   path('topup/<str:topup_id>/update/', update_topup_view, name='update-topup-request'),
   path('topup/<str:topup_id>/deactivate/', deactivate_topup_view, name='deactivate-topup-request'),
+  
+   # ── disbursement reconciliation ──────────────────────────
+    path('reconciliation/', list_all_reconciliations_view, name='list-all-reconciliations'),
+    path('reconciliation/mine/', list_my_reconciliations_view, name='list-my-reconciliations'),
+    path('reconciliation/<str:reconciliation_id>/', get_reconciliation_view, name='get-reconciliation'),
+    path('reconciliation/<str:reconciliation_id>/submit/', submit_reconciliation_receipt_view, name='submit-reconciliation-receipt'),
+    path('reconciliation/<str:reconciliation_id>/review/', review_reconciliation_view, name='review-reconciliation'),
 ]

@@ -35,7 +35,7 @@ def get_default_pending_status():
     )
     return status.id
 
-def get_default_finance_officer():
+def get_default_finance_officers():
     """
     Auto-resolves a default Finance Officer for an expense request.
     Returns the ID of the first active user with the FO role.
@@ -45,7 +45,7 @@ def get_default_finance_officer():
     officer = User.objects.filter(
         role__code='FO',
         is_active=True
-    ).first()
+    )
     
     return officer.id if officer else None
 
