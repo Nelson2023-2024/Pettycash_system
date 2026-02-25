@@ -8,6 +8,7 @@ from utils.decorators.login_required import login_required
 from utils.response_provider import ResponseProvider
 from finance.services.expense_request_service import ExpenseRequestController
 from finance.services.topup_request_service import TopUpRequestController
+from finance.services.disbursment_reconciliation_service import DisbursementReconciliationController
 from .services.pettycash_services import PettyCashService
 
 
@@ -147,3 +148,39 @@ def update_topup_view(request, topup_id: str) -> JsonResponse:
 @login_required("ADM", "CFO", "FO")
 def deactivate_topup_view(request, topup_id: str) -> JsonResponse:
     return TopUpRequestController().deactivate(request, topup_id)
+
+
+# ── DISBURSEMENT RECONCILIATION ──────────────────────────────
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "FO", "ADM")
+def list_my_reconciliations_view(request) -> JsonResponse:
+    return DisbursementReconciliationController().get_my_reconciliations(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO", "FO")
+def list_all_reconciliations_view(request) -> JsonResponse:
+    return DisbursementReconciliationController().get_all_reconciliations(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "FO", "CFO", "ADM")
+def get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:
+    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("EMP", "ADM")  # only the employee submits their own receipt
+def submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:
+    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)
+
+
+@csrf_exempt
+@allowed_http_methods("PATCH")
+@login_required("FO", "CFO", "ADM")  # only FO/CFO can review
+def review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:
+    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)
