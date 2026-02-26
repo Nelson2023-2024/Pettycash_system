@@ -17,7 +17,7 @@ class NotificationController:
         """
         try:
             notifications = NotificationService().list_auth_user_notifications(
-                auth_user=request.user
+                auth_user=request.user.id
             )
             return ResponseProvider.success(
                 data=[cls._serialize(n) for n in notifications]
@@ -38,7 +38,7 @@ class NotificationController:
             JsonResponse: 200 with unread count.
         """
         try:
-            count = NotificationService().get_unread_count(auth_user=request.user)
+            count = NotificationService().get_unread_count(auth_user=request.user.id)
             return ResponseProvider.success(data={"unread_count": count})
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
