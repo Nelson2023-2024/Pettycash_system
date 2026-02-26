@@ -1283,6 +1283,22 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "timezone",
         "importPath": "django.utils",
         "description": "django.utils",
@@ -1672,6 +1688,14 @@
         "description": "base.models",
         "isExtraImport": true,
         "detail": "base.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
+        "isExtraImport": true,
+        "detail": "users.models",
         "documentation": {}
     },
     {
@@ -2301,6 +2325,15 @@
         "description": "django.core.wsgi",
         "isExtraImport": true,
         "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
         "documentation": {}
     },
     {
@@ -3542,6 +3575,24 @@
         "description": "pettycash_system.wsgi",
         "peekOfCode": "application = get_wsgi_application()",
         "detail": "pettycash_system.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "OTPService",
+        "kind": 6,
+        "importPath": "services.otp-email.otp_service",
+        "description": "services.otp-email.otp_service",
+        "peekOfCode": "class OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:\n            str: The generated 6 digit OTP code.",
+        "detail": "services.otp-email.otp_service",
+        "documentation": {}
+    },
+    {
+        "label": "OTP_EXPIRATION_MINUTES",
+        "kind": 5,
+        "importPath": "services.otp-email.otp_service",
+        "description": "services.otp-email.otp_service",
+        "peekOfCode": "OTP_EXPIRATION_MINUTES = 15\nclass OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:",
+        "detail": "services.otp-email.otp_service",
         "documentation": {}
     },
     {
