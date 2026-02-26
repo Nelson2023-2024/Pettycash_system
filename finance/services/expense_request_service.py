@@ -201,6 +201,81 @@ class ExpenseRequestController:
         except Exception as ex:
             return ResponseProvider().handle_exception(ex)
 
+    @classmethod
+    def approve_or_rejext_expense_request(cls, request, expense_id):
+        """
+            Finance Officer approves or rejects a pending expense request.
+        Both actions share one endpoint — decision field determines the outcome.
+
+        Args:
+            request: The HTTP request object. Must contain:
+                - decision (str): 'approved' or 'rejected'.
+                - reason (str, optional): Reason for the decision.
+                  Should always be provided on rejection so the employee knows why.
+
+        Returns:
+            JsonResponse: 200 with serialized updated expense on success.
+            :param request:
+            :param expense_id:
+        """
+        try:
+            data = get_clean_request_data(
+                request,
+                required_fields={"decision"},
+                allowed_fields={"decision", "reason"},
+            )
+
+            decision = data.get("decision")
+
+            if decision not in ["approved", "rejected"]:
+                raise ValueError("Decision must be 'approved' or 'rejected'.")
+
+            expense = ExpenseRequestService().approve_or_reject(
+                request=request,
+                expense_id=expense_id,
+                decision=decision,
+                triggered_by=request.user,
+                reason=data.get("reason"),
+            )
+
+            return ResponseProvider().success(
+                message=f"Expense request {decision} successfully",
+                data=cls._serialize(expense),
+            )
+
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
+    @classmethod
+    def disburse_expense_request(cls, request, expense_id: str):
+        """
+
+            Finance Officer disburses an approved expense request.
+        - Reimbursement: marks as disbursed and closes the request.
+        - Disbursement: marks as disbursed and auto-creates a
+          DisbursementReconciliation record pending employee receipt submission.
+
+        Args:
+            request: The HTTP request object.
+            expense_id (str): The UUID of the expense request to disburse.
+
+        Returns:
+            JsonResponse: 200 with serialized updated expense on success.
+            :param request:
+            :param expense_id:
+            :return:
+        """
+        try:
+            expense = ExpenseRequestService().disburse(
+                request=request, expense_id=expense_id, triggered_by=request.user
+            )
+            return ResponseProvider().success(
+                data=cls._serialize(expense),
+                message="Expense request disbursed successfully.",
+            )
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
     @staticmethod
     def _serialize(expense) -> dict:
         """

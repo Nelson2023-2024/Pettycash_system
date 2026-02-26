@@ -5,7 +5,7 @@ from .views import (create_expense_view, create_petty_cash_view, create_topup_vi
   list_all_expenses_view, list_all_reconciliations_view, list_all_topups_view,
   list_my_expenses_view, list_my_reconciliations_view, list_my_topups_view,
   review_reconciliation_view, submit_reconciliation_receipt_view, update_expense_view,
-  update_petty_cash_view, update_topup_view)
+  update_petty_cash_view, update_topup_view, decide_expense_view,disburse_expense_view)
 
 urlpatterns = [
   path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),
@@ -18,6 +18,8 @@ urlpatterns = [
   path('expense/create/', create_expense_view, name='create-expense-request'),
   path('expense/', list_all_expenses_view, name='list-all-expense-requests'),
   path('expense/mine/', list_my_expenses_view, name='list-my-expense-requests'),
+  path('expense/<str:expense_id>/decide/', decide_expense_view, name='decide-expense-request'),
+  path('expense/<str:expense_id>/disburse/', disburse_expense_view, name='disburse-expense-request'),
   path('expense/<str:expense_id>/update/', update_expense_view, name='update-expense-request'),
   path('expense/<str:expense_request_id>/deactivate/', deactivate_expense_view, name='deactivate-expense-request'),
 

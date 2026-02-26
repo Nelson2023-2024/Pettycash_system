@@ -1,6 +1,7 @@
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
 from services.services import DisbursementReconciliationService
+from decimal import Decimal, InvalidOperation
 
 
 class DisbursementReconciliationController:
@@ -91,6 +92,12 @@ class DisbursementReconciliationController:
                 required_fields={"reconciled_amount", "surplus_returned"},
                 allowed_fields={"reconciled_amount", "surplus_returned", "comments"},
             )
+            # convert to Decimal here — request data always comes in as strings
+            try:
+                reconciled_amount = Decimal(str(data.get("reconciled_amount")))
+                surplus_returned = Decimal(str(data.get("surplus_returned")))
+            except InvalidOperation:
+                raise ValueError("reconciled_amount and surplus_returned must be valid numbers.")
 
             receipt = request.FILES.get("receipt")
             if not receipt:
@@ -101,8 +108,8 @@ class DisbursementReconciliationController:
                 reconciliation_id=reconciliation_id,
                 submitted_by=request.user,
                 receipt=receipt,
-                reconciled_amount=data.get("reconciled_amount"),
-                surplus_returned=data.get("surplus_returned"),
+                reconciled_amount=reconciled_amount,
+                surplus_returned=surplus_returned,
                 comments=data.get("comments"),
             )
 
