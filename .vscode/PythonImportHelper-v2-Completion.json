@@ -688,6 +688,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -3706,6 +3722,15 @@
         "description": "users.migrations.0006_alter_user_avatar_url",
         "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0005_role_is_active'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='user',\n            name='avatar_url',\n            field=models.ImageField(blank=True, null=True, upload_to='avatars/'),\n        ),",
         "detail": "users.migrations.0006_alter_user_avatar_url",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0007_user_otp_code_user_otp_expires_at",
+        "description": "users.migrations.0007_user_otp_code_user_otp_expires_at",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0006_alter_user_avatar_url'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='user',\n            name='otp_code',\n            field=models.CharField(blank=True, max_length=6, null=True, verbose_name='OTP Code'),\n        ),",
+        "detail": "users.migrations.0007_user_otp_code_user_otp_expires_at",
         "documentation": {}
     },
     {
