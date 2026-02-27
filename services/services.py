@@ -48,7 +48,7 @@ class UserService(ServiceBase):
     It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.
     """
 
-    def get_active_user_by_email(self, email):
+    def get_active_user_by_email(self, email) -> User:
         return self.manager.get(email=email, is_active=True)
 
     @staticmethod
@@ -906,7 +906,6 @@ class ExpenseRequestService(ServiceBase):
                     expense_request=expense,
                     submitted_by=expense.employee,
                     status=Status.objects.get(code="pending"),
-                    total_amount=expense.amount,
                 )
 
             TransactionLogService.log(
@@ -1454,11 +1453,27 @@ class DisbursementReconciliationService(ServiceBase):
 
             disbursed_amount = reconciliation.expense_request.amount
 
+            # reconciled cannot exceed what was disbursed
             if reconciled_amount > disbursed_amount:
                 raise ValueError(
                     f"Reconciled amount {reconciled_amount} cannot exceed "
                     f"the disbursed amount of {disbursed_amount}."
                 )
+            
+            # surplus cannot exceed what was disbursed
+            if surplus_returned > disbursed_amount:
+                raise ValueError(
+                f"Surplus returned {surplus_returned} cannot exceed "
+                f"the disbursed amount of {disbursed_amount}."
+            )
+                
+            # reconciled + surplus must equal the disbursed amount — all cash must be accounted for
+            if reconciled_amount + surplus_returned != disbursed_amount:
+                raise ValueError(
+                f"Reconciled amount ({reconciled_amount}) and surplus returned ({surplus_returned}) "
+                f"must add up to the disbursed amount of {disbursed_amount}. "
+                f"Currently they add up to {reconciled_amount + surplus_returned}."
+            )
 
             under_review_status = Status.objects.get(code="under_review")
             reconciliation.status = under_review_status
@@ -1557,10 +1572,10 @@ class DisbursementReconciliationService(ServiceBase):
                 )
 
             if decision == "completed":
-                new_status = Status.boject.get(code="completed")
+                new_status = Status.objects.get(code="completed")
                 reconciliation.status = new_status
-                reconciliation.approved_by = (triggered_by,)
-                reconciliation.approved_at = timezone.now().isoformat()
+                reconciliation.approved_by = triggered_by
+                reconciliation.approved_at = timezone.now()
                 reconciliation.comments = comments
                 reconciliation.metadata.update(
                     {
@@ -1596,8 +1611,8 @@ class DisbursementReconciliationService(ServiceBase):
 
                 expense.save(update_fields=["status", "metadata", "updated_at"])
             else:
-                pendind_status = Status.objects.get(code="pending")
-                reconciliation.status = pendind_status
+                pending_status = Status.objects.get(code="pending")
+                reconciliation.status = pending_status
                 reconciliation.approved_by = None
                 reconciliation.approved_at = None
                 reconciliation.reconciled_amount = (

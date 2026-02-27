@@ -688,6 +688,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -800,22 +816,6 @@
         "documentation": {}
     },
     {
-        "label": "include",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
         "label": "path",
         "importPath": "django.urls",
         "description": "django.urls",
@@ -840,11 +840,43 @@
         "documentation": {}
     },
     {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
         "label": "include",
         "importPath": "django.urls",
         "description": "django.urls",
         "isExtraImport": true,
         "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
         "documentation": {}
     },
     {
@@ -941,6 +973,22 @@
         "description": "django.views.decorators.csrf",
         "isExtraImport": true,
         "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "allowed_http_methods",
+        "importPath": "utils.decorators.allowed_http_methods",
+        "description": "utils.decorators.allowed_http_methods",
+        "isExtraImport": true,
+        "detail": "utils.decorators.allowed_http_methods",
         "documentation": {}
     },
     {
@@ -1058,6 +1106,343 @@
         "documentation": {}
     },
     {
+        "label": "TruncMonth",
+        "importPath": "django.db.models.functions",
+        "description": "django.db.models.functions",
+        "isExtraImport": true,
+        "detail": "django.db.models.functions",
+        "documentation": {}
+    },
+    {
+        "label": "TruncDay",
+        "importPath": "django.db.models.functions",
+        "description": "django.db.models.functions",
+        "isExtraImport": true,
+        "detail": "django.db.models.functions",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "ResponseProvider",
+        "importPath": "utils.response_provider",
+        "description": "utils.response_provider",
+        "isExtraImport": true,
+        "detail": "utils.response_provider",
+        "documentation": {}
+    },
+    {
+        "label": "Count",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "Sum",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "F",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "Manager",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "QuerySet",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "django.utils",
+        "description": "django.utils",
+        "isExtraImport": true,
+        "detail": "django.utils",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccountService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliationService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "NotificationService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TransactionLogService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DepartmentService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "UserService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "DisbursementReconciliationService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "ExpenseRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "PettyCashAccountService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
+        "label": "TopUpRequestService",
+        "importPath": "services.services",
+        "description": "services.services",
+        "isExtraImport": true,
+        "detail": "services.services",
+        "documentation": {}
+    },
+    {
         "label": "TransactionLogBase",
         "importPath": "audit.models",
         "description": "audit.models",
@@ -1362,14 +1747,6 @@
         "documentation": {}
     },
     {
-        "label": "Role",
-        "importPath": "users.models",
-        "description": "users.models",
-        "isExtraImport": true,
-        "detail": "users.models",
-        "documentation": {}
-    },
-    {
         "label": "User",
         "importPath": "users.models",
         "description": "users.models",
@@ -1394,59 +1771,75 @@
         "documentation": {}
     },
     {
-        "label": "timezone",
-        "importPath": "django.utils",
-        "description": "django.utils",
+        "label": "Role",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.utils",
+        "detail": "users.models",
         "documentation": {}
     },
     {
-        "label": "timezone",
-        "importPath": "django.utils",
-        "description": "django.utils",
+        "label": "User",
+        "importPath": "users.models",
+        "description": "users.models",
         "isExtraImport": true,
-        "detail": "django.utils",
+        "detail": "users.models",
         "documentation": {}
     },
     {
-        "label": "timezone",
-        "importPath": "django.utils",
-        "description": "django.utils",
+        "label": "DashBoardController",
+        "importPath": "audit.services.dashboard_service",
+        "description": "audit.services.dashboard_service",
         "isExtraImport": true,
-        "detail": "django.utils",
+        "detail": "audit.services.dashboard_service",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "NotificationController",
+        "importPath": "audit.services.notification_service",
+        "description": "audit.services.notification_service",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "audit.services.notification_service",
+        "documentation": {}
+    },
+    {
+        "label": "daylight",
+        "importPath": "time",
+        "description": "time",
+        "isExtraImport": true,
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "get_clean_request_data",
+        "importPath": "utils.common",
+        "description": "utils.common",
+        "isExtraImport": true,
+        "detail": "utils.common",
         "documentation": {}
     },
     {
@@ -1538,62 +1931,6 @@
         "documentation": {}
     },
     {
-        "label": "UserService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "TransactionLogService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "DepartmentService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "UserService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "ExpenseRequestService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "PettyCashAccountService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
-        "label": "TopUpRequestService",
-        "importPath": "services.services",
-        "description": "services.services",
-        "isExtraImport": true,
-        "detail": "services.services",
-        "documentation": {}
-    },
-    {
         "label": "get_user_model",
         "importPath": "django.contrib.auth",
         "description": "django.contrib.auth",
@@ -1610,83 +1947,11 @@
         "documentation": {}
     },
     {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
+        "label": "OTPService",
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
         "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
-        "documentation": {}
-    },
-    {
-        "label": "ResponseProvider",
-        "importPath": "utils.response_provider",
-        "description": "utils.response_provider",
-        "isExtraImport": true,
-        "detail": "utils.response_provider",
+        "detail": "services.otp_email.otp_service",
         "documentation": {}
     },
     {
@@ -1712,15 +1977,6 @@
         "importPath": "jwt",
         "description": "jwt",
         "detail": "jwt",
-        "documentation": {}
-    },
-    {
-        "label": "datetime",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "datetime",
-        "description": "datetime",
-        "detail": "datetime",
         "documentation": {}
     },
     {
@@ -1753,6 +2009,30 @@
         "description": "authenticate.services.auth_services",
         "isExtraImport": true,
         "detail": "authenticate.services.auth_services",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
         "documentation": {}
     },
     {
@@ -1834,22 +2114,6 @@
         "description": "department",
         "isExtraImport": true,
         "detail": "department",
-        "documentation": {}
-    },
-    {
-        "label": "login_required",
-        "importPath": "utils.decorators.login_required",
-        "description": "utils.decorators.login_required",
-        "isExtraImport": true,
-        "detail": "utils.decorators.login_required",
-        "documentation": {}
-    },
-    {
-        "label": "login_required",
-        "importPath": "utils.decorators.login_required",
-        "description": "utils.decorators.login_required",
-        "isExtraImport": true,
-        "detail": "utils.decorators.login_required",
         "documentation": {}
     },
     {
@@ -1983,6 +2247,22 @@
         "documentation": {}
     },
     {
+        "label": "Decimal",
+        "importPath": "decimal",
+        "description": "decimal",
+        "isExtraImport": true,
+        "detail": "decimal",
+        "documentation": {}
+    },
+    {
+        "label": "InvalidOperation",
+        "importPath": "decimal",
+        "description": "decimal",
+        "isExtraImport": true,
+        "detail": "decimal",
+        "documentation": {}
+    },
+    {
         "label": "logging",
         "kind": 6,
         "isExtraImport": true,
@@ -2024,6 +2304,14 @@
         "documentation": {}
     },
     {
+        "label": "DisbursementReconciliationController",
+        "importPath": "finance.services.disbursment_reconciliation_service",
+        "description": "finance.services.disbursment_reconciliation_service",
+        "isExtraImport": true,
+        "detail": "finance.services.disbursment_reconciliation_service",
+        "documentation": {}
+    },
+    {
         "label": "get_asgi_application",
         "importPath": "django.core.asgi",
         "description": "django.core.asgi",
@@ -2056,19 +2344,12 @@
         "documentation": {}
     },
     {
-        "label": "Manager",
-        "importPath": "django.db.models",
-        "description": "django.db.models",
+        "label": "random",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "django.db.models",
-        "documentation": {}
-    },
-    {
-        "label": "QuerySet",
-        "importPath": "django.db.models",
-        "description": "django.db.models",
-        "isExtraImport": true,
-        "detail": "django.db.models",
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
         "documentation": {}
     },
     {
@@ -2183,7 +2464,7 @@
         "kind": 5,
         "importPath": "api.urls",
         "description": "api.urls",
-        "peekOfCode": "urlpatterns = [\n    path(\"health/\", health_check, name='health'),\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"health/\", health_check, name='health'),\n    path(\"auth/\", include(\"authenticate.urls\")),\n    path(\"finance/\", include(\"finance.urls\")),\n    path(\"department/\", include(\"department.urls\")),\n    path(\"audit/\", include(\"audit.urls\")),\n]",
         "detail": "api.urls",
         "documentation": {}
     },
@@ -2260,6 +2541,24 @@
         "documentation": {}
     },
     {
+        "label": "DashBoardController",
+        "kind": 6,
+        "importPath": "audit.services.dashboard_service",
+        "description": "audit.services.dashboard_service",
+        "peekOfCode": "class DashBoardController:\n    @classmethod\n    def get_dashboard(cls, request):\n        \"\"\"\n        Single comprehensive dashboard endpoint.\n        Returns all dashboard data in one response.\n        Frontend is responsible for rendering only what\n        is relevant to the authenticated user's role.\n        Returns:\n            JsonResponse: 200 with full dashboard data.",
+        "detail": "audit.services.dashboard_service",
+        "documentation": {}
+    },
+    {
+        "label": "NotificationController",
+        "kind": 6,
+        "importPath": "audit.services.notification_service",
+        "description": "audit.services.notification_service",
+        "peekOfCode": "class NotificationController:\n    @classmethod\n    def get_my_notifications(cls, request):\n        \"\"\"\n        Retrieves all notifications for the authenticated user ordered by\n        most recent first, with full transaction log context pre-fetched.\n        Args:\n            request: The HTTP request object.\n        Returns:\n            JsonResponse: 200 with list of serialized notifications.",
+        "detail": "audit.services.notification_service",
+        "documentation": {}
+    },
+    {
         "label": "AuditConfig",
         "kind": 6,
         "importPath": "audit.apps",
@@ -2293,6 +2592,69 @@
         "description": "audit.models",
         "peekOfCode": "class Notifications(BaseModel):\n    updated_at = None\n    transaction_log = models.ForeignKey(\n        TransactionLogBase,\n        on_delete=models.PROTECT,  # You cannot delete a log if notifications reference it\n        related_name=\"notifications\",  # → log.notifications.all()\n    )\n    recipient = models.ForeignKey(\n        User,\n        on_delete=models.PROTECT,  #  You cannot delete a user if notifications exist",
         "detail": "audit.models",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "audit.urls",
+        "description": "audit.urls",
+        "peekOfCode": "urlpatterns = [\n    # ── notifications ────────────────────────────────────────\n    path('notifications/', list_my_notifications_view, name='list-my-notifications'),\n    path('notifications/unread/count/', get_unread_count_view, name='get-unread-count'),\n    path('notifications/<str:notification_id>/read/', mark_notification_as_read_view, name='mark-notification-as-read'),\n    path('notifications/read/all/', mark_all_notifications_as_read_view, name='mark-all-notifications-as-read'),\n    # ── notifications ────────────────────────────────────────\n    path('dashboard/', dashboard_view, name='dashboard')\n]",
+        "detail": "audit.urls",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_notifications_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def list_my_notifications_view(request) -> JsonResponse:\n    return NotificationController().get_my_notifications(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef get_unread_count_view(request) -> JsonResponse:\n    return NotificationController().get_unread_count(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_unread_count_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def get_unread_count_view(request) -> JsonResponse:\n    return NotificationController().get_unread_count(request)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef mark_notification_as_read_view(request, notification_id: str) -> JsonResponse:\n    return NotificationController().mark_notification_as_read(request, notification_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "mark_notification_as_read_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def mark_notification_as_read_view(request, notification_id: str) -> JsonResponse:\n    return NotificationController().mark_notification_as_read(request, notification_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef mark_all_notifications_as_read_view(request) -> JsonResponse:\n    return NotificationController().mark_all_notifications_as_read(request)\n# ── DASHBOARD ────────────────────────────────────────────\ndef employee_dashboard_view(request):\n    return DashBoardController().get_employee_dashboard(request)",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "mark_all_notifications_as_read_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def mark_all_notifications_as_read_view(request) -> JsonResponse:\n    return NotificationController().mark_all_notifications_as_read(request)\n# ── DASHBOARD ────────────────────────────────────────────\ndef employee_dashboard_view(request):\n    return DashBoardController().get_employee_dashboard(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef dashboard_view(request):\n    return DashBoardController().get_dashboard(request)",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "employee_dashboard_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def employee_dashboard_view(request):\n    return DashBoardController().get_employee_dashboard(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef dashboard_view(request):\n    return DashBoardController().get_dashboard(request)",
+        "detail": "audit.views",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard_view",
+        "kind": 2,
+        "importPath": "audit.views",
+        "description": "audit.views",
+        "peekOfCode": "def dashboard_view(request):\n    return DashBoardController().get_dashboard(request)",
+        "detail": "audit.views",
         "documentation": {}
     },
     {
@@ -2692,6 +3054,15 @@
         "documentation": {}
     },
     {
+        "label": "DisbursementReconciliationController",
+        "kind": 6,
+        "importPath": "finance.services.disbursment_reconciliation_service",
+        "description": "finance.services.disbursment_reconciliation_service",
+        "peekOfCode": "class DisbursementReconciliationController:\n    @classmethod\n    def get_my_reconciliations(cls, request):\n        \"\"\"\n        Retrieves all reconciliations for the authenticated employee\n        regardless of status — full history in one call.\n        Args:\n            request: The HTTP request object.\n        Returns:\n            JsonResponse: 200 with list of serialized reconciliations.",
+        "detail": "finance.services.disbursment_reconciliation_service",
+        "documentation": {}
+    },
+    {
         "label": "ExpenseRequestController",
         "kind": 6,
         "importPath": "finance.services.expense_request_service",
@@ -2912,7 +3283,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def update_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().update_expense_request(request, expense_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"EMP\")\ndef deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n# ── TOP UP REQUESTS ──────────────────────────────────────────",
+        "peekOfCode": "def update_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().update_expense_request(request, expense_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"EMP\")\ndef deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n@csrf_exempt",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2921,7 +3292,25 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n# ── TOP UP REQUESTS ──────────────────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"FO\",\"ADM\")  # only Finance Officer can request top-ups\ndef create_topup_view(request, pettycash_account_id: str) -> JsonResponse:\n    return TopUpRequestController().create(request, pettycash_account_id)",
+        "peekOfCode": "def deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:\n    return ExpenseRequestController().deactivate_auth_expense_request(\n        request, expense_request_id\n    )\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\", \"CFO\", \"ADM\")\ndef decide_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().approve_or_rejext_expense_request(request, expense_id)\n@csrf_exempt",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "decide_expense_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def decide_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().approve_or_rejext_expense_request(request, expense_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"FO\", \"CFO\", \"ADM\")\ndef disburse_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().disburse_expense_request(request, expense_id)\n# ── TOP UP REQUESTS ──────────────────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"POST\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "disburse_expense_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def disburse_expense_view(request, expense_id: str) -> JsonResponse:\n    return ExpenseRequestController().disburse_expense_request(request, expense_id)\n# ── TOP UP REQUESTS ──────────────────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"FO\",\"ADM\")  # only Finance Officer can request top-ups\ndef create_topup_view(request, pettycash_account_id: str) -> JsonResponse:\n    return TopUpRequestController().create(request, pettycash_account_id)\n@csrf_exempt\n@allowed_http_methods(\"GET\")",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2975,7 +3364,7 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
+        "peekOfCode": "def update_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().update(request, topup_id)\n@csrf_exempt\n@allowed_http_methods(\"DELETE\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)\n# ── DISBURSEMENT RECONCILIATION ──────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"GET\")",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -2984,7 +3373,52 @@
         "kind": 2,
         "importPath": "finance.views",
         "description": "finance.views",
-        "peekOfCode": "def deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)",
+        "peekOfCode": "def deactivate_topup_view(request, topup_id: str) -> JsonResponse:\n    return TopUpRequestController().deactivate(request, topup_id)\n# ── DISBURSEMENT RECONCILIATION ──────────────────────────────\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"ADM\")\ndef list_my_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_my_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_my_reconciliations_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_my_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_my_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"ADM\", \"CFO\", \"FO\")\ndef list_all_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_all_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "list_all_reconciliations_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def list_all_reconciliations_view(request) -> JsonResponse:\n    return DisbursementReconciliationController().get_all_reconciliations(request)\n@csrf_exempt\n@allowed_http_methods(\"GET\")\n@login_required(\"EMP\", \"FO\", \"CFO\", \"ADM\")\ndef get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"EMP\", \"ADM\")  # only the employee submits their own receipt",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_reconciliation_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"POST\")\n@login_required(\"EMP\", \"ADM\")  # only the employee submits their own receipt\ndef submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\", \"CFO\", \"ADM\")  # only FO/CFO can review",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "submit_reconciliation_receipt_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)\n@csrf_exempt\n@allowed_http_methods(\"PATCH\")\n@login_required(\"FO\", \"CFO\", \"ADM\")  # only FO/CFO can review\ndef review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)",
+        "detail": "finance.views",
+        "documentation": {}
+    },
+    {
+        "label": "review_reconciliation_view",
+        "kind": 2,
+        "importPath": "finance.views",
+        "description": "finance.views",
+        "peekOfCode": "def review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:\n    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)",
         "detail": "finance.views",
         "documentation": {}
     },
@@ -3097,15 +3531,6 @@
         "documentation": {}
     },
     {
-        "label": "LOGGING",
-        "kind": 5,
-        "importPath": "pettycash_system.settings",
-        "description": "pettycash_system.settings",
-        "peekOfCode": "LOGGING = {\n    'version': 1,\n    'handlers': {\n        'console': {\n            'class': 'logging.StreamHandler',\n        },\n    },\n    'loggers': {\n        'django.db.backends': {\n            'handlers': ['console'],",
-        "detail": "pettycash_system.settings",
-        "documentation": {}
-    },
-    {
         "label": "LANGUAGE_CODE",
         "kind": 5,
         "importPath": "pettycash_system.settings",
@@ -3169,6 +3594,24 @@
         "documentation": {}
     },
     {
+        "label": "OTPService",
+        "kind": 6,
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
+        "peekOfCode": "class OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:\n            str: The generated 6 digit OTP code.",
+        "detail": "services.otp_email.otp_service",
+        "documentation": {}
+    },
+    {
+        "label": "OTP_EXPIRATION_MINUTES",
+        "kind": 5,
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
+        "peekOfCode": "OTP_EXPIRATION_MINUTES = 15\nclass OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:",
+        "detail": "services.otp_email.otp_service",
+        "documentation": {}
+    },
+    {
         "label": "ServiceBase",
         "kind": 6,
         "importPath": "services.serviceBase",
@@ -3209,7 +3652,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self, email):\n        return self.manager.get(email=email, is_active=True)",
+        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self, email) -> User:\n        return self.manager.get(email=email, is_active=True)",
         "detail": "services.services",
         "documentation": {}
     },
@@ -3281,7 +3724,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_my_pending(self, auth_user: User):\n        \"\"\"\n        Retrieves all pending reconciliations for the authenticated employee.\n        These are disbursements where the employee has not yet submitted receipts.\n        Args:\n            auth_user (User): The currently authenticated employee.\n        Returns:\n            QuerySet: DisbursementReconciliation instances where submitted_by matches",
+        "peekOfCode": "class DisbursementReconciliationService(ServiceBase):\n    manager = DisbursementReconciliation.objects\n    def get_my_reconciliations(self, auth_user: User):\n        \"\"\"\n        Retrieves all reconciliations belonging to the authenticated employee\n        regardless of status — so the employee has a full view of their\n        reconciliation history in one call.\n        Args:\n            auth_user (User): The currently authenticated employee.\n        Returns:",
         "detail": "services.services",
         "documentation": {}
     },
@@ -3346,6 +3789,15 @@
         "description": "users.migrations.0006_alter_user_avatar_url",
         "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0005_role_is_active'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='user',\n            name='avatar_url',\n            field=models.ImageField(blank=True, null=True, upload_to='avatars/'),\n        ),",
         "detail": "users.migrations.0006_alter_user_avatar_url",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "users.migrations.0007_user_otp_code_user_otp_expires_at",
+        "description": "users.migrations.0007_user_otp_code_user_otp_expires_at",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('users', '0006_alter_user_avatar_url'),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='user',\n            name='otp_code',\n            field=models.CharField(blank=True, max_length=6, null=True, verbose_name='OTP Code'),\n        ),",
+        "detail": "users.migrations.0007_user_otp_code_user_otp_expires_at",
         "documentation": {}
     },
     {

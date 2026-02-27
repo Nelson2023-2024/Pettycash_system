@@ -99,6 +99,18 @@ def deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:
         request, expense_request_id
     )
 
+@csrf_exempt
+@allowed_http_methods("PATCH")
+@login_required("FO", "CFO", "ADM")
+def decide_expense_view(request, expense_id: str) -> JsonResponse:
+    return ExpenseRequestController().approve_or_rejext_expense_request(request, expense_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("FO", "CFO", "ADM")
+def disburse_expense_view(request, expense_id: str) -> JsonResponse:
+    return ExpenseRequestController().disburse_expense_request(request, expense_id)
 
 # ── TOP UP REQUESTS ──────────────────────────────────────────
 @csrf_exempt

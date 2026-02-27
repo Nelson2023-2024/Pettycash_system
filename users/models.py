@@ -100,6 +100,19 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         verbose_name='Role'
     )
 
+    # OTP fields — logic lives in OTPService, not here
+    otp_code = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True,
+        verbose_name=_('OTP Code')
+    )
+    otp_expires_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name=_('OTP Expires At')
+    )
+
     # default manager for this class
     objects = UserManager()
     USERNAME_FIELD = 'email'
