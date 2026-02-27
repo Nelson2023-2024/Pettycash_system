@@ -1819,6 +1819,14 @@
         "documentation": {}
     },
     {
+        "label": "login_required",
+        "importPath": "utils.decorators.login_required",
+        "description": "utils.decorators.login_required",
+        "isExtraImport": true,
+        "detail": "utils.decorators.login_required",
+        "documentation": {}
+    },
+    {
         "label": "NotificationController",
         "importPath": "audit.services.notification_service",
         "description": "audit.services.notification_service",
@@ -1884,6 +1892,14 @@
     },
     {
         "label": "ValidationError",
+        "importPath": "django.core.exceptions",
+        "description": "django.core.exceptions",
+        "isExtraImport": true,
+        "detail": "django.core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "PermissionDenied",
         "importPath": "django.core.exceptions",
         "description": "django.core.exceptions",
         "isExtraImport": true,
@@ -1980,6 +1996,22 @@
         "documentation": {}
     },
     {
+        "label": "forgot_password",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_auth_user",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
         "label": "login",
         "importPath": "authenticate.views",
         "description": "authenticate.views",
@@ -1989,6 +2021,30 @@
     },
     {
         "label": "logout",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "refresh_token",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "reset_password",
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "isExtraImport": true,
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "verify_otp",
         "importPath": "authenticate.views",
         "description": "authenticate.views",
         "isExtraImport": true,
@@ -2662,7 +2718,7 @@
         "kind": 6,
         "importPath": "authenticate.services.auth_services",
         "description": "authenticate.services.auth_services",
-        "peekOfCode": "class AuthService:\n    @classmethod\n    def login(cls, request) -> JsonResponse:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"\n        data = get_clean_request_data(request,required_fields={'email', 'password'})",
+        "peekOfCode": "class AuthService:\n    @classmethod\n    def login(cls, request) -> JsonResponse:\n        \"\"\"\n        Authenticate a user with email and password.\n        update the last_login to now()\n        Returns a dict with token and basic user info on success.\n        Raises ValidationError on failure.\n        \"\"\"\n        try:",
         "detail": "authenticate.services.auth_services",
         "documentation": {}
     },
@@ -2680,7 +2736,7 @@
         "kind": 6,
         "importPath": "authenticate.services.token_service",
         "description": "authenticate.services.token_service",
-        "peekOfCode": "class TokenService:\n    @staticmethod\n    def generate_token(user: User, response: JsonResponse, cookie_name,max_age: int) -> str:\n        now = timezone.now()\n        payload = {\n            'user_id': str(user.id),\n            'exp':  now + datetime.timedelta(seconds=max_age),\n            'iat': now\n        }\n        token = jwt.encode(payload, ENV.JWT_SECRET, algorithm='HS256' )",
+        "peekOfCode": "class TokenService:\n    @staticmethod\n    def _generate_token(\n        user: User, secret: str, expiry: datetime.timedelta, token_type: str\n    ) -> str:\n        \"\"\"\n        Base token generator — reused by access and refresh token methods.\n        Args:\n            user (User): The user to generate token for.\n            secret (str): The secret key to sign the token.",
         "detail": "authenticate.services.token_service",
         "documentation": {}
     },
@@ -2698,7 +2754,7 @@
         "kind": 5,
         "importPath": "authenticate.urls",
         "description": "authenticate.urls",
-        "peekOfCode": "urlpatterns = [\n  path('login/',login, name='login'),\n  path('logout/',logout, name='logout'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path(\"login/\", login, name=\"login\"),\n    path(\"logout/\", logout, name=\"logout\"),\n    path(\"refresh/\", refresh_token, name=\"refresh-token\"),\n    path(\"me/\", get_auth_user, name=\"get-auth-user\"),\n    path(\"forgot-password/\", forgot_password, name=\"forgot-password\"),\n    path(\"verify-otp/\", verify_otp, name=\"verify-otp\"),\n    path(\"reset-password/\", reset_password, name=\"reset-password\"),\n]",
         "detail": "authenticate.urls",
         "documentation": {}
     },
@@ -2707,7 +2763,16 @@
         "kind": 2,
         "importPath": "authenticate.views",
         "description": "authenticate.views",
-        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return user_data\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@require_http_methods(['POST'])\ndef logout(request) -> JsonResponse:\n    try:",
+        "peekOfCode": "def login(request) -> JsonResponse:\n    try:\n        user_data = AuthService.login(request)\n        return user_data\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef refresh_token(request) -> JsonResponse:\n    return AuthService.refresh(request)",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "refresh_token",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def refresh_token(request) -> JsonResponse:\n    return AuthService.refresh(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef logout(request) -> JsonResponse:\n    try:\n        return AuthService.logout()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt",
         "detail": "authenticate.views",
         "documentation": {}
     },
@@ -2716,7 +2781,43 @@
         "kind": 2,
         "importPath": "authenticate.views",
         "description": "authenticate.views",
-        "peekOfCode": "def logout(request) -> JsonResponse:\n    try:\n        return  AuthService.logout()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)",
+        "peekOfCode": "def logout(request) -> JsonResponse:\n    try:\n        return AuthService.logout()\n    except Exception as ex:\n        return ResponseProvider.handle_exception(ex)\n@csrf_exempt\n@require_http_methods([\"GET\"])\n@login_required()\ndef get_auth_user(request) -> JsonResponse:\n    return AuthService.get_auth_user(request)",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_auth_user",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def get_auth_user(request) -> JsonResponse:\n    return AuthService.get_auth_user(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef forgot_password(request):\n    return AuthService().forgot_password(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef verify_otp(request):\n    return AuthService().verify_otp(request)",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "forgot_password",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def forgot_password(request):\n    return AuthService().forgot_password(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef verify_otp(request):\n    return AuthService().verify_otp(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef reset_password(request):\n    return AuthService().reset_password(request)",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "verify_otp",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def verify_otp(request):\n    return AuthService().verify_otp(request)\n@csrf_exempt\n@require_http_methods([\"POST\"])\ndef reset_password(request):\n    return AuthService().reset_password(request)",
+        "detail": "authenticate.views",
+        "documentation": {}
+    },
+    {
+        "label": "reset_password",
+        "kind": 2,
+        "importPath": "authenticate.views",
+        "description": "authenticate.views",
+        "peekOfCode": "def reset_password(request):\n    return AuthService().reset_password(request)",
         "detail": "authenticate.views",
         "documentation": {}
     },
@@ -2815,7 +2916,7 @@
         "kind": 6,
         "importPath": "config.env_config",
         "description": "config.env_config",
-        "peekOfCode": "class Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
+        "peekOfCode": "class Environment:\n    def __init__(self):\n        self.JWT_ACCESS_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\n        self.JWT_REFRESH_SECRET = os.getenv(\"REFRESH_SECRET\", \"secret\")\nENV = Environment()",
         "detail": "config.env_config",
         "documentation": {}
     },
@@ -2824,7 +2925,7 @@
         "kind": 5,
         "importPath": "config.env_config",
         "description": "config.env_config",
-        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\nload_dotenv(BASE_DIR / \".env\")\nclass Environment:\n    def __init__(self):\n        self.JWT_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\nENV = Environment()",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\nload_dotenv(BASE_DIR / \".env\")\nclass Environment:\n    def __init__(self):\n        self.JWT_ACCESS_SECRET = os.getenv(\"JWT_SECRET\", \"secret\")\n        self.JWT_REFRESH_SECRET = os.getenv(\"REFRESH_SECRET\", \"secret\")\nENV = Environment()",
         "detail": "config.env_config",
         "documentation": {}
     },
