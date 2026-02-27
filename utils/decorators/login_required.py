@@ -17,6 +17,13 @@ def login_required(*allowed_roles):
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
+            # auth_header = request.headers.get('Authorization', '')
+            # if not auth_header.startswith('Bearer '):
+            #     return ResponseProvider.unauthorized(
+            #         message="Authentication required",
+            #     error = 'Authorization header missing or malformed. Expected: Bearer <token>'
+            #     )
+            #
             token = request.COOKIES.get('jwt')
         
             if not token:
