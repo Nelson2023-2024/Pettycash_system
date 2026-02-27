@@ -59,7 +59,7 @@ class TokenService:
         :return:
         """
         try:
-            return jwt.decode(token, ENV.JWT_SECRET, algorithms=["HS256"])
+            return jwt.decode(token, secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
             raise PermissionDenied("Token has expired.")
         except jwt.InvalidTokenError:
@@ -79,7 +79,7 @@ class TokenService:
         """
         return cls._generate_token(
             user=user,
-            secret=ENV.JWT_SECRET,
+            secret=ENV.JWT_ACCESS_SECRET,
             token_type="access",
             expiry=datetime.timedelta(minutes=15),
         )
@@ -108,7 +108,7 @@ class TokenService:
         :param token:
         :return:
         """
-        return cls._decode_token(token)
+        return cls._decode_token(token, secret=ENV.JWT_ACCESS_SECRET)
 
     @classmethod
     def decode_refresh_token(cls, token):
@@ -117,4 +117,4 @@ class TokenService:
         :param token:
         :return:
         """
-        return cls._decode_token(token)
+        return cls._decode_token(token, secret=ENV.JWT_REFRESH_SECRET)

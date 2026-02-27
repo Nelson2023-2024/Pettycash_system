@@ -1,13 +1,14 @@
 import random
 from users.models import User
 from  datetime import  datetime, timedelta
+from django.utils import timezone
 
 OTP_EXPIRATION_MINUTES = 15
 
 class OTPService:
 
     @staticmethod
-    def generate_otp(cls, user: User):
+    def generate_otp(user: User):
         """
         Generates a 6 digit OTP, saves it to the user record
         with a 15-minute expiry, and returns the code.
@@ -19,7 +20,7 @@ class OTPService:
             str: The generated 6 digit OTP code.
         :return:
         """
-        now = datetime.now()
+        now = timezone.now()
 
 
         otp = random.randint(100000, 999999)
@@ -55,7 +56,7 @@ class OTPService:
             raise  ValueError("OTP cannot be more than 6 characters")
 
         # check in noow is > the 15 min which after otp had been generated
-        if datetime.now() > user.otp_expires_at:
+        if timezone.now() > user.otp_expires_at:
             raise  ValueError("OTP expired")
 
         # check if the opt passed is not equeal to what is stored in DB
@@ -65,6 +66,7 @@ class OTPService:
         #set the code and expired_at to Null to prevent reuse
         user.otp_code = None
         user.otp_expires_at = None
+        user.save(update_fields=["otp_code", "otp_expires_at"])
 
         return True
 

@@ -1,5 +1,3 @@
-from time import daylight
-
 from django.db import transaction
 from django.http import JsonResponse
 
@@ -86,7 +84,7 @@ class AuthService:
         :param request:
         :return:
         """
-        refresh_token = request.COOKIES("refresh_token")
+        refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
             raise ValidationError("No refresh token found. Please login again.")
 
@@ -107,7 +105,7 @@ class AuthService:
         )
 
     @classmethod
-    def logout(cls) -> JsonResponse:
+    def logout(cls, request) -> JsonResponse:
         """
         Logs out the user by clearing the refresh token cookie.
         Frontend is responsible for clearing the access token from memory.
