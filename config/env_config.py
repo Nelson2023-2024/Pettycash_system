@@ -8,7 +8,8 @@ load_dotenv(BASE_DIR / ".env")
 
 class Environment:
     def __init__(self):
-        self.JWT_SECRET = os.getenv("JWT_SECRET", "secret")
+        self.JWT_ACCESS_SECRET = os.getenv("JWT_SECRET", "secret")
+        self.JWT_REFRESH_SECRET = os.getenv("REFRESH_SECRET", "secret")
 
 
 ENV = Environment()
