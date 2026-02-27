@@ -1827,6 +1827,14 @@
         "documentation": {}
     },
     {
+        "label": "daylight",
+        "importPath": "time",
+        "description": "time",
+        "isExtraImport": true,
+        "detail": "time",
+        "documentation": {}
+    },
+    {
         "label": "get_clean_request_data",
         "importPath": "utils.common",
         "description": "utils.common",
@@ -1936,6 +1944,14 @@
         "description": "authenticate.services.token_service",
         "isExtraImport": true,
         "detail": "authenticate.services.token_service",
+        "documentation": {}
+    },
+    {
+        "label": "OTPService",
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
+        "isExtraImport": true,
+        "detail": "services.otp_email.otp_service",
         "documentation": {}
     },
     {
@@ -3580,19 +3596,19 @@
     {
         "label": "OTPService",
         "kind": 6,
-        "importPath": "services.otp-email.otp_service",
-        "description": "services.otp-email.otp_service",
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
         "peekOfCode": "class OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:\n            str: The generated 6 digit OTP code.",
-        "detail": "services.otp-email.otp_service",
+        "detail": "services.otp_email.otp_service",
         "documentation": {}
     },
     {
         "label": "OTP_EXPIRATION_MINUTES",
         "kind": 5,
-        "importPath": "services.otp-email.otp_service",
-        "description": "services.otp-email.otp_service",
+        "importPath": "services.otp_email.otp_service",
+        "description": "services.otp_email.otp_service",
         "peekOfCode": "OTP_EXPIRATION_MINUTES = 15\nclass OTPService:\n    @staticmethod\n    def generate_otp(cls, user: User):\n        \"\"\"\n        Generates a 6 digit OTP, saves it to the user record\n        with a 15-minute expiry, and returns the code.\n        Args:\n            user (User): The user to generate OTP for.\n        Returns:",
-        "detail": "services.otp-email.otp_service",
+        "detail": "services.otp_email.otp_service",
         "documentation": {}
     },
     {
@@ -3636,7 +3652,7 @@
         "kind": 6,
         "importPath": "services.services",
         "description": "services.services",
-        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self, email):\n        return self.manager.get(email=email, is_active=True)",
+        "peekOfCode": "class UserService(ServiceBase):\n    manager = User.objects\n    ## AUTHENTICATION QUERIES\n    \"\"\"\n    LOGIN usage\n    This method retrieves an active user from the database based on the provided email address u. \n    It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.\n    \"\"\"\n    def get_active_user_by_email(self, email) -> User:\n        return self.manager.get(email=email, is_active=True)",
         "detail": "services.services",
         "documentation": {}
     },

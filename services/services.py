@@ -48,7 +48,7 @@ class UserService(ServiceBase):
     It returns the user object if found; otherwise, it raises a `DoesNotExist` exception if no active user matches the email.
     """
 
-    def get_active_user_by_email(self, email):
+    def get_active_user_by_email(self, email) -> User:
         return self.manager.get(email=email, is_active=True)
 
     @staticmethod
