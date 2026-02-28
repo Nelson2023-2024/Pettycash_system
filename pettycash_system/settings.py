@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from config.env_config import ENV
 
-from django.conf.global_settings import AUTH_USER_MODEL
+from django.conf.global_settings import AUTH_USER_MODEL, EMAIL_BACKEND, EMAIL_HOST, EMAIL_USE_TLS, EMAIL_HOST_USER
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'pettycash_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,7 +112,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+EMAIL_BACKEND=ENV.EMAIL_BACKEND
+EMAIL_HOST=ENV.EMAIL_HOST # This is the mail server you're connecting to. Since you're using Gmail → smtp.gmail.com
+EMAIL_USE_TLS=ENV.EMAIL_USE_TLS #  TLS encrypts the connection between: Your Django app Gmail’s mail server Without this, your password would be sent in plain text ❌
+EMAIL_PORT=ENV.EMAIL_PORT
+EMAIL_HOST_USER=ENV.EMAIL_HOST_USER # The Gmail account used to send emails
+EMAIL_HOST_PASSWORD=ENV.EMAIL_HOST_PASSWORD# The password used to log in to Gmail
 # LOGGING = {
 #     'version': 1,
 #     'handlers': {
