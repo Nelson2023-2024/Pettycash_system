@@ -1,8 +1,9 @@
-from django.core.mail import  EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
 from config.env_config import ENV
 from users.models import User
+
 
 class EmailService:
     @staticmethod
@@ -28,13 +29,12 @@ class EmailService:
 
             # render the HTML template with context
             html_content = render_to_string(
-                'otp_email.html', # ← just the filename since APP_DIRS=True
+                "otp_email.html",  # ← just the filename since APP_DIRS=True
                 #   Django will find it inside services/otp_email/templates/
-
                 {
-                    'fullname': user.first_name + ' '+ user.last_name,
-                    'otp_code': otp_code
-                }
+                    "fullname": user.first_name + " " + user.last_name,
+                    "otp_code": otp_code,
+                },
             )
 
             # plain text fallback for email clients that don't render HTML
@@ -48,15 +48,14 @@ class EmailService:
 
             # Initialize a single email message (which can be sent to multiple recipients).
             email = EmailMultiAlternatives(
-                subject=subject,
-                body=plain_text,
-                from_email=from_email,
-                to_email=[to_email]
+                subject=subject, body=plain_text, from_email=from_email, to=[to_email]
             )
 
             # Attach an alternative content representation.
-            email.attach_alternative(html_content,'text/html')
+            email.attach_alternative(html_content, "text/html")
             email.send(fail_silently=False)
+
+            return email
 
         except Exception as ex:
             raise Exception(f"failed to send OTP email to {user.email}: {str(ex)}")

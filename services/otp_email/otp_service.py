@@ -1,9 +1,10 @@
 import random
 from users.models import User
-from  datetime import  datetime, timedelta
+from datetime import datetime, timedelta
 from django.utils import timezone
 
 OTP_EXPIRATION_MINUTES = 15
+
 
 class OTPService:
 
@@ -20,15 +21,17 @@ class OTPService:
             str: The generated 6 digit OTP code.
         :return:
         """
-        now = timezone.now()
+        try:
+            now = timezone.now()
 
+            otp = random.randint(100000, 999999)
+            user.otp_code = otp
+            user.otp_expires_at = now + timedelta(minutes=OTP_EXPIRATION_MINUTES)
+            user.save(update_fields=["otp_code", "otp_expires_at", "updated_at"])
 
-        otp = random.randint(100000, 999999)
-        user.otp_code = otp
-        user.otp_expires_at = now + timedelta(minutes=OTP_EXPIRATION_MINUTES)
-        user.save(update_fields=['otp_code','otp_expires_at','updated_at'])
-
-        return otp
+            return otp
+        except Exception as ex:
+            raise Exception(f"Failed to generate OTP: {str(ex)}")
 
     @staticmethod
     def verify_opt(otp, user: User):
@@ -50,25 +53,34 @@ class OTPService:
         :param user:
         :return:
         """
+        try:
 
-        # check if length exceed required length
-        if len(str(otp)) > 6:
-            raise  ValueError("OTP cannot be more than 6 characters")
+            if not user.otp_code or not user.otp_expires_at:
+                raise ValueError("No OTP was requested for this account.")
 
-        # check in noow is > the 15 min which after otp had been generated
-        if timezone.now() > user.otp_expires_at:
-            raise  ValueError("OTP expired")
+            # check if length exceed required length
+            if len(str(otp)) != 6:
+                raise ValueError("OTP must be exactly 6 digits.")
 
-        # check if the opt passed is not equeal to what is stored in DB
-        if otp != user.otp_code:
-            raise ValueError("Invalid OTP code")
+            # check in noow is > the 15 min which after otp had been generated
+            if timezone.now() > user.otp_expires_at:
+                # set the code and expired_at to Null to prevent reuse
+                user.otp_code = None
+                user.otp_expires_at = None
+                user.save(update_fields=["otp_code", "otp_expires_at"])
+                raise ValueError("OTP has expired. Please request a new one.")
 
-        #set the code and expired_at to Null to prevent reuse
-        user.otp_code = None
-        user.otp_expires_at = None
-        user.save(update_fields=["otp_code", "otp_expires_at"])
+            if str(otp) != str(user.otp_code):
+                raise ValueError("Invalid OTP code.")
 
-        return True
+            # set the code and expired_at to Null to prevent reuse
+            user.otp_code = None
+            user.otp_expires_at = None
+            user.save(update_fields=["otp_code", "otp_expires_at"])
 
+            return True
 
-
+        except ValueError:
+            raise
+        except Exception as ex:
+            raise Exception(f"OTP verification failed: {str(ex)}")
