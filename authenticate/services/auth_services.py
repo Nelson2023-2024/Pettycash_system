@@ -11,7 +11,7 @@ from utils.response_provider import ResponseProvider
 
 from services.otp_email.otp_service import OTPService
 
-User = get_user_model()
+from users.models import User
 
 
 class AuthService:
@@ -232,11 +232,12 @@ class AuthService:
             return ResponseProvider().handle_exception(ex)
 
     @staticmethod
-    def _serialize(user) -> dict:
+    def _serialize(user: User) -> dict:
         return {
             "id": str(user.id),
             "email": user.email,
             "fullname": user.first_name + " " + user.last_name,
             "status": user.status.name,
             "role": user.role.name,
+            "permissions":list(user.role.permissions.values_list('code', flat=True))
         }
