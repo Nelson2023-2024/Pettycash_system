@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.http import JsonResponse
 
+from services.otp_email.email_service import EmailService
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
 from services.services import UserService, TransactionLogService
@@ -164,6 +165,7 @@ class AuthService:
 
             # send code to user's email — plug in your email service here
             # EmailService.send_otp(user.email, code)
+            EmailService.send_otp(user=user, otp_code=otp_code)
 
             return ResponseProvider().success(
                 message="OTP sent to your email! Validation 15 minutes"
