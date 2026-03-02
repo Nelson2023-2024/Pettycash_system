@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Your OTP Code</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #f4f4f7;
+            font-family: Arial, sans-serif;
+            color: #333333;
+        }
+
+        .wrapper {
+            max-width: 560px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            background-color: #1a1a2e;
+            padding: 32px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: #a0a0b0;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .body {
+            padding: 40px;
+        }
+
+        .body p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555555;
+        }
+
+        .otp-block {
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .otp-code {
+            display: inline-block;
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 12px;
+            color: #1a1a2e;
+            background-color: #f4f4f7;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: 2px dashed #d0d0e0;
+        }
+
+        .expiry-note {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #eeeeee;
+            margin: 32px 0;
+        }
+
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #f6c90e;
+            padding: 14px 18px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #7a6000;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background-color: #f4f4f7;
+            padding: 24px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #aaaaaa;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Petty Cash &amp; Expense Tracker</h1>
+            <p>Password Reset Request</p>
+        </div>
+
+        <!-- Body -->
+        <div class="body">
+            <p>Hello <strong>{{ fullname }}</strong>,</p>
+            <br/>
+            <p>
+                We received a request to reset the password for your account.
+                Use the OTP code below to proceed. This code is valid for
+                <strong>15 minutes</strong>.
+            </p>
+
+            <!-- OTP Block -->
+            <div class="otp-block">
+                <div class="otp-code">{{ otp_code }}</div>
+                <p class="expiry-note">⏱ Expires in 15 minutes</p>
+            </div>
+
+            <hr class="divider"/>
+
+            <!-- Warning -->
+            <div class="warning">
+                ⚠️ If you did not request a password reset, please ignore this email.
+                Your account remains secure and no changes have been made.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p style="margin-top: 8px;">© 2026 Petty Cash &amp; Expense Tracker. All rights reserved.</p>
+        </div>
+
+    </div>
+</body>
+</html>

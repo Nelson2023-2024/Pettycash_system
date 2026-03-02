@@ -49,7 +49,7 @@ class UserService(ServiceBase):
     """
 
     def get_active_user_by_email(self, email) -> User:
-        return self.manager.get(email=email, is_active=True)
+        return self.manager.select_related('role','status','department').prefetch_related('role__permissions').get(email=email, is_active=True)
 
     @staticmethod
     def update_last_login(user: User) -> User:
