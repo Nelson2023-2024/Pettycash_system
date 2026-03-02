@@ -1,7 +1,12 @@
+from django.conf.locale import tr
+
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
-from services.services import ExpenseRequestService
+from services.services import ExpenseRequestService, NotificationService, UserService
 from finance.models import ExpenseRequest
+from users.models import User
+from audit.models import Notifications
+from django.db import transaction
 
 
 class ExpenseRequestController:
@@ -67,16 +72,24 @@ class ExpenseRequestController:
             if expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT and not receipt:
                 raise ValueError("A receipt is required for reimbursement requests.")
 
-            expense = ExpenseRequestService().create(
-                request=request,
-                title=data.get("title"),
-                mpesa_phone=data.get("mpesa_phone"),
-                description=data.get("description"),
-                amount=data.get("amount"),
-                employee=request.user,
-                expense_type=data.get("expense_type"),
-                receipt=receipt,
-            )
+            with transaction.atomic():
+
+                expense, log = ExpenseRequestService().create(
+                    request=request,
+                    title=data.get("title"),
+                    mpesa_phone=data.get("mpesa_phone"),
+                    description=data.get("description"),
+                    amount=data.get("amount"),
+                    employee=request.user,
+                    expense_type=data.get("expense_type"),
+                    receipt=receipt,
+                )
+                finance_officers = UserService().get_active_finance_officers()
+
+                NotificationService.notify_many(
+                    transaction_log=log,
+                    recipients=finance_officers,
+                )
 
             return ResponseProvider().success(
                 message="Expense request created successfully",
@@ -165,10 +178,20 @@ class ExpenseRequestController:
                         f"Invalid expense_type '{data['expense_type']}'. "
                         f"Allowed values are: {', '.join(valid_expense_types)}"
                     )
+            with transaction.atomic():
+                expense, log = ExpenseRequestService().update(
+                    triggered_by=authUser,
+                    request=request,
+                    expense_id=expense_id,
+                    data=data,
+                )
+                admins = UserService().get_active_admins()
 
-            expense = ExpenseRequestService().update(
-                triggered_by=authUser, request=request, expense_id=expense_id, data=data
-            )
+                NotificationService.notify_many(
+                    transaction_log=log,
+                    recipients=admins,
+                    channel=Notifications.Channel.IN_APP,
+                )
 
             return ResponseProvider().success(data=cls._serialize(expense))
         except Exception as ex:
@@ -190,10 +213,16 @@ class ExpenseRequestController:
         authUser = request.user
 
         try:
-            expense = ExpenseRequestService().deactivate(
+            expense, log = ExpenseRequestService().deactivate(
                 request=request,
                 expense_request_id=expense_request_id,
                 triggered_by=authUser,
+            )
+
+            NotificationService().notify_many(
+                transaction_log=log,
+                recipients=UserService().get_active_admins(),
+                channel=Notifications.Channel.IN_APP,
             )
             return ResponseProvider().success(
                 message="Expense Request Deactivated", data=cls._serialize(expense)
@@ -229,14 +258,20 @@ class ExpenseRequestController:
 
             if decision not in ["approved", "rejected"]:
                 raise ValueError("Decision must be 'approved' or 'rejected'.")
+            with transaction.atomic():
+                expense, log = ExpenseRequestService().approve_or_reject(
+                    request=request,
+                    expense_id=expense_id,
+                    decision=decision,
+                    triggered_by=request.user,
+                    reason=data.get("reason"),
+                )
 
-            expense = ExpenseRequestService().approve_or_reject(
-                request=request,
-                expense_id=expense_id,
-                decision=decision,
-                triggered_by=request.user,
-                reason=data.get("reason"),
-            )
+                NotificationService().notify(
+                    transaction_log=log,
+                    recipient=expense.employee,
+                    channel=Notifications.Channel.EMAIL,
+                )
 
             return ResponseProvider().success(
                 message=f"Expense request {decision} successfully",
@@ -266,9 +301,15 @@ class ExpenseRequestController:
             :return:
         """
         try:
-            expense = ExpenseRequestService().disburse(
-                request=request, expense_id=expense_id, triggered_by=request.user
-            )
+            with transaction.atomic():
+                expense, log = ExpenseRequestService().disburse(
+                    request=request, expense_id=expense_id, triggered_by=request.user
+                )
+                NotificationService().notify(
+                    transaction_log=log,
+                    channel=Notifications.Channel.EMAIL,
+                    recipient=expense.employee,
+                )
             return ResponseProvider().success(
                 data=cls._serialize(expense),
                 message="Expense request disbursed successfully.",
