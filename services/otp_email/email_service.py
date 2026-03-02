@@ -3,30 +3,59 @@ from django.template.loader import get_template, render_to_string
 from django.conf import settings
 from config.env_config import ENV
 from users.models import User
+from audit.models import Notifications
 
 
 class EmailService:
+
     @staticmethod
-    def send_otp(user: User, otp_code: str) -> None:
+    def _send(subject: str, to_email: str, html_content: str, plain_text: str) -> None:
         """
-         Sends the OTP code to the user's email using the HTML template.
-        Falls back to plain text if HTML rendering fails.
+
+        Base email sender — reused by all email methods.
+        Handles the actual sending so otp and notification methods
+        don't duplicate sending logic.
 
         Args:
-            user (User): The user to send the OTP to.
-            otp_code (str): The generated OTP code.
+            subject (str): Email subject line.
+            to_email (str): Recipient email address.
+            html_content (str): Rendered HTML body.
+            plain_text (str): Plain text fallback body.
 
         Raises:
-            Exception: If email sending fails.
-        :param user:
-        :param otp_code:
+            Exception: If sending fails.
+
+        :param subject:
+        :param to_email:
+        :param html_content:
+        :param plain_text:
         :return:
         """
         try:
-            subject = "Your Password Reset OTP code"
-            from_email = ENV.EMAIL_HOST_USER
-            to_email = user.email
+            email = EmailMultiAlternatives(
+                from_email=ENV.EMAIL_HOST_USER,
+                to=to_email,
+                subject=subject,
+                body=plain_text,
+            )
+            email.attach_alternative(html_content, "text/html")
+            email.send(fail_silently=True)
+        except Exception as ex:
+            raise Exception(f"Failed to send email to {to_email}: {str(ex)}")
 
+    @classmethod
+    def send_otp(cls, user: User, otp_code: str) -> None:
+        """
+          Sends a password reset OTP to the user's email.
+
+        Args:
+            user (User): The user requesting the password reset.
+            otp_code (str): The generated 6 digit OTP code.
+
+        Raises:
+            Exception: If rendering or sending fails.
+        """
+        try:
             # render the HTML template with context
             html_content = render_to_string(
                 "otp_email.html",  # ← just the filename since APP_DIRS=True
@@ -38,7 +67,6 @@ class EmailService:
             )
 
             # plain text fallback for email clients that don't render HTML
-
             plain_text = (
                 f"Hello {user.first_name},\n\n"
                 f"Your OTP code is: {otp_code}\n\n"
@@ -46,16 +74,60 @@ class EmailService:
                 f"If you did not request this, please ignore this email."
             )
 
-            # Initialize a single email message (which can be sent to multiple recipients).
-            email = EmailMultiAlternatives(
-                subject=subject, body=plain_text, from_email=from_email, to=[to_email]
+            cls._send(
+                subject="Your Password Reset OTP Code",
+                to_email=user.email,
+                html_content=html_content,
+                plain_text=plain_text,
             )
-
-            # Attach an alternative content representation.
-            email.attach_alternative(html_content, "text/html")
-            email.send(fail_silently=False)
-
-            return email
-
         except Exception as ex:
             raise Exception(f"failed to send OTP email to {user.email}: {str(ex)}")
+
+    @classmethod
+    def send_notification(cls, user: User, notification: Notifications):
+        """
+        Sends an in-app notification as an email to the user.
+        Called from NotificationService.notify() when channel is EMAIL.
+
+        Args:
+            user (User): The notification recipient.
+            notification: The Notifications model instance.
+
+        Raises:
+            Exception: If rendering or sending fails.
+
+        """
+        try:
+
+            html_content = render_to_string(
+                "notification_email.html",
+                {
+                    "fullname": user.first_name + " " + user.last_name,
+                    "event_name": notification.transaction_log.event_type.name,
+                    "message": notification.transaction_log.event_message,
+                    "triggered_by": (
+                        notification.transaction_log.triggered_by.email
+                        if notification.transaction_log.triggered_by
+                        else "System"
+                    ),
+                },
+            )
+
+            plain_text = (
+                f"Hello {user.first_name},\n\n"
+                f"You have a new notification {notification.transaction_log.event_type.name}\n\n"
+                f"{notification.transaction_log.event_message}\n\n"
+                f"Triggered by {notification.transaction_log.triggered_by.email if notification.transaction_log.triggered_by else "System"}"
+            )
+
+            cls._send(
+                subject=f"Notification: {notification.transaction_log.event_type.name}",
+                to_email=user.email,
+                html_content=html_content,
+                plain_text=plain_text,
+            )
+
+        except Exception as ex:
+            raise Exception(
+                f"Failed to send notification email to {user.email}: {str(ex)}"
+            )
