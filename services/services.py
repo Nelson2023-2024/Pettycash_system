@@ -56,6 +56,12 @@ class UserService(ServiceBase):
             .get(email=email, is_active=True)
         )
 
+    def get_active_admins(self):
+        return self.manager.filter(role__code="ADM", is_active=True)
+
+    def get_active_finance_officers(self):
+        return self.manager.filter(role__code="FO", is_active=True)
+
     @staticmethod
     def update_last_login(user: User) -> User:
         from django.utils import timezone
@@ -295,7 +301,7 @@ class NotificationService(ServiceBase):
 
     @staticmethod
     def notify(
-        transaction_log, recipient, channel: str = Notifications.Channel.IN_APP
+        transaction_log, recipient, channel: str = Notifications.Channel.EMAIL
     ) -> Notifications:
         """
          Creates a single notification tied to a transaction log.
@@ -311,25 +317,30 @@ class NotificationService(ServiceBase):
             Notifications: The created notification instance.
 
         """
-        notification = Notifications.objects.create(
-            transaction_log=transaction_log, recipient=recipient, channel=channel
-        )
+        try:
+            notification = Notifications.objects.create(
+                transaction_log=transaction_log, recipient=recipient, channel=channel
+            )
 
-        if channel == Notifications.Channel.EMAIL:
-            try:
-                EmailService.send_notification(
-                    user=recipient, notification=notification
-                )
-            except Exception as ex:
-                raise Exception(
-                    f"[EmailService] Failed to send notification email: {str(ex)}"
-                )
+            if channel == Notifications.Channel.EMAIL:
+                try:
+                    EmailService.send_notification(
+                        user=recipient, notification=notification
+                    )
+                except Exception as ex:
+                    raise Exception(
+                        f"[EmailService] Failed to send notification email: {str(ex)}"
+                    )
 
-        return notification
+            return notification
+        except Exception as ex:
+            raise Exception(
+                f"[NotificationService] Failed to create notification: {str(ex)}"
+            )
 
     @staticmethod
     def notify_many(
-        transaction_log, recipients, channel: str = Notifications.Channel.IN_APP
+        transaction_log, recipients, channel: str = Notifications.Channel.EMAIL
     ):
         """
         Creates notifications for multiple recipients from a single transaction log.
@@ -349,29 +360,34 @@ class NotificationService(ServiceBase):
         :param channel:
         :return:
         """
-        notifications = Notifications.objects.bulk_create(
-            [
-                Notifications(
-                    transaction_log=transaction_log,
-                    recipient=recipient,
-                    channel=channel,
-                )
-                for recipient in recipients
-            ]
-        )
-
-        if channel == Notifications.Channel.EMAIL:
-            for notification in notifications:
-                try:
-                    EmailService.send_notification(
-                        user=notification.recipient, notification=notification
+        try:
+            notifications = Notifications.objects.bulk_create(
+                [
+                    Notifications(
+                        transaction_log=transaction_log,
+                        recipient=recipient,
+                        channel=channel,
                     )
-                except Exception as ex:
-                    raise Exception(
-                        f"[EmailService] Failed to send email to {notification.recipient.email}: {str(ex)}"
-                    )
+                    for recipient in recipients
+                ]
+            )
 
-        return notifications
+            if channel == Notifications.Channel.EMAIL:
+                for notification in notifications:
+                    try:
+                        EmailService.send_notification(
+                            user=notification.recipient, notification=notification
+                        )
+                    except Exception as ex:
+                        raise Exception(
+                            f"[EmailService] Failed to send email to {notification.recipient.email}: {str(ex)}"
+                        )
+
+            return notifications
+        except Exception as ex:
+            raise Exception(
+                f"[NotificationService] Failed to create notifications: {str(ex)}"
+            )
 
     def list_auth_user_notifications(self, auth_user: User):
         """
@@ -425,6 +441,7 @@ class NotificationService(ServiceBase):
             id=notification_id, is_read=False, recipient=auth_user
         )
         notification.is_read = True
+        notification.read_at = timezone.now()
         notification.save(update_fields=["is_read", "read_at"])
         return notification
 
@@ -657,35 +674,36 @@ class ExpenseRequestService(ServiceBase):
         Creates a new expense request for the given employee.
         Category, status, and assigned_to are auto-resolved via defaults in the models.
         """
-        expense = self.manager.create(
-            employee=employee,
-            expense_type=expense_type,
-            title=title,
-            mpesa_phone=mpesa_phone,
-            description=description,
-            amount=amount,
-            receipt=receipt,
-        )
-        TransactionLogService.log(
-            entity=expense,
-            event_code="expense_submitted",
-            triggered_by=employee,
-            message=f'Expense request "{expense.title}" created',
-            ip_address=request.META.get("REMOTE_ADDR") if request else None,
-            metadata={
-                "expense_id": str(expense.id),
-                "title": expense.title,
-                "amount": str(expense.amount),
-                "expense_type": expense.expense_type,
-                "mpesa_phone": expense.mpesa_phone,
-                "description": expense.description,
-                "employee_id": str(employee.id),
-                "employee_email": employee.email,
-                "action": "create",
-            },
-        )
+        with transaction.atomic():
+            expense = self.manager.create(
+                employee=employee,
+                expense_type=expense_type,
+                title=title,
+                mpesa_phone=mpesa_phone,
+                description=description,
+                amount=amount,
+                receipt=receipt,
+            )
+            log = TransactionLogService.log(
+                entity=expense,
+                event_code="expense_submitted",
+                triggered_by=employee,
+                message=f'Expense request "{expense.title}" created by {request.user.email}',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "expense_id": str(expense.id),
+                    "title": expense.title,
+                    "amount": str(expense.amount),
+                    "expense_type": expense.expense_type,
+                    "mpesa_phone": expense.mpesa_phone,
+                    "description": expense.description,
+                    "employee_id": str(employee.id),
+                    "employee_email": employee.email,
+                    "action": "create",
+                },
+            )
 
-        return expense
+        return expense, log
 
     def get_all(self):
         """
@@ -764,11 +782,11 @@ class ExpenseRequestService(ServiceBase):
 
             expense.save(update_fields=list(data.keys()) + ["updated_at"])
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=expense,
             event_code="expense_updated",
             triggered_by=triggered_by,
-            message=f'Expense request "{expense.title}" updated',
+            message=f'Expense request "{expense.title}" updated by {request.user.email}',
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
             metadata={
                 "expense_id": str(expense.id),
@@ -785,7 +803,7 @@ class ExpenseRequestService(ServiceBase):
             },
         )
 
-        return expense
+        return expense, log
 
     def deactivate(self, request, expense_request_id, triggered_by: User):
         """
@@ -810,12 +828,12 @@ class ExpenseRequestService(ServiceBase):
         expense.is_active = False
         expense.save(update_fields=["is_active", "status"])
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=expense,
             event_code="expense_updated",
             triggered_by=triggered_by,
             status_code="INACT",
-            message=f'Expense request "{expense.title}" deactivated',
+            message=f'Expense request "{expense.title}" deactivated by {request.user.email}',
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
             metadata={
                 "expense_id": str(expense.id),
@@ -831,7 +849,7 @@ class ExpenseRequestService(ServiceBase):
             },
         )
 
-        return expense
+        return expense, log
 
     def approve_or_reject(
         self,
@@ -877,7 +895,7 @@ class ExpenseRequestService(ServiceBase):
 
             expense.save(update_fields=["status", "metadata", "updated_at"])
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=expense,
                 event_code=event_code,
                 triggered_by=triggered_by,
@@ -898,7 +916,7 @@ class ExpenseRequestService(ServiceBase):
                 },
             )
 
-            return expense
+            return expense, log
 
     def disburse(self, request, expense_id: str, triggered_by: User):
         """
@@ -938,7 +956,7 @@ class ExpenseRequestService(ServiceBase):
                     status=Status.objects.get(code="pending"),
                 )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=expense,
                 event_code="expense_disbursed",
                 triggered_by=triggered_by,
@@ -957,7 +975,7 @@ class ExpenseRequestService(ServiceBase):
                 },
             )
 
-            return expense
+            return expense, log
         # REIMBURSEMENT: submitted → pending → approved → disbursed ✅ (closed)
         # DISBURSEMENT:  submitted → pending → approved → disbursed → reconciliation pending → under_review → completed ✅
 
