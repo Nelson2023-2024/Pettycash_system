@@ -33,8 +33,6 @@ class Role(GenericBaseModel):
     permissions = models.ManyToManyField(
         Permission,
         related_name="roles",
-        blank=True,
-        null=True,
         verbose_name=_("Permissions"),
     )
 
