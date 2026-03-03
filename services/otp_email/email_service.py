@@ -34,12 +34,13 @@ class EmailService:
         try:
             email = EmailMultiAlternatives(
                 from_email=ENV.EMAIL_HOST_USER,
-                to=to_email,
+                to=[to_email],
                 subject=subject,
                 body=plain_text,
             )
             email.attach_alternative(html_content, "text/html")
-            email.send(fail_silently=True)
+            #lets exceptions bubble up to your try/except
+            email.send(fail_silently=False)
         except Exception as ex:
             raise Exception(f"Failed to send email to {to_email}: {str(ex)}")
 
@@ -90,7 +91,7 @@ class EmailService:
         Called from NotificationService.notify() when channel is EMAIL.
 
         Args:
-            user (User): The notification recipient.
+            user (User): The recipient.
             notification: The Notifications model instance.
 
         Raises:

@@ -80,18 +80,30 @@ WSGI_APPLICATION = 'pettycash_system.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+#----------CONTAINER-------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pettycash_db',
-        'USER':'postgres',
-        'PASSWORD':'root',
-        'HOST':'localhost',
-        'PORT':'5432'
+        'NAME': ENV.POSTGRES_DB,
+        'USER': ENV.POSTGRES_USER,
+        'PASSWORD':ENV.POSTGRES_PASSWORD,
+        'HOST':ENV.POSRGRES_HOST,
+        'PORT':ENV.POSTGRES_PORT
 
     }
 }
+
+#------------LOCALHOST----------
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'pettycash_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '5432',  # mapped host port
+#     }
+# }
 #USER postgres
 
 
