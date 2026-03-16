@@ -143,6 +143,14 @@ class ExpenseRequestController:
             return ResponseProvider().handle_exception(ex)
 
     @classmethod
+    def get_expense_request(cls, request, expense_id):
+        try:
+            expense = ExpenseRequestService().get_by_id(expense_id)
+            return ResponseProvider().success(data=cls._serialize(expense))
+        except Exception as ex:
+            return ResponseProvider().handle_exception(ex)
+
+    @classmethod
     def update_expense_request(cls, request, expense_id):
         """
         Updates an existing expense request with the provided fields.
@@ -330,4 +338,8 @@ class ExpenseRequestController:
             "description": expense.description,
             "status": expense.status.name if expense.status else None,
             "created_at": expense.created_at.isoformat(),
+            "mpesa_phone": expense.mpesa_phone,
+            "receipt": expense.receipt.url if expense.receipt else None,
+            "employee_email": expense.employee.email,
+            "reason": expense.metadata.get("decision_reason") or None, 
         }
