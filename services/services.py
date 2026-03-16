@@ -614,6 +614,47 @@ class PettyCashAccountService(ServiceBase):
         )
         return account
 
+    def deduct_balance(self, amount, triggered_by, request=None):
+        """
+        Deducts the disbursed amount from the active petty cash account balance.
+        Raises ValueError if no active account exists or if balance would go negative.
+        """
+        with transaction.atomic():
+            account = self.manager.filter(is_active=True).select_for_update().first()
+
+            if not account:
+                raise ValueError("No active petty cash account found.")
+
+            if account.current_balance < amount:
+                raise ValueError(
+                    f"Insufficient balance. Available: {account.current_balance}, Requested: {amount}"
+                )
+
+            account.current_balance -= amount
+            account.save(update_fields=["current_balance"])
+
+            # Check to automatically trigger topup when balance goes low
+            TopUpRequestService().trigger_top_up_request(
+                account=account, request=request
+            )
+
+            TransactionLogService.log(
+                entity=account,
+                event_code="petty_cash_balance_deducted",
+                triggered_by=triggered_by,
+                message=f"KES {amount} deducted from petty cash account '{account.name}'",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "account_id": str(account.id),
+                    "account_name": account.name,
+                    "amount_deducted": str(amount),
+                    "new_balance": str(account.current_balance),
+                    "expense_deducted_by": triggered_by.email,
+                },
+            )
+
+            return account
+
     def deactivate_account(self, account_id: str, triggered_by, request=None):
         """
             Soft deletes a petty cash account by setting is_active to False.
@@ -732,8 +773,15 @@ class ExpenseRequestService(ServiceBase):
             with assigned_to and status pre-fetched via select_related.
         """
         return self.manager.filter(employee=authUser, is_active=True).select_related(
-            "status"
+            "status", "employee"
         )
+
+    def get_by_id(self, expense_id: str):
+        expense = self.manager.filter(id=expense_id, is_active=True).first()
+
+        if not expense:
+            raise ValueError("Expense request not found.")
+        return expense
 
     def get_all_pending_for_fo(self):
         """
@@ -871,7 +919,7 @@ class ExpenseRequestService(ServiceBase):
                 .get(id=expense_id, is_active=True)
             )
 
-            if expense.status.code != "pending":
+            if expense.status.code not in ["pending", "rejected"]:
                 raise ValueError(
                     f"Only pending requests can be approved or rejected. Current status: {expense.status.code}"
                 )
@@ -935,6 +983,12 @@ class ExpenseRequestService(ServiceBase):
                 raise ValueError(
                     f"Only approved requests can be disbursed. Current status: {expense.status.code}"
                 )
+
+            PettyCashAccountService().deduct_balance(
+                amount=expense.amount,
+                triggered_by=triggered_by,
+                request=request,
+            )
 
             disbursed_status = Status.objects.get(code="disbursed")
             expense.status = disbursed_status
@@ -1177,47 +1231,50 @@ class TopUpRequestService(ServiceBase):
                     .get(id=topup_id, is_active=True)
                 )
 
-            # Idempotency check
-            if topup.status.code == decision:
-                return topup
+                # Idempotency check
+                if topup.status.code == decision:
+                    return topup
 
-            status = Status.objects.get(code=decision)
-            event_code = (
-                "topup_approved" if decision == "approved" else "topup_rejected"
-            )
-            event_type = EventTypes.objects.get(code=event_code)
-            decision_at = timezone.now()
+                status = Status.objects.get(code=decision)
+                event_code = (
+                    "topup_approved" if decision == "approved" else "topup_rejected"
+                )
+                event_type = EventTypes.objects.get(code=event_code)
+                decision_at = timezone.now()
 
-            topup.status = status
-            topup.event_type = event_type
-            topup.decision_by = triggered_by
-            topup.decision_reason = decision_reason or ""
-            topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
-            topup.save(
-                update_fields=[
-                    "status_id",
-                    "event_type_id",
-                    "decision_by_id",
-                    "decision_reason",
-                    "metadata",
-                    "updated_at",
-                ]
-            )
-
-            TransactionLogService.log(
-                entity=topup,
-                event_code=event_code,
-                triggered_by=triggered_by,
-                status_code=decision,  # or a relevant status
-                message=f"Top-up request {decision} for {topup.amount}",
-                ip_address=request.META.get("REMOTE_ADDR") if request else None,
-                metadata={
-                    "topup_id": str(topup.id),
-                    "account_id": str(topup.pettycash_account.id),
-                    "decision_reason": decision_reason,
+                topup.status = status
+                topup.event_type = event_type
+                topup.decision_by = triggered_by
+                topup.decision_reason = decision_reason or ""
+                topup.metadata = {
+                    **topup.metadata,
                     "decision_at": decision_at.isoformat(),
-                },
-            )
+                }
+                topup.save(
+                    update_fields=[
+                        "status_id",
+                        "event_type_id",
+                        "decision_by_id",
+                        "decision_reason",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
+
+                TransactionLogService.log(
+                    entity=topup,
+                    event_code=event_code,
+                    triggered_by=triggered_by,
+                    status_code=decision,  # or a relevant status
+                    message=f"Top-up request {decision} for {topup.amount}",
+                    ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                    metadata={
+                        "topup_id": str(topup.id),
+                        "account_id": str(topup.pettycash_account.id),
+                        "decision_reason": decision_reason,
+                        "decision_at": decision_at.isoformat(),
+                    },
+                )
 
             return topup
         except IntegrityError as e:
@@ -1292,6 +1349,7 @@ class TopUpRequestService(ServiceBase):
                     "action": "update",
                 },
             )
+            return topup
 
     def deactivate_top_up_request(
         self, topup_id: str, triggered_by: User, request=None
@@ -1342,59 +1400,52 @@ class TopUpRequestService(ServiceBase):
         return topup
 
     def disburse_top_up_request(self, topup_id: str, triggered_by: User, request=None):
-        """
-            Disburses an approved top-up by crediting the petty cash account balance.
-        Automatically triggers another top-up check after balance changes.
+        with transaction.atomic():
+            topup = self.get_by_id(topup_id)
 
-        Raises:
-            ValueError: If the top-up request is not in 'approved' status.
-        """
-        topup = self.get_by_id(topup_id)
-        # If already complete – just return (idempotent)
-        if topup.status.code == "complete":
-            return topup
+            if topup.status.code == "completed":
+                return topup
 
-        if topup.status.code != "approved":
-            raise ValueError(
-                f"Cannot disburse a request that is '{topup.status.name}'. Must be 'approved'."
+            if topup.status.code != "approved":
+                raise ValueError(
+                    f"Cannot disburse a request that is '{topup.status.name}'. Must be 'approved'."
+                )
+
+            account = topup.pettycash_account
+            previous_balance = account.current_balance
+
+            # credit the balance
+            account.current_balance += topup.amount
+            account.save(update_fields=["current_balance", "updated_at"])
+
+            complete_status = Status.objects.get(code="completed")
+            event_type = EventTypes.objects.get(code="topup_disbursed")
+
+            topup.status = complete_status
+            topup.event_type = event_type
+            topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
+
+            TransactionLogService.log(
+                entity=topup,
+                event_code="topup_disbursed",
+                triggered_by=triggered_by,
+                message=f'Top-up of {topup.amount} disbursed to "{account.name}"',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "topup_id": str(topup.id),
+                    "account_id": str(account.id),
+                    "account_name": account.name,
+                    "amount": str(topup.amount),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(account.current_balance),
+                    "disbursed_by_id": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_by_role": triggered_by.role.name,
+                    "action": "disburse",
+                },
             )
 
-        account = topup.pettycash_account
-        previous_balance = account.current_balance
-
-        # increment on the current balance the topup amount
-        account.current_balance += topup.amount
-        account.save(update_fields=["current_balance", "updated_at"])
-
-        complete_status = Status.objects.get(code="complete")
-        event_type = EventTypes.objects.get(code="topup_disbursed")
-
-        topup.status = complete_status
-        topup.event_type = event_type
-
-        topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
-
-        TransactionLogService.log(
-            entity=topup,
-            event_code="topup_disbursed",
-            triggered_by=triggered_by,
-            message=f'Top-up of {topup.amount} disbursed to "{account.name}"',
-            ip_address=request.META.get("REMOTE_ADDR") if request else None,
-            metadata={
-                "topup_id": str(topup.id),
-                "account_id": str(account.id),
-                "account_name": account.name,
-                "amount": str(topup.amount),
-                "previous_balance": str(previous_balance),
-                "new_balance": str(account.current_balance),
-                "disbursed_by_id": str(triggered_by.id),
-                "disbursed_by_email": triggered_by.email,
-                "disbursed_by_role": triggered_by.role.name,
-                "action": "disburse",
-            },
-        )
-
-        return topup
+            return topup
 
 
 # -----------------------------------------------------------------------------
@@ -1494,7 +1545,7 @@ class DisbursementReconciliationService(ServiceBase):
                 .get(id=reconciliation_id, is_active=True)
             )
 
-            if reconciliation.status.code != "pending":
+            if reconciliation.status.code not in ["pending", "rejected"]:
                 raise ValueError(
                     f"Receipts already submitted. Current status: {reconciliation.status.code}"
                 )
@@ -1659,8 +1710,8 @@ class DisbursementReconciliationService(ServiceBase):
 
                 expense.save(update_fields=["status", "metadata", "updated_at"])
             else:
-                pending_status = Status.objects.get(code="pending")
-                reconciliation.status = pending_status
+                rejected_status = Status.objects.get(code="rejected")
+                reconciliation.status = rejected_status
                 reconciliation.approved_by = None
                 reconciliation.approved_at = None
                 reconciliation.reconciled_amount = (

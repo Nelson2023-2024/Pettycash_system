@@ -118,7 +118,7 @@ class EmailService:
                 f"Hello {user.first_name},\n\n"
                 f"You have a new notification {notification.transaction_log.event_type.name}\n\n"
                 f"{notification.transaction_log.event_message}\n\n"
-                f"Triggered by {notification.transaction_log.triggered_by.email if notification.transaction_log.triggered_by else "System"}"
+                f"Triggered by {notification.transaction_log.triggered_by.email if notification.transaction_log.triggered_by else 'System'}"
             )
 
             cls._send(
