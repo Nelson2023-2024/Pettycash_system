@@ -19,8 +19,10 @@ class DisbursementReconciliationController:
             JsonResponse: 200 with list of serialized reconciliations.
         """
         try:
-            reconciliations = DisbursementReconciliationService().get_my_reconciliations(
-                auth_user=request.user
+            reconciliations = (
+                DisbursementReconciliationService().get_my_reconciliations(
+                    auth_user=request.user
+                )
             )
             return ResponseProvider.success(
                 data=[cls._serialize(r) for r in reconciliations]
@@ -41,7 +43,9 @@ class DisbursementReconciliationController:
             JsonResponse: 200 with list of serialized reconciliations.
         """
         try:
-            reconciliations = DisbursementReconciliationService().get_all_reconciliations()
+            reconciliations = (
+                DisbursementReconciliationService().get_all_reconciliations()
+            )
             return ResponseProvider.success(
                 data=[cls._serialize(r) for r in reconciliations]
             )
@@ -97,7 +101,9 @@ class DisbursementReconciliationController:
                 reconciled_amount = Decimal(str(data.get("reconciled_amount")))
                 surplus_returned = Decimal(str(data.get("surplus_returned")))
             except InvalidOperation:
-                raise ValueError("reconciled_amount and surplus_returned must be valid numbers.")
+                raise ValueError(
+                    "reconciled_amount and surplus_returned must be valid numbers."
+                )
 
             receipt = request.FILES.get("receipt")
             if not receipt:
@@ -171,13 +177,41 @@ class DisbursementReconciliationController:
             "expense_request_id": str(reconciliation.expense_request.id),
             "expense_request_title": reconciliation.expense_request.title,
             "disbursed_amount": str(reconciliation.expense_request.amount),
-            "reconciled_amount": str(reconciliation.reconciled_amount) if reconciliation.reconciled_amount else None,
-            "surplus_returned": str(reconciliation.surplus_returned) if reconciliation.surplus_returned else None,
+            "reconciled_amount": (
+                str(reconciliation.reconciled_amount)
+                if reconciliation.reconciled_amount
+                else None
+            ),
+            "surplus_returned": (
+                str(reconciliation.surplus_returned)
+                if reconciliation.surplus_returned
+                else None
+            ),
             "comments": reconciliation.comments,
             "status": reconciliation.status.name if reconciliation.status else None,
-            "submitted_by": reconciliation.submitted_by.email,
-            "approved_by": reconciliation.approved_by.email if reconciliation.approved_by else None,
-            "approved_at": reconciliation.approved_at.isoformat() if reconciliation.approved_at else None,
+            "submitted_by": (
+                {
+                    "id": str(reconciliation.submitted_by.id),
+                    "name": f"{reconciliation.submitted_by.first_name} {reconciliation.submitted_by.last_name}".strip(),
+                    "email": reconciliation.submitted_by.email,
+                }
+                if reconciliation.submitted_by
+                else None
+            ),
+            "approved_by": (
+                {
+                    "id": str(reconciliation.approved_by.id),
+                    "name": f"{reconciliation.approved_by.first_name} {reconciliation.approved_by.last_name}".strip(),
+                    "email": reconciliation.approved_by.email,
+                }
+                if reconciliation.approved_by
+                else None
+            ),
+            "approved_at": (
+                reconciliation.approved_at.isoformat()
+                if reconciliation.approved_at
+                else None
+            ),
             "receipt": reconciliation.receipt.url if reconciliation.receipt else None,
             "is_active": reconciliation.is_active,
             "created_at": str(reconciliation.created_at),
