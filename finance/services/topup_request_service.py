@@ -1,9 +1,10 @@
-from django.db import DataError, IntegrityError,OperationalError
+from django.db import DataError, IntegrityError, OperationalError
 from finance.models import TopUpRequest
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
 from services.services import TopUpRequestService
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -94,37 +95,37 @@ class TopUpRequestController:
     def decide(cls, request, topup_id: str):
         try:
             data = get_clean_request_data(
-            request,
-            required_fields={"decision"},
-            allowed_fields={"decision", "decision_reason"},
-        )
+                request,
+                required_fields={"decision"},
+                allowed_fields={"decision", "decision_reason"},
+            )
 
             decision = data.get("decision")
             VALID_DECISIONS = {"approved", "rejected"}
 
             if decision not in VALID_DECISIONS:
                 raise ValueError(
-                f"Invalid decision '{decision}'. Must be one of {VALID_DECISIONS}."
-            )
+                    f"Invalid decision '{decision}'. Must be one of {VALID_DECISIONS}."
+                )
 
             topup = TopUpRequestService().decide_top_up_request(
-            topup_id=topup_id,
-            decision=decision,
-            decision_reason=data.get("decision_reason"),
-            triggered_by=request.user,
-            request=request,
-        )
+                topup_id=topup_id,
+                decision=decision,
+                decision_reason=data.get("decision_reason"),
+                triggered_by=request.user,
+                request=request,
+            )
             return ResponseProvider().success(
-            message=f"Top-up request {decision} successfully",
-            data=cls._serialize(topup),
-        )
+                message=f"Top-up request {decision} successfully",
+                data=cls._serialize(topup),
+            )
 
         except IntegrityError as e:
-        # Log the full error for debugging
+            # Log the full error for debugging
             logger.error(f"IntegrityError in decide endpoint: {e}", exc_info=True)
             return ResponseProvider().conflict(
-            error="This top‑up request cannot be decided twice or a related record conflicts."
-        )
+                error="This top‑up request cannot be decided twice or a related record conflicts."
+            )
         except Exception as ex:
             return ResponseProvider().handle_exception(ex)
 
@@ -213,20 +214,47 @@ class TopUpRequestController:
 
     @staticmethod
     def _serialize(topup) -> dict:
-        """
-        Converting a Django model → JSON-safe dictionary
-        """
         return {
             "id": str(topup.id),
-            "account_name": topup.pettycash_account.name,
             "amount": str(topup.amount),
             "request_reason": topup.request_reason,
             "decision_reason": topup.decision_reason,
-            "status": topup.status.name if topup.status else None,
-            "event_type": topup.event_type.code if topup.event_type else None,
-            "requested_by": topup.requested_by.email,
-            "decision_by": topup.decision_by.email if topup.decision_by else None,
             "is_auto_triggered": topup.is_auto_triggered,
             "is_active": topup.is_active,
             "created_at": topup.created_at.isoformat(),
+            "updated_at": topup.updated_at.isoformat(),
+            # ── Status & Event ──
+            "status": topup.status.name if topup.status else None,
+            "status_code": topup.status.code if topup.status else None,
+            "event_type": topup.event_type.code if topup.event_type else None,
+            # ── Petty Cash Account ──
+            "pettycash_account": (
+                {
+                    "id": str(topup.pettycash_account.id),
+                    "name": topup.pettycash_account.name,
+                    "current_balance": str(topup.pettycash_account.current_balance),
+                }
+                if topup.pettycash_account
+                else None
+            ),
+            # ── Requested By ──
+            "requested_by": (
+                {
+                    "id": str(topup.requested_by.id),
+                    "name": f"{topup.requested_by.first_name} {topup.requested_by.last_name}".strip(),
+                    "email": topup.requested_by.email,
+                }
+                if topup.requested_by
+                else None
+            ),
+            # ── Decision By ──
+            "decision_by": (
+                {
+                    "id": str(topup.decision_by.id),
+                    "name": f"{topup.decision_by.first_name} {topup.decision_by.last_name}".strip(),
+                    "email": topup.decision_by.email,
+                }
+                if topup.decision_by
+                else None
+            ),
         }
