@@ -113,4 +113,14 @@ class DepartmentController:
             "name": department.name,
             "code": department.code,
             "description": department.description,
+            "is_active": department.is_active,
+            "line_manager": (
+                {
+                    "id": str(department.line_manager.id),
+                    "name": f"{department.line_manager.first_name} {department.line_manager.last_name}".strip(),
+                    "email": department.line_manager.email,
+                }
+                if department.line_manager
+                else None
+            ),
         }
