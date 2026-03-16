@@ -83,6 +83,12 @@ def list_all_expenses_view(request) -> JsonResponse:
 def list_my_expenses_view(request) -> JsonResponse:
     return ExpenseRequestController().get_auth_user_expense_request(request)
 
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "FO", "CFO", "ADM")
+def get_expense_request_view(request) -> JsonResponse:
+    return ExpenseRequestController().get_expense_request(request)
+
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
