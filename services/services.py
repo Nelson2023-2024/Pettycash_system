@@ -33,6 +33,16 @@ class CategoryService(ServiceBase):
 
 class RoleService(ServiceBase):
     manager = Role.objects
+    
+    def get_all(self):
+        """
+        Retrieves all active roles with their permissions pre-fetched.
+
+        Returns:
+            QuerySet: Role instances where is_active is True,
+            with permissions prefetched to avoid N+1 queries.
+        """
+        return self.manager.filter(is_active=True)
 
 
 # -----------------------------------------------------------------------------

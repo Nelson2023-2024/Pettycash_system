@@ -9,4 +9,6 @@ urlpatterns = [
     path("<str:user_id>/update/", views.update_user_view, name="update_user"),
     # USER
     path("profile/update/", views.update_profile_view, name="update_profile"),
+    # ROLES
+    path("roles/all/", views.list_roles_view, name="list_roles"),
 ]

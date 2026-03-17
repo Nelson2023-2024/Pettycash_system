@@ -2,7 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from utils.decorators.login_required import login_required
 from utils.decorators.allowed_http_methods import allowed_http_methods
 from utils.response_provider import ResponseProvider
-from .services.user_services import UserController
+from .services.user_service import UserController
+from .services.role_service import RoleController
 
 
 # ---------------------------------------------------------------------
@@ -68,3 +69,13 @@ def update_user_view(request, user_id):
         return UserController.update_user(request, user_id)
     except Exception as ex:
         return ResponseProvider().handle_exception(ex)
+
+
+# ---------------------------------------------------------------------
+# ADMIN — list all roles
+# ---------------------------------------------------------------------
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM")
+def list_roles_view(request):
+    return RoleController.list_roles(request)
