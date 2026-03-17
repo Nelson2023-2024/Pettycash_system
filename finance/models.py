@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from users.models import User
 from finance.default import (get_default_expense_category, get_default_expense_submitted_event, get_default_pending_status, get_default_topup_requested_event)
 from audit.models import EventTypes
-
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class PettyCashAccount(GenericBaseModel):
@@ -80,7 +80,14 @@ class ExpenseRequest(BaseModel):
     mpesa_phone = models.CharField(max_length=20, blank=True, verbose_name=_('M-Pesa Phone'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
     amount = models.DecimalField(max_digits=8, decimal_places=2, verbose_name=_('Amount'))
-    receipt = models.FileField(upload_to='receipts/%Y/%m/%d/',null=True, blank=True, verbose_name=_('Receipt'))
+    # receipt = models.FileField(upload_to='receipts/%Y/%m/%d/',null=True, blank=True, verbose_name=_('Receipt'))
+    receipt = CloudinaryField(
+    folder="receipts",
+    blank=True,
+    null=True,
+    verbose_name=_('Receipt'),
+    resource_type="auto"  # allows both images and PDFs
+)
 
     metadata = models.JSONField(default=dict, blank=True, verbose_name=_('Metadata'))  # store approved_by, timestamps, comments, etc.
 
@@ -211,6 +218,7 @@ class DisbursementReconciliation(BaseModel):
         default=0,
         verbose_name='Surplus Returned'
     )
+    
     
     receipt = models.FileField(
         upload_to='reconciliation_receipts/%Y/%m/%d/',

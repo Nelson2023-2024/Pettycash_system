@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
 from base.models import BaseModel, GenericBaseModel, Status
 from django.utils.translation import gettext_lazy as _
 from department.models import Department
+from cloudinary.models import CloudinaryField
 
 
 class Permission(GenericBaseModel):
@@ -112,7 +113,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         null=True,
         verbose_name=_("National Identity Number"),
     )
-    avatar_url = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    avatar_url = CloudinaryField(
+        folder="avatars", blank=True, null=True, resource_type="image"
+    )
 
     last_login = models.DateTimeField(blank=True, null=True)
 
