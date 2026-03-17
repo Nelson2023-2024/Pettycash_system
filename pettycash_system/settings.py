@@ -13,8 +13,18 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from config.env_config import ENV
 
-from django.conf.global_settings import AUTH_USER_MODEL, EMAIL_BACKEND, EMAIL_HOST, EMAIL_USE_TLS, EMAIL_HOST_USER
+from django.conf.global_settings import (
+    AUTH_USER_MODEL,
+    EMAIL_BACKEND,
+    EMAIL_HOST,
+    EMAIL_USE_TLS,
+    EMAIL_HOST_USER,
+)
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,76 +34,79 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y'
+SECRET_KEY = "django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL='users.User'
+AUTH_USER_MODEL = "users.User"
 # Application definition
 
 INSTALLED_APPS = [
-    'base',
-    'users',
-    'audit',
-    'finance',
-    'department',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "base",
+    "users",
+    "audit",
+    "finance",
+    "department",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "corsheaders",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'pettycash_system.urls'
+ROOT_URLCONF = "pettycash_system.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'pettycash_system' / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "pettycash_system" / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'pettycash_system.wsgi.application'
+WSGI_APPLICATION = "pettycash_system.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-#----------CONTAINER-------
+# ----------CONTAINER-------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': ENV.POSTGRES_DB,
-        'USER': ENV.POSTGRES_USER,
-        'PASSWORD':ENV.POSTGRES_PASSWORD,
-        'HOST':ENV.POSRGRES_HOST,
-        'PORT':ENV.POSTGRES_PORT
-
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": ENV.POSTGRES_DB,
+        "USER": ENV.POSTGRES_USER,
+        "PASSWORD": ENV.POSTGRES_PASSWORD,
+        "HOST": ENV.POSTGRES_HOST,
+        "PORT": ENV.POSTGRES_PORT,
     }
 }
 
-#------------LOCALHOST----------
+# ------------LOCALHOST----------
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -104,7 +117,7 @@ DATABASES = {
 #         'PORT': '5432',  # mapped host port
 #     }
 # }
-#USER postgres
+# USER postgres
 
 
 # Password validation
@@ -112,24 +125,28 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-EMAIL_BACKEND=ENV.EMAIL_BACKEND
-EMAIL_HOST=ENV.EMAIL_HOST # This is the mail server you're connecting to. Since you're using Gmail → smtp.gmail.com
-EMAIL_USE_TLS=ENV.EMAIL_USE_TLS #  TLS encrypts the connection between: Your Django app Gmail’s mail server Without this, your password would be sent in plain text ❌
-EMAIL_PORT=ENV.EMAIL_PORT
-EMAIL_HOST_USER=ENV.EMAIL_HOST_USER # The Gmail account used to send emails
-EMAIL_HOST_PASSWORD=ENV.EMAIL_HOST_PASSWORD# The password used to log in to Gmail
+EMAIL_BACKEND = ENV.EMAIL_BACKEND
+EMAIL_HOST = (
+    ENV.EMAIL_HOST
+)  # This is the mail server you're connecting to. Since you're using Gmail → smtp.gmail.com
+EMAIL_USE_TLS = (
+    ENV.EMAIL_USE_TLS
+)  #  TLS encrypts the connection between: Your Django app Gmail’s mail server Without this, your password would be sent in plain text ❌
+EMAIL_PORT = ENV.EMAIL_PORT
+EMAIL_HOST_USER = ENV.EMAIL_HOST_USER  # The Gmail account used to send emails
+EMAIL_HOST_PASSWORD = ENV.EMAIL_HOST_PASSWORD  # The password used to log in to Gmail
 # LOGGING = {
 #     'version': 1,
 #     'handlers': {
@@ -149,9 +166,9 @@ EMAIL_HOST_PASSWORD=ENV.EMAIL_HOST_PASSWORD# The password used to log in to Gmai
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Africa/Nairobi'
+TIME_ZONE = "Africa/Nairobi"
 
 USE_I18N = True
 
@@ -161,7 +178,42 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
-MEDIA_URL='media/' # When accessing files in browser, use this URL prefix
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')# Physically store uploaded files in this folder
+MEDIA_URL = "media/"  # When accessing files in browser, use this URL prefix
+MEDIA_ROOT = os.path.join(
+    BASE_DIR, "media"
+)  # Physically store uploaded files in this folder
+
+# ─── CORS CONFIGURATION ───────────────────────────────────────────────────────────────────────
+
+# Which frontend origins are allowed to talk to this API
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Next.js dev server
+]
+
+# This is critical for your setup. It tells the browser: "yes, you're allowed to send cookies and Authorization headers on cross-origin requests."
+CORS_ALLOW_CREDENTIALS = True
+
+# This is separate from CORS — it's Django's built-in CSRF protection. For any POST, PUT, PATCH, DELETE request, Django checks the Referer header to make sure the request came from a trusted origin. Without this, your login and other mutation endpoints would return 403 Forbidden.
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+# Allow the Authorization header (needed for Bearer token)
+# The defaults already include it, but being explicit is safer
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = (
+    *default_headers,  # accept, authorization, content-type, etc.
+    # add any custom headers your Next.js app sends here
+)
+
+cloudinary.config(
+    cloud_name=ENV.CLOUDINARY_CLOUD_NAME,
+    api_key=ENV.CLOUDINARY_API_KEY,
+    api_secret=ENV.CLOUDINARY_SECRET_KEY,
+)
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
