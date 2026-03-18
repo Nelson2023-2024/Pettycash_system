@@ -236,8 +236,18 @@ class AuthService:
         return {
             "id": str(user.id),
             "email": user.email,
-            "fullname": user.first_name + " " + user.last_name,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "other_name": user.other_name,
+            "fullname": " ".join(
+                filter(None, [user.first_name, user.other_name, user.last_name])
+            ),
+            "phone_number": user.phone_number,
+            "national_id": user.national_id,
             "status": user.status.name,
             "role": user.role.name,
-            "permissions":list(user.role.permissions.values_list('code', flat=True))
+            "avatar_url": (
+                user.avatar_url.url if getattr(user.avatar_url, "url", None) else None
+            ),
+            "permissions": list(user.role.permissions.values_list("code", flat=True)),
         }
