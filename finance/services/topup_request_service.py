@@ -257,4 +257,17 @@ class TopUpRequestController:
                 if topup.decision_by
                 else None
             ),
+            # ── Disbursement financial details ──────────────────────
+            "previous_balance": (
+                topup.metadata.get("previous_balance") if topup.metadata else None
+            ),
+            "new_balance": (
+                topup.metadata.get("new_balance") if topup.metadata else None
+            ),
+            "disbursed_by_email": (
+                topup.metadata.get("disbursed_by_email") if topup.metadata else None
+            ),
+            "disbursed_at": (
+                topup.metadata.get("disbursed_at") if topup.metadata else None
+            ),
         }
