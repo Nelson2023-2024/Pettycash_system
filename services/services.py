@@ -7,6 +7,7 @@ from finance.models import (
     ExpenseRequest,
     TopUpRequest,
     DisbursementReconciliation,
+    MpesaTransactionCost,
 )
 from base.models import Status, Category
 from department.models import Department
@@ -19,6 +20,7 @@ from utils.exceptions import TransactionLogError
 
 from django.db import transaction, IntegrityError
 import logging
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ class CategoryService(ServiceBase):
 
 class RoleService(ServiceBase):
     manager = Role.objects
-    
+
     def get_all(self):
         """
         Retrieves all active roles with their permissions pre-fetched.
@@ -43,6 +45,44 @@ class RoleService(ServiceBase):
             with permissions prefetched to avoid N+1 queries.
         """
         return self.manager.filter(is_active=True)
+
+
+class MpesaTransactionCostService(ServiceBase):
+    manager = MpesaTransactionCost.objects
+
+    def calculate(self, amount: Decimal) -> Decimal:
+        """
+        Looks up the transaction cost for the given amount
+        from the active tariff bands in the database.
+
+        Args:
+            amount (Decimal): The amount being sent in KES.
+
+        Returns:
+            Decimal: The transaction cost in KES.
+
+        Raises:
+            ValueError: If amount is below KES 10 or above KES 150,000.
+            ValueError: If no matching tariff band is found.
+        """
+        if amount < 10:
+            raise ValueError("Minimum M-Pesa transaction amount is KES 10.")
+        if amount > 500000:
+            raise ValueError("Maximum M-Pesa transaction amount is KES 500,000.")
+
+        band = self.manager.filter(
+            min_amount__lte=amount,
+            max_amount__gte=amount,
+            is_active=True,
+        ).first()
+
+        if not band:
+            raise ValueError(
+                f"No active tariff band found for amount KES {amount}. "
+                f"Please update the M-Pesa transaction cost table in admin."
+            )
+
+        return band.cost
 
 
 # -----------------------------------------------------------------------------
@@ -71,6 +111,23 @@ class UserService(ServiceBase):
 
     def get_active_finance_officers(self):
         return self.manager.filter(role__code="FO", is_active=True)
+
+    def get_by_id(self, user_id: str) -> User:
+        """
+        Retrieves a single active user by ID.
+
+        Args:
+            user_id (str): The UUID of the user.
+
+        Returns:
+            User: The matching active user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        return self.manager.select_related("role", "status", "department").get(
+            id=user_id, is_active=True
+        )
 
     @staticmethod
     def update_last_login(user: User) -> User:
@@ -106,6 +163,119 @@ class UserService(ServiceBase):
                 "login_at": timezone.now().isoformat(),
             },
         )
+
+    def create(self, password: str, triggered_by: User, request=None, **data) -> User:
+        """
+        Creates a new user via the custom UserManager.
+        Role defaults to EMP, status defaults to ACT if not provided.
+
+        Args:
+            password (str): Plain text password — hashed by UserManager.
+            triggered_by (User): The admin creating the user.
+            request: Optional HTTP request for logging.
+            **data: Any additional user fields e.g. email, first_name, role.
+
+        Returns:
+            User: The newly created user instance.
+        """
+        user = self.manager.create_user(password=password, **data)
+
+        TransactionLogService().log(
+            entity=user,
+            event_code="user_created",
+            triggered_by=triggered_by,
+            message=f"User {user.email} created by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "role": user.role.name,
+                "department": user.department.name if user.department else None,
+                "created_by": triggered_by.email,
+            },
+        )
+        return user
+
+    def update(
+        self, user_id: str, data: dict, triggered_by: User, request=None
+    ) -> User:
+        """
+        Updates a user with the provided fields.
+
+        Args:
+            user_id (str): The UUID of the user to update.
+            data (dict): Fields to update and their new values.
+            triggered_by (User): The admin performing the update.
+            request: Optional HTTP request for logging.
+
+        Returns:
+            User: The updated user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        user = self.get_by_id(user_id)
+
+        old_values = {k: str(getattr(user, k, None)) for k in data}
+        new_values = {}
+
+        for field, value in data.items():
+            setattr(user, field, value)
+            new_values[field] = str(value)
+
+        user.save(update_fields=list(data.keys()) + ["updated_at"])
+
+        TransactionLogService().log(
+            entity=user,
+            event_code="user_updated",
+            triggered_by=triggered_by,
+            message=f"User {user.email} updated by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "changed_fields": list(data.keys()),
+                "old_values": old_values,
+                "new_values": new_values,
+                "updated_by": triggered_by.email,
+            },
+        )
+        return user
+
+    def deactivate(self, user_id: str, triggered_by: User, request=None) -> User:
+        """
+        Soft deletes a user by setting is_active to False.
+
+        Args:
+            user_id (str): The UUID of the user to deactivate.
+            triggered_by (User): The admin performing the deactivation.
+            request: Optional HTTP request for logging.
+
+        Returns:
+            User: The updated user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        user = self.get_by_id(user_id)
+        user.is_active = False
+        user.save(update_fields=["is_active", "updated_at"])
+
+        TransactionLogService().log(
+            entity=user,
+            event_code="user_deactivated",
+            triggered_by=triggered_by,
+            status_code="INACT",
+            message=f"User {user.email} deactivated by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "deactivated_by": triggered_by.email,
+                "action": "deactivate",
+            },
+        )
+        return user
 
 
 # -----------------------------------------------------------------------------
@@ -624,10 +794,16 @@ class PettyCashAccountService(ServiceBase):
         )
         return account
 
-    def deduct_balance(self, amount, triggered_by, request=None):
+    def deduct_balance(self, amount, triggered_by, request=None, transaction_cost=None):
         """
         Deducts the disbursed amount from the active petty cash account balance.
         Raises ValueError if no active account exists or if balance would go negative.
+
+        Args:
+            amount (Decimal): Total amount to deduct (expense + transaction cost).
+            triggered_by (User): The user triggering the deduction.
+            request: Optional HTTP request for IP logging.
+            transaction_cost (Decimal, optional): M-Pesa transaction cost component.
         """
         with transaction.atomic():
             account = self.manager.filter(is_active=True).select_for_update().first()
@@ -640,8 +816,12 @@ class PettyCashAccountService(ServiceBase):
                     f"Insufficient balance. Available: {account.current_balance}, Requested: {amount}"
                 )
 
-            account.current_balance -= amount
+            previous_balance = (
+                account.current_balance
+            )  # before balance no deductions still
+            account.current_balance -= amount  # current amount after deductions
             account.save(update_fields=["current_balance"])
+            new_balance = account.current_balance  # ← capture after
 
             # Check to automatically trigger topup when balance goes low
             TopUpRequestService().trigger_top_up_request(
@@ -657,13 +837,22 @@ class PettyCashAccountService(ServiceBase):
                 metadata={
                     "account_id": str(account.id),
                     "account_name": account.name,
+                    "expense_amount": (
+                        str(amount - transaction_cost)
+                        if transaction_cost
+                        else str(amount)
+                    ),
+                    "transaction_cost": (
+                        str(transaction_cost) if transaction_cost else "0"
+                    ),
                     "amount_deducted": str(amount),
-                    "new_balance": str(account.current_balance),
-                    "expense_deducted_by": triggered_by.email,
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "deducted_by": triggered_by.email,
                 },
             )
 
-            return account
+            return account, previous_balance, new_balance
 
     def deactivate_account(self, account_id: str, triggered_by, request=None):
         """
@@ -994,8 +1183,17 @@ class ExpenseRequestService(ServiceBase):
                     f"Only approved requests can be disbursed. Current status: {expense.status.code}"
                 )
 
-            PettyCashAccountService().deduct_balance(
-                amount=expense.amount,
+            # ── Calculate cost first ──────────────────────────────
+            transaction_cost = MpesaTransactionCostService().calculate(expense.amount)
+            total_deduction = expense.amount + transaction_cost
+
+            (
+                _,
+                previous_balance,
+                new_balance,
+            ) = PettyCashAccountService().deduct_balance(
+                amount=total_deduction,
+                transaction_cost=transaction_cost,
                 triggered_by=triggered_by,
                 request=request,
             )
@@ -1007,6 +1205,8 @@ class ExpenseRequestService(ServiceBase):
                     "disbursed_by": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "disbursed_at": timezone.now().isoformat(),
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
                 }
             )
 
@@ -1031,6 +1231,10 @@ class ExpenseRequestService(ServiceBase):
                     "title": expense.title,
                     "amount": str(expense.amount),
                     "expense_type": expense.expense_type,
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),  
                     "disbursed_by_id": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "employee_id": str(expense.employee.id),
@@ -1427,6 +1631,7 @@ class TopUpRequestService(ServiceBase):
             # credit the balance
             account.current_balance += topup.amount
             account.save(update_fields=["current_balance", "updated_at"])
+            new_balance = account.current_balance
 
             complete_status = Status.objects.get(code="completed")
             event_type = EventTypes.objects.get(code="topup_disbursed")
@@ -1447,7 +1652,7 @@ class TopUpRequestService(ServiceBase):
                     "account_name": account.name,
                     "amount": str(topup.amount),
                     "previous_balance": str(previous_balance),
-                    "new_balance": str(account.current_balance),
+                    "new_balance": str(new_balance),
                     "disbursed_by_id": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "disbursed_by_role": triggered_by.role.name,
