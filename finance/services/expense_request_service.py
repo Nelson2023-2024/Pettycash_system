@@ -331,15 +331,26 @@ class ExpenseRequestController:
         Converting a Django model → JSON-safe dictionary
         """
         return {
-            "id": str(expense.id),
-            "title": expense.title,
-            "amount": expense.amount,
-            "expense_type": expense.expense_type,
-            "description": expense.description,
-            "status": expense.status.name if expense.status else None,
-            "created_at": expense.created_at.isoformat(),
-            "mpesa_phone": expense.mpesa_phone,
-            "receipt": expense.receipt.url if expense.receipt else None,
-            "employee_email": expense.employee.email,
-            "reason": expense.metadata.get("decision_reason") or None, 
-        }
+        "id": str(expense.id),
+        "title": expense.title,
+        "amount": str(expense.amount),
+        "expense_type": expense.expense_type,
+        "description": expense.description,
+        "status": expense.status.name if expense.status else None,
+        "status_code": expense.status.code if expense.status else None,
+        "created_at": expense.created_at.isoformat(),
+        "updated_at": expense.updated_at.isoformat(),
+        "mpesa_phone": expense.mpesa_phone,
+        "receipt": expense.receipt.url if expense.receipt else None,
+        "employee": {
+            "id": str(expense.employee.id),
+            "name": f"{expense.employee.first_name} {expense.employee.last_name}".strip(),
+            "email": expense.employee.email,
+        },
+        "reason": expense.metadata.get("decision_reason") or None,
+        # ── Disbursement financial details ─────────────────────
+        "transaction_cost": expense.metadata.get("transaction_cost") or None,
+        "total_deduction": expense.metadata.get("total_deduction") or None,
+        "disbursed_at": expense.metadata.get("disbursed_at") or None,
+        "disbursed_by_email": expense.metadata.get("disbursed_by_email") or None,
+    }
