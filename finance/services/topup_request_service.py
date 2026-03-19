@@ -2,8 +2,9 @@ from django.db import DataError, IntegrityError, OperationalError
 from finance.models import TopUpRequest
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
-from services.services import TopUpRequestService
+from services.services import NotificationService, TopUpRequestService, UserService
 import logging
+from audit.models import Notifications
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +34,16 @@ class TopUpRequestController:
                 allowed_fields={"amount", "request_reason"},
             )
 
-            topup = TopUpRequestService().create_top_up_request(
+            topup, log = TopUpRequestService().create_top_up_request(
                 request=request,
                 pettycash_account_id=pettycash_account_id,
                 requested_by=request.user,
                 request_reason=data.get("request_reason"),
                 amount=data.get("amount"),
+            )
+            NotificationService().notify_many(
+                recipients=UserService().get_active_admin_cfo(),
+                transaction_log=log,
             )
             return ResponseProvider().created(
                 message=f"Topup Request created successfully",
@@ -108,13 +113,18 @@ class TopUpRequestController:
                     f"Invalid decision '{decision}'. Must be one of {VALID_DECISIONS}."
                 )
 
-            topup = TopUpRequestService().decide_top_up_request(
+            topup, log = TopUpRequestService().decide_top_up_request(
                 topup_id=topup_id,
                 decision=decision,
                 decision_reason=data.get("decision_reason"),
                 triggered_by=request.user,
                 request=request,
             )
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=topup.requested_by,
+            )
+
             return ResponseProvider().success(
                 message=f"Top-up request {decision} successfully",
                 data=cls._serialize(topup),
@@ -142,8 +152,13 @@ class TopUpRequestController:
             JsonResponse: 200 on success, 400/500 on failure.
         """
         try:
-            topup = TopUpRequestService().disburse_top_up_request(
+            topup, log = TopUpRequestService().disburse_top_up_request(
                 topup_id=topup_id, triggered_by=request.user, request=request
+            )
+
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=topup.requested_by,
             )
 
             return ResponseProvider().success(
@@ -175,8 +190,14 @@ class TopUpRequestController:
                 request, required_fields={}, allowed_fields={"amount", "request_reason"}
             )
 
-            topup = TopUpRequestService().update_topup_request(
+            topup, log = TopUpRequestService().update_topup_request(
                 topup_id=topup_id, data=data, triggered_by=request.user, request=request
+            )
+
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=topup.requested_by,
+                channel=Notifications.Channel.IN_APP,
             )
             return ResponseProvider.success(
                 message="Top-up request updated successfully",
@@ -199,10 +220,16 @@ class TopUpRequestController:
             JsonResponse: 200 on success, 400/500 on failure.
         """
         try:
-            topup = TopUpRequestService().deactivate_top_up_request(
+            topup, log = TopUpRequestService().deactivate_top_up_request(
                 topup_id=topup_id,
                 triggered_by=request.user,
                 request=request,
+            )
+
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=topup.requested_by,
+                channel=Notifications.Channel.IN_APP,
             )
 
             return ResponseProvider.success(
