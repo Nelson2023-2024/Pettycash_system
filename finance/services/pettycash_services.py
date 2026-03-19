@@ -1,8 +1,8 @@
-from services.services import PettyCashAccountService
+from services.services import NotificationService, PettyCashAccountService, UserService
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
-from audit.models import TransactionLogBase
+from audit.models import Notifications, TransactionLogBase
 
 
 class PettyCashService:
@@ -24,13 +24,19 @@ class PettyCashService:
         mpesa_phone_number = data.get("mpesa_phone_number")
         minimum_threshold = data.get("minimum_threshold")
 
-        petty_cash = PettyCashAccountService().create_account(
+        petty_cash, log = PettyCashAccountService().create_account(
             name,
             description,
             mpesa_phone_number,
             minimum_threshold,
             triggered_by=request.user,
             request=request,
+        )
+
+        NotificationService.notify_many(
+            transaction_log=log,
+            recipients=UserService().get_active_admin_fo_cfo(),
+            channel=Notifications.Channel.IN_APP
         )
 
         return ResponseProvider.created(
@@ -64,8 +70,13 @@ class PettyCashService:
             },
         )
 
-        petty_cash = PettyCashAccountService().update_account(
+        petty_cash, log = PettyCashAccountService().update_account(
             account_id, data, triggered_by=request.user, request=request
+        )
+        NotificationService.notify(
+            transaction_log=log,
+            recipient=request.user,
+            channel=Notifications.Channel.IN_APP,
         )
         return ResponseProvider.success(
             message=f"{petty_cash.name} updated successfully",
@@ -74,8 +85,14 @@ class PettyCashService:
 
     @staticmethod
     def deactivate_petty_cash_account(request, account_id: str):
-        petty_cash = PettyCashAccountService().deactivate_account(
+        petty_cash, log = PettyCashAccountService().deactivate_account(
             account_id, triggered_by=request.user, request=request
+        )
+
+        NotificationService.notify(
+            transaction_log=log,
+            recipient=request.user,
+            channel=Notifications.Channel.IN_APP,
         )
         return ResponseProvider.success(
             message=f"{petty_cash.name} deactivated successfully"
