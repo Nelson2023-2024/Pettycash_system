@@ -109,6 +109,9 @@ class UserService(ServiceBase):
     def get_active_admins(self):
         return self.manager.filter(role__code="ADM", is_active=True)
 
+    def get_active_admin_fo_cfo(self):
+        return self.manager.filter(role__code__in=["ADM", "CFO", "FO"], is_active=True)
+
     def get_active_finance_officers(self):
         return self.manager.filter(role__code="FO", is_active=True)
 
@@ -1191,6 +1194,7 @@ class ExpenseRequestService(ServiceBase):
                 _,
                 previous_balance,
                 new_balance,
+                log,
             ) = PettyCashAccountService().deduct_balance(
                 amount=total_deduction,
                 transaction_cost=transaction_cost,
