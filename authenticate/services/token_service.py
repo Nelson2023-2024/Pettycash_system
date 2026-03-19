@@ -81,7 +81,7 @@ class TokenService:
             user=user,
             secret=ENV.JWT_ACCESS_SECRET,
             token_type="access",
-            expiry=datetime.timedelta(minutes=15),
+            expiry=datetime.timedelta(days=7),
         )
 
     @classmethod

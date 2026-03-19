@@ -27,5 +27,10 @@ class Environment:
         self.POSTGRES_PORT = os.getenv("POSTGRES_PORT")
         self.POSTGRES_HOST = os.getenv("POSTGRES_HOST")
 
+        # -----clodinary config------
+        self.CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+        self.CLOUDINARY_SECRET_KEY = os.getenv("CLOUDINARY_SECRET_KEY")
+        self.CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+
 
 ENV = Environment()

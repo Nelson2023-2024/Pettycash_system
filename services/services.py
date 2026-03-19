@@ -7,6 +7,7 @@ from finance.models import (
     ExpenseRequest,
     TopUpRequest,
     DisbursementReconciliation,
+    MpesaTransactionCost,
 )
 from base.models import Status, Category
 from department.models import Department
@@ -19,6 +20,7 @@ from utils.exceptions import TransactionLogError
 
 from django.db import transaction, IntegrityError
 import logging
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +35,54 @@ class CategoryService(ServiceBase):
 
 class RoleService(ServiceBase):
     manager = Role.objects
+
+    def get_all(self):
+        """
+        Retrieves all active roles with their permissions pre-fetched.
+
+        Returns:
+            QuerySet: Role instances where is_active is True,
+            with permissions prefetched to avoid N+1 queries.
+        """
+        return self.manager.filter(is_active=True)
+
+
+class MpesaTransactionCostService(ServiceBase):
+    manager = MpesaTransactionCost.objects
+
+    def calculate(self, amount: Decimal) -> Decimal:
+        """
+        Looks up the transaction cost for the given amount
+        from the active tariff bands in the database.
+
+        Args:
+            amount (Decimal): The amount being sent in KES.
+
+        Returns:
+            Decimal: The transaction cost in KES.
+
+        Raises:
+            ValueError: If amount is below KES 10 or above KES 150,000.
+            ValueError: If no matching tariff band is found.
+        """
+        if amount < 10:
+            raise ValueError("Minimum M-Pesa transaction amount is KES 10.")
+        if amount > 500000:
+            raise ValueError("Maximum M-Pesa transaction amount is KES 500,000.")
+
+        band = self.manager.filter(
+            min_amount__lte=amount,
+            max_amount__gte=amount,
+            is_active=True,
+        ).first()
+
+        if not band:
+            raise ValueError(
+                f"No active tariff band found for amount KES {amount}. "
+                f"Please update the M-Pesa transaction cost table in admin."
+            )
+
+        return band.cost
 
 
 # -----------------------------------------------------------------------------
@@ -59,8 +109,31 @@ class UserService(ServiceBase):
     def get_active_admins(self):
         return self.manager.filter(role__code="ADM", is_active=True)
 
+    def get_active_admin_fo_cfo(self):
+        return self.manager.filter(role__code__in=["ADM", "CFO", "FO"], is_active=True)
+
+    def get_active_admin_cfo(self):
+        return self.manager.filter(role__code__in=["ADM", "CFO"], is_active=True)
+
     def get_active_finance_officers(self):
         return self.manager.filter(role__code="FO", is_active=True)
+
+    def get_by_id(self, user_id: str) -> User:
+        """
+        Retrieves a single active user by ID.
+
+        Args:
+            user_id (str): The UUID of the user.
+
+        Returns:
+            User: The matching active user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        return self.manager.select_related("role", "status", "department").get(
+            id=user_id, is_active=True
+        )
 
     @staticmethod
     def update_last_login(user: User) -> User:
@@ -97,6 +170,121 @@ class UserService(ServiceBase):
             },
         )
 
+    def create(
+        self, password: str, triggered_by: User, request=None, **data
+    ) -> tuple[User, TransactionLogBase]:
+        """
+        Creates a new user via the custom UserManager.
+        Role defaults to EMP, status defaults to ACT if not provided.
+
+        Args:
+            password (str): Plain text password — hashed by UserManager.
+            triggered_by (User): The admin creating the user.
+            request: Optional HTTP request for logging.
+            **data: Any additional user fields e.g. email, first_name, role.
+
+        Returns:
+            User: The newly created user instance.
+        """
+        user = self.manager.create_user(password=password, **data)
+
+        log = TransactionLogService().log(
+            entity=user,
+            event_code="user_created",
+            triggered_by=triggered_by,
+            message=f"User {user.email} created by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "role": user.role.name,
+                "department": user.department.name if user.department else None,
+                "created_by": triggered_by.email,
+            },
+        )
+        return user, log
+
+    def update(
+        self, user_id: str, data: dict, triggered_by: User, request=None
+    ) -> tuple[User, TransactionLogBase]:
+        """
+        Updates a user with the provided fields.
+
+        Args:
+            user_id (str): The UUID of the user to update.
+            data (dict): Fields to update and their new values.
+            triggered_by (User): The admin performing the update.
+            request: Optional HTTP request for logging.
+
+        Returns:
+            User: The updated user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        user = self.get_by_id(user_id)
+
+        old_values = {k: str(getattr(user, k, None)) for k in data}
+        new_values = {}
+
+        for field, value in data.items():
+            setattr(user, field, value)
+            new_values[field] = str(value)
+
+        user.save(update_fields=list(data.keys()) + ["updated_at"])
+
+        log = TransactionLogService().log(
+            entity=user,
+            event_code="user_updated",
+            triggered_by=triggered_by,
+            message=f"User {user.email} updated by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "changed_fields": list(data.keys()),
+                "old_values": old_values,
+                "new_values": new_values,
+                "updated_by": triggered_by.email,
+            },
+        )
+        return user, log
+
+    def deactivate(self, user_id: str, triggered_by: User, request=None) -> User:
+        """
+        Soft deletes a user by setting is_active to False.
+
+        Args:
+            user_id (str): The UUID of the user to deactivate.
+            triggered_by (User): The admin performing the deactivation.
+            request: Optional HTTP request for logging.
+
+        Returns:
+            User: The updated user instance.
+
+        Raises:
+            User.DoesNotExist: If no active user matches the given ID.
+        """
+        user = self.get_by_id(user_id)
+        user.is_active = False
+        user.save(update_fields=["is_active", "updated_at"])
+
+        log = TransactionLogService().log(
+            entity=user,
+            event_code="user_deactivated",
+            triggered_by=triggered_by,
+            status_code="INACT",
+            message=f"User {user.email} deactivated by {triggered_by.email}",
+            ip_address=request.META.get("REMOTE_ADDR") if request else None,
+            metadata={
+                "user_id": str(user.id),
+                "email": user.email,
+                "deactivated_by": triggered_by.email,
+                "action": "deactivate",
+            },
+        )
+        return user, log
+
 
 # -----------------------------------------------------------------------------
 # DEPARMENT SERVICE
@@ -117,7 +305,7 @@ class DepartmentService(ServiceBase):
             name=name, description=description, code=code, line_manager=line_manager
         )
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_created",
             triggered_by=triggered_by,
@@ -141,7 +329,7 @@ class DepartmentService(ServiceBase):
             },
         )
 
-        return department
+        return department, log
 
     def get_all(self):
         departments = self.manager.filter(is_active=True).select_related("line_manager")
@@ -188,7 +376,7 @@ class DepartmentService(ServiceBase):
             "updated_at": timezone.now().isoformat(),
         }
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_updated",
             triggered_by=triggered_by,
@@ -197,7 +385,7 @@ class DepartmentService(ServiceBase):
             metadata=metadata,
         )
 
-        return department
+        return department, log
 
     def deactivate(self, department_id: str, triggered_by: User, request=None):
         department = self.get_by_id(department_id)
@@ -217,7 +405,7 @@ class DepartmentService(ServiceBase):
             "deactivated_at": timezone.now().isoformat(),
         }
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_deactivated",
             triggered_by=triggered_by,
@@ -226,7 +414,7 @@ class DepartmentService(ServiceBase):
             metadata=metadata,
         )
 
-        return department
+        return department, log
 
 
 class EventTypeService(ServiceBase):
@@ -511,7 +699,7 @@ class PettyCashAccountService(ServiceBase):
         )
 
         try:
-            TransactionLogService().log(
+            log = TransactionLogService().log(
                 entity=account,
                 event_code="petty_cash_account_created",
                 ip_address=request.META.get("REMOTE_ADDR") if request else None,
@@ -528,7 +716,7 @@ class PettyCashAccountService(ServiceBase):
         except Exception as e:
             print(f"[TransactionLog ERROR] {e}")  # you'll see the real reason now
 
-        return account
+        return account, log
 
     def get_by_id(self, account_id: str):
         """
@@ -594,7 +782,7 @@ class PettyCashAccountService(ServiceBase):
 
         account.save(update_fields=list(data.keys()))
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             event_code="petty_cash_account_updated",
             triggered_by=triggered_by,
             entity=account,
@@ -612,7 +800,67 @@ class PettyCashAccountService(ServiceBase):
                 },  # what it changed to
             },
         )
-        return account
+        return account, log
+
+    def deduct_balance(self, amount, triggered_by, request=None, transaction_cost=None):
+        """
+        Deducts the disbursed amount from the active petty cash account balance.
+        Raises ValueError if no active account exists or if balance would go negative.
+
+        Args:
+            amount (Decimal): Total amount to deduct (expense + transaction cost).
+            triggered_by (User): The user triggering the deduction.
+            request: Optional HTTP request for IP logging.
+            transaction_cost (Decimal, optional): M-Pesa transaction cost component.
+        """
+        with transaction.atomic():
+            account = self.manager.filter(is_active=True).select_for_update().first()
+
+            if not account:
+                raise ValueError("No active petty cash account found.")
+
+            if account.current_balance < amount:
+                raise ValueError(
+                    f"Insufficient balance. Available: {account.current_balance}, Requested: {amount}"
+                )
+
+            previous_balance = (
+                account.current_balance
+            )  # before balance no deductions still
+            account.current_balance -= amount  # current amount after deductions
+            account.save(update_fields=["current_balance"])
+            new_balance = account.current_balance  # ← capture after
+
+            # Check to automatically trigger topup when balance goes low
+            TopUpRequestService().trigger_top_up_request(
+                account=account, request=request
+            )
+
+            log = TransactionLogService.log(
+                entity=account,
+                event_code="petty_cash_balance_deducted",
+                triggered_by=triggered_by,
+                message=f"KES {amount} deducted from petty cash account '{account.name}'",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "account_id": str(account.id),
+                    "account_name": account.name,
+                    "expense_amount": (
+                        str(amount - transaction_cost)
+                        if transaction_cost
+                        else str(amount)
+                    ),
+                    "transaction_cost": (
+                        str(transaction_cost) if transaction_cost else "0"
+                    ),
+                    "amount_deducted": str(amount),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "deducted_by": triggered_by.email,
+                },
+            )
+
+            return account, previous_balance, new_balance, log
 
     def deactivate_account(self, account_id: str, triggered_by, request=None):
         """
@@ -636,7 +884,7 @@ class PettyCashAccountService(ServiceBase):
         account.is_active = False
         account.save(update_fields=["is_active"])
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=account,
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
             message=f"Petty cash account {account.name} deactivated",
@@ -650,7 +898,7 @@ class PettyCashAccountService(ServiceBase):
                 "action": "deactivate",
             },
         )
-        return account
+        return account, log
 
 
 # -----------------------------------------------------------------------------
@@ -732,8 +980,15 @@ class ExpenseRequestService(ServiceBase):
             with assigned_to and status pre-fetched via select_related.
         """
         return self.manager.filter(employee=authUser, is_active=True).select_related(
-            "status"
+            "status", "employee"
         )
+
+    def get_by_id(self, expense_id: str):
+        expense = self.manager.filter(id=expense_id, is_active=True).first()
+
+        if not expense:
+            raise ValueError("Expense request not found.")
+        return expense
 
     def get_all_pending_for_fo(self):
         """
@@ -871,7 +1126,7 @@ class ExpenseRequestService(ServiceBase):
                 .get(id=expense_id, is_active=True)
             )
 
-            if expense.status.code != "pending":
+            if expense.status.code not in ["pending", "rejected"]:
                 raise ValueError(
                     f"Only pending requests can be approved or rejected. Current status: {expense.status.code}"
                 )
@@ -936,6 +1191,22 @@ class ExpenseRequestService(ServiceBase):
                     f"Only approved requests can be disbursed. Current status: {expense.status.code}"
                 )
 
+            # ── Calculate cost first ──────────────────────────────
+            transaction_cost = MpesaTransactionCostService().calculate(expense.amount)
+            total_deduction = expense.amount + transaction_cost
+
+            (
+                _,
+                previous_balance,
+                new_balance,
+                log,
+            ) = PettyCashAccountService().deduct_balance(
+                amount=total_deduction,
+                transaction_cost=transaction_cost,
+                triggered_by=triggered_by,
+                request=request,
+            )
+
             disbursed_status = Status.objects.get(code="disbursed")
             expense.status = disbursed_status
             expense.metadata.update(
@@ -943,6 +1214,8 @@ class ExpenseRequestService(ServiceBase):
                     "disbursed_by": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "disbursed_at": timezone.now().isoformat(),
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
                 }
             )
 
@@ -967,6 +1240,10 @@ class ExpenseRequestService(ServiceBase):
                     "title": expense.title,
                     "amount": str(expense.amount),
                     "expense_type": expense.expense_type,
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
                     "disbursed_by_id": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "employee_id": str(expense.employee.id),
@@ -1049,7 +1326,7 @@ class TopUpRequestService(ServiceBase):
             # event_type auto-resolves to 'topup_requested' via model default
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_requested",
             triggered_by=requested_by,
@@ -1071,7 +1348,7 @@ class TopUpRequestService(ServiceBase):
             },
         )
 
-        return topup
+        return topup, log
 
     def trigger_top_up_request(
         self, account: PettyCashAccount, request=None
@@ -1125,7 +1402,7 @@ class TopUpRequestService(ServiceBase):
             # event_type auto-resolves to 'topup_requested' via model default
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_requested",
             triggered_by=system_user,
@@ -1177,49 +1454,52 @@ class TopUpRequestService(ServiceBase):
                     .get(id=topup_id, is_active=True)
                 )
 
-            # Idempotency check
-            if topup.status.code == decision:
-                return topup
+                # Idempotency check
+                if topup.status.code == decision:
+                    return topup
 
-            status = Status.objects.get(code=decision)
-            event_code = (
-                "topup_approved" if decision == "approved" else "topup_rejected"
-            )
-            event_type = EventTypes.objects.get(code=event_code)
-            decision_at = timezone.now()
+                status = Status.objects.get(code=decision)
+                event_code = (
+                    "topup_approved" if decision == "approved" else "topup_rejected"
+                )
+                event_type = EventTypes.objects.get(code=event_code)
+                decision_at = timezone.now()
 
-            topup.status = status
-            topup.event_type = event_type
-            topup.decision_by = triggered_by
-            topup.decision_reason = decision_reason or ""
-            topup.metadata = {**topup.metadata, "decision_at": decision_at.isoformat()}
-            topup.save(
-                update_fields=[
-                    "status_id",
-                    "event_type_id",
-                    "decision_by_id",
-                    "decision_reason",
-                    "metadata",
-                    "updated_at",
-                ]
-            )
-
-            TransactionLogService.log(
-                entity=topup,
-                event_code=event_code,
-                triggered_by=triggered_by,
-                status_code=decision,  # or a relevant status
-                message=f"Top-up request {decision} for {topup.amount}",
-                ip_address=request.META.get("REMOTE_ADDR") if request else None,
-                metadata={
-                    "topup_id": str(topup.id),
-                    "account_id": str(topup.pettycash_account.id),
-                    "decision_reason": decision_reason,
+                topup.status = status
+                topup.event_type = event_type
+                topup.decision_by = triggered_by
+                topup.decision_reason = decision_reason or ""
+                topup.metadata = {
+                    **topup.metadata,
                     "decision_at": decision_at.isoformat(),
-                },
-            )
+                }
+                topup.save(
+                    update_fields=[
+                        "status_id",
+                        "event_type_id",
+                        "decision_by_id",
+                        "decision_reason",
+                        "metadata",
+                        "updated_at",
+                    ]
+                )
 
-            return topup
+                log = TransactionLogService.log(
+                    entity=topup,
+                    event_code=event_code,
+                    triggered_by=triggered_by,
+                    status_code=decision,  # or a relevant status
+                    message=f"Top-up request {decision} for {topup.amount}",
+                    ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                    metadata={
+                        "topup_id": str(topup.id),
+                        "account_id": str(topup.pettycash_account.id),
+                        "decision_reason": decision_reason,
+                        "decision_at": decision_at.isoformat(),
+                    },
+                )
+
+            return topup, log
         except IntegrityError as e:
             logger.error(f"IntegrityError in decide_top_up_request: {e}", exc_info=True)
             # Re-raise as a more specific exception or let the controller handle it
@@ -1273,7 +1553,7 @@ class TopUpRequestService(ServiceBase):
 
             topup.save(update_fields=list(data.keys()) + ["updated_at"])
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=topup,
                 event_code="topup_requested",  # still in requested stage — no workflow change
                 triggered_by=triggered_by,
@@ -1292,6 +1572,7 @@ class TopUpRequestService(ServiceBase):
                     "action": "update",
                 },
             )
+            return topup, log
 
     def deactivate_top_up_request(
         self, topup_id: str, triggered_by: User, request=None
@@ -1318,7 +1599,7 @@ class TopUpRequestService(ServiceBase):
             update_fields=["is_active", "updated_at", "status_id", "event_type_id"]
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_deactivated",
             triggered_by=triggered_by,
@@ -1339,62 +1620,56 @@ class TopUpRequestService(ServiceBase):
             },
         )
 
-        return topup
+        return topup, log
 
     def disburse_top_up_request(self, topup_id: str, triggered_by: User, request=None):
-        """
-            Disburses an approved top-up by crediting the petty cash account balance.
-        Automatically triggers another top-up check after balance changes.
+        with transaction.atomic():
+            topup = self.get_by_id(topup_id)
 
-        Raises:
-            ValueError: If the top-up request is not in 'approved' status.
-        """
-        topup = self.get_by_id(topup_id)
-        # If already complete – just return (idempotent)
-        if topup.status.code == "complete":
-            return topup
+            if topup.status.code == "completed":
+                return topup
 
-        if topup.status.code != "approved":
-            raise ValueError(
-                f"Cannot disburse a request that is '{topup.status.name}'. Must be 'approved'."
+            if topup.status.code != "approved":
+                raise ValueError(
+                    f"Cannot disburse a request that is '{topup.status.name}'. Must be 'approved'."
+                )
+
+            account = topup.pettycash_account
+            previous_balance = account.current_balance
+
+            # credit the balance
+            account.current_balance += topup.amount
+            account.save(update_fields=["current_balance", "updated_at"])
+            new_balance = account.current_balance
+
+            complete_status = Status.objects.get(code="completed")
+            event_type = EventTypes.objects.get(code="topup_disbursed")
+
+            topup.status = complete_status
+            topup.event_type = event_type
+            topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
+
+            log = TransactionLogService.log(
+                entity=topup,
+                event_code="topup_disbursed",
+                triggered_by=triggered_by,
+                message=f'Top-up of {topup.amount} disbursed to "{account.name}"',
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "topup_id": str(topup.id),
+                    "account_id": str(account.id),
+                    "account_name": account.name,
+                    "amount": str(topup.amount),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "disbursed_by_id": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_by_role": triggered_by.role.name,
+                    "action": "disburse",
+                },
             )
 
-        account = topup.pettycash_account
-        previous_balance = account.current_balance
-
-        # increment on the current balance the topup amount
-        account.current_balance += topup.amount
-        account.save(update_fields=["current_balance", "updated_at"])
-
-        complete_status = Status.objects.get(code="complete")
-        event_type = EventTypes.objects.get(code="topup_disbursed")
-
-        topup.status = complete_status
-        topup.event_type = event_type
-
-        topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
-
-        TransactionLogService.log(
-            entity=topup,
-            event_code="topup_disbursed",
-            triggered_by=triggered_by,
-            message=f'Top-up of {topup.amount} disbursed to "{account.name}"',
-            ip_address=request.META.get("REMOTE_ADDR") if request else None,
-            metadata={
-                "topup_id": str(topup.id),
-                "account_id": str(account.id),
-                "account_name": account.name,
-                "amount": str(topup.amount),
-                "previous_balance": str(previous_balance),
-                "new_balance": str(account.current_balance),
-                "disbursed_by_id": str(triggered_by.id),
-                "disbursed_by_email": triggered_by.email,
-                "disbursed_by_role": triggered_by.role.name,
-                "action": "disburse",
-            },
-        )
-
-        return topup
+            return topup, log
 
 
 # -----------------------------------------------------------------------------
@@ -1494,7 +1769,7 @@ class DisbursementReconciliationService(ServiceBase):
                 .get(id=reconciliation_id, is_active=True)
             )
 
-            if reconciliation.status.code != "pending":
+            if reconciliation.status.code not in ["pending", "rejected"]:
                 raise ValueError(
                     f"Receipts already submitted. Current status: {reconciliation.status.code}"
                 )
@@ -1540,7 +1815,7 @@ class DisbursementReconciliationService(ServiceBase):
                 ]
             )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=reconciliation,
                 event_code="expense_reconciliation_submitted",
                 triggered_by=submitted_by,
@@ -1558,7 +1833,7 @@ class DisbursementReconciliationService(ServiceBase):
                 },
             )
 
-            return reconciliation
+            return reconciliation, log
 
     def review(
         self,
@@ -1659,8 +1934,8 @@ class DisbursementReconciliationService(ServiceBase):
 
                 expense.save(update_fields=["status", "metadata", "updated_at"])
             else:
-                pending_status = Status.objects.get(code="pending")
-                reconciliation.status = pending_status
+                rejected_status = Status.objects.get(code="rejected")
+                reconciliation.status = rejected_status
                 reconciliation.approved_by = None
                 reconciliation.approved_at = None
                 reconciliation.reconciled_amount = (
@@ -1691,7 +1966,7 @@ class DisbursementReconciliationService(ServiceBase):
                         "updated_at",
                     ]
                 )
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=reconciliation,
             event_code=(
                 "expense_completed" if decision == "completed" else "expense_rejected"
@@ -1735,4 +2010,4 @@ class DisbursementReconciliationService(ServiceBase):
                 ),
             },
         )
-        return reconciliation
+        return reconciliation, log

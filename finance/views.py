@@ -60,6 +60,15 @@ def deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:
         return PettyCashService().deactivate_petty_cash_account(request, account_id)
     except Exception as ex:
         return ResponseProvider().handle_exception(ex)
+    
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO", "FO")
+def get_petty_cash_activity_view(request):
+    try:
+        return PettyCashService().get_account_activity(request)
+    except Exception as ex:
+        return ResponseProvider().handle_exception(ex)
 
 
 # ── EXPENSE REQUESTS ─────────────────────────────────────────
@@ -82,6 +91,12 @@ def list_all_expenses_view(request) -> JsonResponse:
 @login_required("EMP", "FO", "CFO", "ADM")
 def list_my_expenses_view(request) -> JsonResponse:
     return ExpenseRequestController().get_auth_user_expense_request(request)
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "FO", "CFO", "ADM")
+def get_expense_request_view(request) -> JsonResponse:
+    return ExpenseRequestController().get_expense_request(request)
 
 
 @csrf_exempt
