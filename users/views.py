@@ -10,7 +10,7 @@ from .services.role_service import RoleController
 # USER — update own profile
 # ---------------------------------------------------------------------
 @csrf_exempt
-@allowed_http_methods("PATCH")
+@allowed_http_methods("POST")
 @login_required()
 def update_profile_view(request):
     try:
