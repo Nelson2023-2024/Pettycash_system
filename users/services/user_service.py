@@ -1,13 +1,7 @@
-from django.conf.locale import tr, en
-from django.db import transaction
-
-
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
-from services.services import UserService, TransactionLogService
-from django.contrib.auth import get_user_model
+from services.services import UserService
 from utils.response_provider import ResponseProvider
-from services.otp_email.otp_service import OTPService
 from ..models import User
 
 
@@ -38,36 +32,21 @@ class UserController:
                 },
             )
 
-            user = request.user  # already resolved by jwt_required decorator
+            user = request.user
 
-            # capture old values before update
-            old_values = {k: str(getattr(user, k, None)) for k in data}
-            new_values = {}
+            if "avatar_url" in request.FILES:
+                data["avatar_url"] = request.FILES["avatar_url"]
 
-            with transaction.atomic():
-                for field, value in data.items():
-                    setattr(user, field, value)
-                    new_values[field] = str(value)
-                user.save(update_fields=list(data.keys()) + ["updated_at"])
-
-                TransactionLogService.log(
-                    event_code="user_update_profile",
-                    triggered_by=user,
-                    entity=user,
-                    # status_code default ACT
-                    message=f"{user.email} updated their profile",
-                    ip_address=request.META.get("REMOTE_ADDR"),
-                    metadata={
-                        "user_id": user.id,
-                        "updated_by": user.email,
-                        "changed_fields": list(data.keys()),
-                        "old_values": old_values,
-                        "new_value": new_values,
-                    },
-                )
+            updated_user = UserService().update(
+                user_id=user.id,
+                data=data,
+                triggered_by=user,
+                request=request,
+            )
 
             return ResponseProvider.success(
-                message="profile updated successfully", data=cls._serialize(user=user)
+                message="profile updated successfully",
+                data=cls._serialize(user=updated_user),
             )
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
@@ -101,10 +80,11 @@ class UserController:
     def get_user(cls, request, user_id: User) -> ResponseProvider:
         try:
             user = (
-                    UserService.filter(id=user_id, is_active=True)
-                    .select_related("role", "department", "status")
-                    .first()
-                )
+                UserService()
+                .filter(id=user_id, is_active=True)
+                .select_related("role", "department", "status")
+                .first()
+            )
             if not user:
                 raise ValidationError("User not found.")
             return ResponseProvider.success(data=cls._serialize(user))
@@ -137,33 +117,23 @@ class UserController:
                     "national_id",
                     "role",
                     "department",
-                    "status",
                 },
             )
-            if UserService.exists(email=data.get("email")):
+            if UserService().exists(email=data.get("email")):
                 raise ValidationError("A user with this email already exists.")
 
-            with transaction.atomic():
-                password = data.pop("password")
-                user = UserService.manager.create_user(password=password, **data)
+            password = data.pop("password")
+            data = cls._resolve_foreign_key(data)
+            user = UserService().create(
+                password=password,
+                triggered_by=request.user,
+                request=request,
+                **data,
+            )
 
-                TransactionLogService.log(
-                    event_code="user_created",
-                    triggered_by=user,
-                    entity=user,
-                    # status__code ='ACT default,
-                    message="User created successfully",
-                    metadata={
-                        "created_by": request.user.email,
-                        "new_user_id": str(user.id),
-                        "new_user_email": user.email,
-                        "role": user.role.name,
-                        "department": user.department.name if user.department else None,
-                    },
-                )
-                return ResponseProvider.success(
-                    message="user created successfully", data=cls._serialize(user)
-                )
+            return ResponseProvider.success(
+                message="user created successfully", data=cls._serialize(user)
+            )
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
 
@@ -203,46 +173,21 @@ class UserController:
             if str(request.user.id) == str(user_id) and data.get("is_active") is False:
                 raise ValidationError("You cannot deactivate your own account.")
 
-            user = (
-                    UserService.filter(id=user_id, is_active=True)
-                    .select_related("role", "department", "status")
-                    .first()
-                )
-            if not user:
-                    raise ValidationError("User not found.")
-
             # Normalize is_active from string to bool (checkbox sends "true"/"false")
-            if 'is_active' in data:
-                raw = str(data['is_active']).strip().lower()
-                if raw not in ['true', 'false']:
+            if "is_active" in data:
+                raw = str(data["is_active"]).strip().lower()
+                if raw not in ["true", "false"]:
                     raise ValidationError("is_active must be true or false.")
-                data['is_active'] = raw == 'true'
+                data["is_active"] = raw == "true"
 
-            # old values
-            old_values = {k: str(getattr(user, k, None)) for k in data}
-            new_values = {}
-            with transaction.atomic():
-                for field, value in data.items():
-                    setattr(user, field, value)
-                    new_values[field] = value
-                user.save(update_fields=list(data.keys()) + ["updated_at"])
+            data = cls._resolve_foreign_key(data)
 
-                TransactionLogService.log(
-                    event_code="user_updated",
-                    triggered_by=request.user,
-                    entity=user,
-                    status_code="ACT",
-                    message=f"Admin {request.user.email} updated user {user.email}",
-                    ip_address=request.META.get("REMOTE_ADDR"),
-                    metadata={
-                        "updated_by": request.user.email,
-                        "target_user_id": str(user.id),
-                        "target_user_email": user.email,
-                        "changed_fields": list(data.keys()),
-                        "old_values": old_values,
-                        "new_values": new_values,
-                    },
-                )
+            user = UserService().update(
+                user_id=user_id,
+                data=data,
+                triggered_by=request.user,
+                request=request,
+            )
 
             return ResponseProvider.success(
                 message="user updated successfully", data=cls._serialize(user)
@@ -250,19 +195,48 @@ class UserController:
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
 
+    @classmethod
+    def _resolve_foreign_key(cls, data: dict) -> dict:
+        """Resolves UUID strings to model instances for ForeignKey fields bcoz create_user required model instances."""
+        from department.models import Department
+        from users.models import Role
+
+        if "department" in data and data["department"]:
+            try:
+                data["department"] = Department.objects.get(id=data["department"])
+            except Department.DoesNotExist:
+                raise ValueError("Department not found.")
+
+        if "role" in data and data["role"]:
+            try:
+                data["role"] = Role.objects.get(code=data["role"])
+            except Role.DoesNotExist:
+                raise ValueError("Role not found.")
+
+        return data
+
     @staticmethod
     def _serialize(user: User) -> dict:
         return {
+            "id": user.id,
             "email": user.email,
             "first_name": user.first_name,
             "last_name": user.last_name,
             "other_name": user.other_name,
             "phone_number": user.phone_number,
             "national_id": user.national_id,
-            "avatar_url": user.avatar_url,
+            "avatar_url": user.avatar_url.url if user.avatar_url else None,
             "last_login": user.last_login,
-            "department": user.department.name if user.department else None,
+            "department": (
+                {
+                    "id": str(user.department.id),
+                    "name": user.department.name,
+                }
+                if user.department
+                else None
+            ),
             "is_active": user.is_active,
             "role": user.role.name,
+            "role_code": user.role.code,
             "status": user.status.name,
         }
