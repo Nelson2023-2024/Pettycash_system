@@ -1,7 +1,8 @@
 from utils.common import get_clean_request_data
 from django.core.exceptions import ValidationError
-from services.services import UserService
+from services.services import NotificationService, UserService
 from utils.response_provider import ResponseProvider
+from audit.models import Notifications
 from ..models import User
 
 
@@ -37,11 +38,17 @@ class UserController:
             if "avatar_url" in request.FILES:
                 data["avatar_url"] = request.FILES["avatar_url"]
 
-            updated_user = UserService().update(
+            updated_user, log = UserService().update(
                 user_id=user.id,
                 data=data,
                 triggered_by=user,
                 request=request,
+            )
+
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=user,
+                channel=Notifications.Channel.IN_APP,
             )
 
             return ResponseProvider.success(
@@ -124,11 +131,24 @@ class UserController:
 
             password = data.pop("password")
             data = cls._resolve_foreign_key(data)
-            user = UserService().create(
+            user, log = UserService().create(
                 password=password,
                 triggered_by=request.user,
                 request=request,
                 **data,
+            )
+
+            # notify the new user — they need to know their account was created
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=user,
+                channel=Notifications.Channel.EMAIL,
+            )
+            # notify other admins — IN_APP, just informational
+            NotificationService.notify_many(
+                transaction_log=log,
+                recipients=UserService().get_active_admins(),
+                channel=Notifications.Channel.IN_APP,
             )
 
             return ResponseProvider.success(
@@ -182,11 +202,17 @@ class UserController:
 
             data = cls._resolve_foreign_key(data)
 
-            user = UserService().update(
+            user, log = UserService().update(
                 user_id=user_id,
                 data=data,
                 triggered_by=request.user,
                 request=request,
+            )
+            # notify the affected user — their account was changed
+            NotificationService.notify(
+                transaction_log=log,
+                recipient=user,
+                channel=Notifications.Channel.EMAIL,
             )
 
             return ResponseProvider.success(

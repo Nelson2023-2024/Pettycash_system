@@ -170,7 +170,9 @@ class UserService(ServiceBase):
             },
         )
 
-    def create(self, password: str, triggered_by: User, request=None, **data) -> User:
+    def create(
+        self, password: str, triggered_by: User, request=None, **data
+    ) -> tuple[User, TransactionLogBase]:
         """
         Creates a new user via the custom UserManager.
         Role defaults to EMP, status defaults to ACT if not provided.
@@ -204,7 +206,7 @@ class UserService(ServiceBase):
 
     def update(
         self, user_id: str, data: dict, triggered_by: User, request=None
-    ) -> User:
+    ) -> tuple[User, TransactionLogBase]:
         """
         Updates a user with the provided fields.
 
