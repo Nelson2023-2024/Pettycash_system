@@ -1,7 +1,12 @@
 from utils.response_provider import ResponseProvider
 from utils.common import get_clean_request_data
-from services.services import DisbursementReconciliationService
+from services.services import (
+    DisbursementReconciliationService,
+    NotificationService,
+    UserService,
+)
 from decimal import Decimal, InvalidOperation
+from audit.models import Notifications
 
 
 class DisbursementReconciliationController:
@@ -109,7 +114,7 @@ class DisbursementReconciliationController:
             if not receipt:
                 raise ValueError("A receipt file is required for reconciliation.")
 
-            reconciliation = DisbursementReconciliationService().submit_receipt(
+            reconciliation, log = DisbursementReconciliationService().submit_receipt(
                 request=request,
                 reconciliation_id=reconciliation_id,
                 submitted_by=request.user,
@@ -117,6 +122,9 @@ class DisbursementReconciliationController:
                 reconciled_amount=reconciled_amount,
                 surplus_returned=surplus_returned,
                 comments=data.get("comments"),
+            )
+            NotificationService.notify_many(
+                transaction_log=log, recipients=UserService().get_active_admin_fo_cfo()
             )
 
             return ResponseProvider.success(
@@ -152,12 +160,18 @@ class DisbursementReconciliationController:
             if decision not in ["completed", "rejected"]:
                 raise ValueError("Decision must be 'completed' or 'rejected'.")
 
-            reconciliation = DisbursementReconciliationService().review(
+            reconciliation, log = DisbursementReconciliationService().review(
                 request=request,
                 reconciliation_id=reconciliation_id,
                 decision=decision,
                 triggered_by=request.user,
                 comments=data.get("comments"),
+            )
+
+            NotificationService.notify(
+                recipient=reconciliation.submitted_by,
+                channel=Notifications.Channel.EMAIL,
+                transaction_log=log,
             )
 
             return ResponseProvider.success(
