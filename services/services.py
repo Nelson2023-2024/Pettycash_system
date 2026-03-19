@@ -112,6 +112,9 @@ class UserService(ServiceBase):
     def get_active_admin_fo_cfo(self):
         return self.manager.filter(role__code__in=["ADM", "CFO", "FO"], is_active=True)
 
+    def get_active_admin_cfo(self):
+        return self.manager.filter(role__code__in=["ADM", "CFO"], is_active=True)
+
     def get_active_finance_officers(self):
         return self.manager.filter(role__code="FO", is_active=True)
 
