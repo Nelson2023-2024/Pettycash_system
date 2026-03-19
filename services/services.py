@@ -180,7 +180,7 @@ class UserService(ServiceBase):
         """
         user = self.manager.create_user(password=password, **data)
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=user,
             event_code="user_created",
             triggered_by=triggered_by,
@@ -194,7 +194,7 @@ class UserService(ServiceBase):
                 "created_by": triggered_by.email,
             },
         )
-        return user
+        return user, log
 
     def update(
         self, user_id: str, data: dict, triggered_by: User, request=None
@@ -225,7 +225,7 @@ class UserService(ServiceBase):
 
         user.save(update_fields=list(data.keys()) + ["updated_at"])
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=user,
             event_code="user_updated",
             triggered_by=triggered_by,
@@ -240,7 +240,7 @@ class UserService(ServiceBase):
                 "updated_by": triggered_by.email,
             },
         )
-        return user
+        return user, log
 
     def deactivate(self, user_id: str, triggered_by: User, request=None) -> User:
         """
@@ -261,7 +261,7 @@ class UserService(ServiceBase):
         user.is_active = False
         user.save(update_fields=["is_active", "updated_at"])
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=user,
             event_code="user_deactivated",
             triggered_by=triggered_by,
@@ -275,7 +275,7 @@ class UserService(ServiceBase):
                 "action": "deactivate",
             },
         )
-        return user
+        return user, log
 
 
 # -----------------------------------------------------------------------------
@@ -297,7 +297,7 @@ class DepartmentService(ServiceBase):
             name=name, description=description, code=code, line_manager=line_manager
         )
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_created",
             triggered_by=triggered_by,
@@ -321,7 +321,7 @@ class DepartmentService(ServiceBase):
             },
         )
 
-        return department
+        return department, log
 
     def get_all(self):
         departments = self.manager.filter(is_active=True).select_related("line_manager")
@@ -368,7 +368,7 @@ class DepartmentService(ServiceBase):
             "updated_at": timezone.now().isoformat(),
         }
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_updated",
             triggered_by=triggered_by,
@@ -377,7 +377,7 @@ class DepartmentService(ServiceBase):
             metadata=metadata,
         )
 
-        return department
+        return department, log
 
     def deactivate(self, department_id: str, triggered_by: User, request=None):
         department = self.get_by_id(department_id)
@@ -397,7 +397,7 @@ class DepartmentService(ServiceBase):
             "deactivated_at": timezone.now().isoformat(),
         }
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=department,
             event_code="department_deactivated",
             triggered_by=triggered_by,
@@ -406,7 +406,7 @@ class DepartmentService(ServiceBase):
             metadata=metadata,
         )
 
-        return department
+        return department, log
 
 
 class EventTypeService(ServiceBase):
@@ -691,7 +691,7 @@ class PettyCashAccountService(ServiceBase):
         )
 
         try:
-            TransactionLogService().log(
+            log = TransactionLogService().log(
                 entity=account,
                 event_code="petty_cash_account_created",
                 ip_address=request.META.get("REMOTE_ADDR") if request else None,
@@ -708,7 +708,7 @@ class PettyCashAccountService(ServiceBase):
         except Exception as e:
             print(f"[TransactionLog ERROR] {e}")  # you'll see the real reason now
 
-        return account
+        return account, log
 
     def get_by_id(self, account_id: str):
         """
@@ -774,7 +774,7 @@ class PettyCashAccountService(ServiceBase):
 
         account.save(update_fields=list(data.keys()))
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             event_code="petty_cash_account_updated",
             triggered_by=triggered_by,
             entity=account,
@@ -792,7 +792,7 @@ class PettyCashAccountService(ServiceBase):
                 },  # what it changed to
             },
         )
-        return account
+        return account, log
 
     def deduct_balance(self, amount, triggered_by, request=None, transaction_cost=None):
         """
@@ -828,7 +828,7 @@ class PettyCashAccountService(ServiceBase):
                 account=account, request=request
             )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=account,
                 event_code="petty_cash_balance_deducted",
                 triggered_by=triggered_by,
@@ -852,7 +852,7 @@ class PettyCashAccountService(ServiceBase):
                 },
             )
 
-            return account, previous_balance, new_balance
+            return account, previous_balance, new_balance, log
 
     def deactivate_account(self, account_id: str, triggered_by, request=None):
         """
@@ -876,7 +876,7 @@ class PettyCashAccountService(ServiceBase):
         account.is_active = False
         account.save(update_fields=["is_active"])
 
-        TransactionLogService().log(
+        log = TransactionLogService().log(
             entity=account,
             ip_address=request.META.get("REMOTE_ADDR") if request else None,
             message=f"Petty cash account {account.name} deactivated",
@@ -890,7 +890,7 @@ class PettyCashAccountService(ServiceBase):
                 "action": "deactivate",
             },
         )
-        return account
+        return account, log
 
 
 # -----------------------------------------------------------------------------
@@ -1234,7 +1234,7 @@ class ExpenseRequestService(ServiceBase):
                     "transaction_cost": str(transaction_cost),
                     "total_deduction": str(total_deduction),
                     "previous_balance": str(previous_balance),
-                    "new_balance": str(new_balance),  
+                    "new_balance": str(new_balance),
                     "disbursed_by_id": str(triggered_by.id),
                     "disbursed_by_email": triggered_by.email,
                     "employee_id": str(expense.employee.id),
@@ -1317,7 +1317,7 @@ class TopUpRequestService(ServiceBase):
             # event_type auto-resolves to 'topup_requested' via model default
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_requested",
             triggered_by=requested_by,
@@ -1339,7 +1339,7 @@ class TopUpRequestService(ServiceBase):
             },
         )
 
-        return topup
+        return topup, log
 
     def trigger_top_up_request(
         self, account: PettyCashAccount, request=None
@@ -1393,7 +1393,7 @@ class TopUpRequestService(ServiceBase):
             # event_type auto-resolves to 'topup_requested' via model default
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_requested",
             triggered_by=system_user,
@@ -1475,7 +1475,7 @@ class TopUpRequestService(ServiceBase):
                     ]
                 )
 
-                TransactionLogService.log(
+                log = TransactionLogService.log(
                     entity=topup,
                     event_code=event_code,
                     triggered_by=triggered_by,
@@ -1490,7 +1490,7 @@ class TopUpRequestService(ServiceBase):
                     },
                 )
 
-            return topup
+            return topup, log
         except IntegrityError as e:
             logger.error(f"IntegrityError in decide_top_up_request: {e}", exc_info=True)
             # Re-raise as a more specific exception or let the controller handle it
@@ -1544,7 +1544,7 @@ class TopUpRequestService(ServiceBase):
 
             topup.save(update_fields=list(data.keys()) + ["updated_at"])
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=topup,
                 event_code="topup_requested",  # still in requested stage — no workflow change
                 triggered_by=triggered_by,
@@ -1563,7 +1563,7 @@ class TopUpRequestService(ServiceBase):
                     "action": "update",
                 },
             )
-            return topup
+            return topup, log
 
     def deactivate_top_up_request(
         self, topup_id: str, triggered_by: User, request=None
@@ -1590,7 +1590,7 @@ class TopUpRequestService(ServiceBase):
             update_fields=["is_active", "updated_at", "status_id", "event_type_id"]
         )
 
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=topup,
             event_code="topup_deactivated",
             triggered_by=triggered_by,
@@ -1611,7 +1611,7 @@ class TopUpRequestService(ServiceBase):
             },
         )
 
-        return topup
+        return topup, log
 
     def disburse_top_up_request(self, topup_id: str, triggered_by: User, request=None):
         with transaction.atomic():
@@ -1640,7 +1640,7 @@ class TopUpRequestService(ServiceBase):
             topup.event_type = event_type
             topup.save(update_fields=["status_id", "event_type_id", "updated_at"])
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=topup,
                 event_code="topup_disbursed",
                 triggered_by=triggered_by,
@@ -1660,7 +1660,7 @@ class TopUpRequestService(ServiceBase):
                 },
             )
 
-            return topup
+            return topup, log
 
 
 # -----------------------------------------------------------------------------
@@ -1806,7 +1806,7 @@ class DisbursementReconciliationService(ServiceBase):
                 ]
             )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=reconciliation,
                 event_code="expense_reconciliation_submitted",
                 triggered_by=submitted_by,
@@ -1824,7 +1824,7 @@ class DisbursementReconciliationService(ServiceBase):
                 },
             )
 
-            return reconciliation
+            return reconciliation, log
 
     def review(
         self,
@@ -1957,7 +1957,7 @@ class DisbursementReconciliationService(ServiceBase):
                         "updated_at",
                     ]
                 )
-        TransactionLogService.log(
+        log = TransactionLogService.log(
             entity=reconciliation,
             event_code=(
                 "expense_completed" if decision == "completed" else "expense_rejected"
@@ -2001,4 +2001,4 @@ class DisbursementReconciliationService(ServiceBase):
                 ),
             },
         )
-        return reconciliation
+        return reconciliation, log
