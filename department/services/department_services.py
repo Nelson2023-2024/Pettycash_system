@@ -1,9 +1,10 @@
 from django.core.exceptions import ValidationError
 from utils.response_provider import ResponseProvider
-from services.services import DepartmentService, UserService
+from services.services import DepartmentService, NotificationService, UserService
 from utils.common import get_clean_request_data
 from department.models import Department
 from users.models import User
+from audit.models import Notifications
 
 
 class DepartmentController:
@@ -33,12 +34,17 @@ class DepartmentController:
         except Department.DoesNotExist:
             pass
 
-        department = DepartmentService().create(
+        department, log = DepartmentService().create(
             code=deparment_code,
             name=deparment_name,
             description=deparment_description,
             request=request,
             triggered_by=request.user,
+        )
+        NotificationService.notify_many(
+            channel=Notifications.Channel.IN_APP,
+            recipients=UserService().get_active_admins(),
+            transaction_log=log,
         )
 
         return ResponseProvider().created(
@@ -80,11 +86,16 @@ class DepartmentController:
         deparment_id = deparment_id
         department_name = data.get("name")
 
-        department = DepartmentService().update(
+        department, log = DepartmentService().update(
             request=request,
             department_id=deparment_id,
             triggered_by=request.user,
             data=data,
+        )
+        NotificationService.notify(
+            channel=Notifications.Channel.IN_APP,
+            recipient=request.user,
+            transaction_log=log,
         )
         return ResponseProvider().created(
             message=f"{department_name} departement created succesfully",
@@ -96,8 +107,13 @@ class DepartmentController:
 
         try:
 
-            department = DepartmentService().deactivate(
+            department, log = DepartmentService().deactivate(
                 department_id=deparment_id, triggered_by=request.user, request=request
+            )
+            NotificationService.notify(
+                channel=Notifications.Channel.IN_APP,
+                recipient=request.user,
+                transaction_log=log,
             )
             return ResponseProvider().success(
                 message=f"{department.name} department deactivated successfully"
