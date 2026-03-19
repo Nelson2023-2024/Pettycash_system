@@ -1,6 +1,7 @@
 from services.services import NotificationService
 from utils.response_provider import ResponseProvider
 
+
 class NotificationController:
 
     @classmethod
@@ -19,29 +20,19 @@ class NotificationController:
             notifications = NotificationService().list_auth_user_notifications(
                 auth_user=request.user.id
             )
+
+            unread_count = NotificationService().get_unread_count(
+                auth_user=request.user.id
+            )
             return ResponseProvider.success(
-                data=[cls._serialize(n) for n in notifications]
+                data={
+                    "unread_count": unread_count,
+                    "notifications": [cls._serialize(n) for n in notifications],
+                }
             )
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
 
-    @classmethod
-    def get_unread_count(cls, request):
-        """
-        Returns the count of unread notifications for the authenticated user.
-        Used for the notification badge/counter in the UI.
-
-        Args:
-            request: The HTTP request object.
-
-        Returns:
-            JsonResponse: 200 with unread count.
-        """
-        try:
-            count = NotificationService().get_unread_count(auth_user=request.user.id)
-            return ResponseProvider.success(data={"unread_count": count})
-        except Exception as ex:
-            return ResponseProvider.handle_exception(ex)
 
     @classmethod
     def mark_notification_as_read(cls, request, notification_id: str):
@@ -102,7 +93,9 @@ class NotificationController:
             "id": str(notification.id),
             "channel": notification.channel,
             "is_read": notification.is_read,
-            "read_at": notification.read_at.isoformat() if notification.read_at else None,
+            "read_at": (
+                notification.read_at.isoformat() if notification.read_at else None
+            ),
             "created_at": notification.created_at.isoformat(),
             # transaction log fields
             "message": log.event_message,
