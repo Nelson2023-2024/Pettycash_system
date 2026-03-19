@@ -84,11 +84,16 @@ class ExpenseRequestController:
                     expense_type=data.get("expense_type"),
                     receipt=receipt,
                 )
-                finance_officers = UserService().get_active_finance_officers()
 
                 NotificationService.notify_many(
                     transaction_log=log,
-                    recipients=finance_officers,
+                    recipients=UserService().get_active_admin_fo_cfo(),
+                )
+
+                NotificationService().notify(
+                    transaction_log=log,
+                    recipient=request.user,
+                    channel=Notifications.Channel.EMAIL,
                 )
 
             return ResponseProvider().success(
@@ -193,11 +198,10 @@ class ExpenseRequestController:
                     expense_id=expense_id,
                     data=data,
                 )
-                admins = UserService().get_active_admins()
 
-                NotificationService.notify_many(
+                NotificationService().notify(
                     transaction_log=log,
-                    recipients=admins,
+                    recipient=authUser,
                     channel=Notifications.Channel.IN_APP,
                 )
 
@@ -227,9 +231,9 @@ class ExpenseRequestController:
                 triggered_by=authUser,
             )
 
-            NotificationService().notify_many(
+            NotificationService().notify(
                 transaction_log=log,
-                recipients=UserService().get_active_admins(),
+                recipient=authUser,
                 channel=Notifications.Channel.IN_APP,
             )
             return ResponseProvider().success(
@@ -280,7 +284,6 @@ class ExpenseRequestController:
                     recipient=expense.employee,
                     channel=Notifications.Channel.EMAIL,
                 )
-
             return ResponseProvider().success(
                 message=f"Expense request {decision} successfully",
                 data=cls._serialize(expense),
@@ -318,6 +321,11 @@ class ExpenseRequestController:
                     channel=Notifications.Channel.EMAIL,
                     recipient=expense.employee,
                 )
+                NotificationService().notify_many(
+                    transaction_log=log,
+                    recipients=UserService().get_active_admin_fo_cfo(),
+                    channel=Notifications.Channel.EMAIL,
+                )
             return ResponseProvider().success(
                 data=cls._serialize(expense),
                 message="Expense request disbursed successfully.",
@@ -331,26 +339,26 @@ class ExpenseRequestController:
         Converting a Django model → JSON-safe dictionary
         """
         return {
-        "id": str(expense.id),
-        "title": expense.title,
-        "amount": str(expense.amount),
-        "expense_type": expense.expense_type,
-        "description": expense.description,
-        "status": expense.status.name if expense.status else None,
-        "status_code": expense.status.code if expense.status else None,
-        "created_at": expense.created_at.isoformat(),
-        "updated_at": expense.updated_at.isoformat(),
-        "mpesa_phone": expense.mpesa_phone,
-        "receipt": expense.receipt.url if expense.receipt else None,
-        "employee": {
-            "id": str(expense.employee.id),
-            "name": f"{expense.employee.first_name} {expense.employee.last_name}".strip(),
-            "email": expense.employee.email,
-        },
-        "reason": expense.metadata.get("decision_reason") or None,
-        # ── Disbursement financial details ─────────────────────
-        "transaction_cost": expense.metadata.get("transaction_cost") or None,
-        "total_deduction": expense.metadata.get("total_deduction") or None,
-        "disbursed_at": expense.metadata.get("disbursed_at") or None,
-        "disbursed_by_email": expense.metadata.get("disbursed_by_email") or None,
-    }
+            "id": str(expense.id),
+            "title": expense.title,
+            "amount": str(expense.amount),
+            "expense_type": expense.expense_type,
+            "description": expense.description,
+            "status": expense.status.name if expense.status else None,
+            "status_code": expense.status.code if expense.status else None,
+            "created_at": expense.created_at.isoformat(),
+            "updated_at": expense.updated_at.isoformat(),
+            "mpesa_phone": expense.mpesa_phone,
+            "receipt": expense.receipt.url if expense.receipt else None,
+            "employee": {
+                "id": str(expense.employee.id),
+                "name": f"{expense.employee.first_name} {expense.employee.last_name}".strip(),
+                "email": expense.employee.email,
+            },
+            "reason": expense.metadata.get("decision_reason") or None,
+            # ── Disbursement financial details ─────────────────────
+            "transaction_cost": expense.metadata.get("transaction_cost") or None,
+            "total_deduction": expense.metadata.get("total_deduction") or None,
+            "disbursed_at": expense.metadata.get("disbursed_at") or None,
+            "disbursed_by_email": expense.metadata.get("disbursed_by_email") or None,
+        }
