@@ -31,6 +31,9 @@ class Environment:
         self.CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
         self.CLOUDINARY_SECRET_KEY = os.getenv("CLOUDINARY_SECRET_KEY")
         self.CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+        
+        #----celery configuration----
+        self.CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 
 
 ENV = Environment()

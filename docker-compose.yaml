@@ -13,10 +13,12 @@ services:
       - "8000:8000"
     env_file:
       - ./.env
-    
+
     depends_on:
       - pettycash-db
-  
+      - pettycash-redis-task-broker
+
+  # ── Postgres ──────────────────────────────────────────
   pettycash-db:
     image: postgres:18
     restart: always
@@ -28,8 +30,41 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/18/docker # named volume to store my data for peristence 
-  
+      - postgres_data:/var/lib/postgresql/18/docker # named volume to store my data for peristence
+
+  # ── Redis Broker ──────────────────────────────────────
+  pettycash-redis-task-broker:
+    image: redis:8.2-alpine
+    container_name: pettycash-redis-task-broker
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+  # ── Celery Worker ─────────────────────────────────────
+  celery:
+    build: .
+    command: python -m celery -A pettycash_system worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - pettycash-redis-task-broker
+      - pettycash-db
+    env_file:
+      - .env
+
+  # ── Flower — Celery monitor UI ────────────────────────
+  flower:
+    build: .
+    command: python -m celery -A pettycash_system flower --port=5555
+    ports:
+      - 5555:5555
+    depends_on:
+      - pettycash-redis-task-broker
+      - celery
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
-
+  redis_data:
