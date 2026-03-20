@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "audit",
     "finance",
     "department",
+    "services.otp_email",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -217,3 +218,10 @@ cloudinary.config(
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
+
+## REDIS CONFIGURATION
+CELERY_BROKER_URL = ENV.CELERY_BROKER_URL
+# CELERY_BROKER_URL='redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
