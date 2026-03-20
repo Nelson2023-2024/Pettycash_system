@@ -52,7 +52,12 @@ INSTALLED_APPS = [
     "department",
     "services.otp_email",
     "django.contrib.admin",
-    "django.contrib.auth",
+    "django.contrib.auth",git add pettycash_system/settings.py
+git commit -m "feat(celery): configure Redis broker and register otp email service
+
+- Added services.otp_email to INSTALLED_APPS
+- Configured CELERY_BROKER_URL from environment
+- Set Celery serializers and accepted content to JSON"
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
