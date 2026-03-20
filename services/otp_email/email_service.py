@@ -4,45 +4,39 @@ from django.conf import settings
 from config.env_config import ENV
 from users.models import User
 from audit.models import Notifications
+from celery import shared_task
+
+
+@shared_task
+def send_email_task(subject: str, to_email: str, html_content: str, plain_text: str):
+    """
+    Async email sending task — queued to Celery worker.
+    All emails go through here so none of them block the request.
+    """
+    try:
+        email = EmailMultiAlternatives(
+            from_email=ENV.EMAIL_HOST_USER,
+            to=[to_email],
+            subject=subject,
+            body=plain_text,
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)
+    except Exception as ex:
+        raise Exception(f"Failed to send email to {to_email}: {str(ex)}")
 
 
 class EmailService:
 
     @staticmethod
     def _send(subject: str, to_email: str, html_content: str, plain_text: str) -> None:
-        """
-
-        Base email sender — reused by all email methods.
-        Handles the actual sending so otp and notification methods
-        don't duplicate sending logic.
-
-        Args:
-            subject (str): Email subject line.
-            to_email (str): Recipient email address.
-            html_content (str): Rendered HTML body.
-            plain_text (str): Plain text fallback body.
-
-        Raises:
-            Exception: If sending fails.
-
-        :param subject:
-        :param to_email:
-        :param html_content:
-        :param plain_text:
-        :return:
-        """
-        try:
-            email = EmailMultiAlternatives(
-                from_email=ENV.EMAIL_HOST_USER,
-                to=[to_email],
-                subject=subject,
-                body=plain_text,
-            )
-            email.attach_alternative(html_content, "text/html")
-            #lets exceptions bubble up to your try/except
-            email.send(fail_silently=False)
-        except Exception as ex:
-            raise Exception(f"Failed to send email to {to_email}: {str(ex)}")
+        # queue to Celery — returns immediately, worker handles sending
+        send_email_task.delay(
+            subject=subject,
+            to_email=to_email,
+            html_content=html_content,
+            plain_text=plain_text,
+        )
 
     @classmethod
     def send_otp(cls, user: User, otp_code: str) -> None:
