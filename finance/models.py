@@ -19,7 +19,7 @@ class PettyCashAccount(GenericBaseModel):
     is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
     account_type = models.CharField(
         default="mpesa", max_length=20, blank=True, verbose_name=_("Account Type")
-    )   
+    )
     mpesa_phone_number = models.CharField(
         max_length=15, blank=True, verbose_name=_("Phone number")
     )
@@ -250,11 +250,15 @@ class DisbursementReconciliation(BaseModel):
         verbose_name="Surplus Returned",
     )
 
-    receipt = models.FileField(
-        upload_to="reconciliation_receipts/%Y/%m/%d/",
-        null=True,
-        blank=True,
-        verbose_name="Receipt",
+    # receipt = models.FileField(
+    #     upload_to="reconciliation_receipts/%Y/%m/%d/",
+    #     null=True,
+    #     blank=True,
+    #     verbose_name="Receipt",
+    # )
+    
+    receipt = CloudinaryField(
+        folder="receipt", blank=True, verbose_name="Receipt", resource_type="image"
     )
 
     comments = models.TextField(blank=True, null=True, verbose_name="Comments")
