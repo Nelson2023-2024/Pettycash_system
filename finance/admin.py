@@ -1,5 +1,6 @@
 from django.contrib import admin
-from finance.models import ExpenseRequest, TopUpRequest, PettyCashAccount, DisbursementReconciliation, MpesaTransactionCost
+from finance.models import (DisbursementReconciliation, ExpenseRequest, LoanConfig, LoanRequest,
+    MpesaTransactionCost, PettyCashAccount, TopUpRequest)
 from users.models import User
 
 
@@ -28,3 +29,12 @@ admin.site.register(DisbursementReconciliation)
 class MpesaTransactionCostAdmin(admin.ModelAdmin):
     list_display = ['min_amount', 'max_amount', 'cost', 'is_active']
     ordering = ['min_amount']
+    
+@admin.register(LoanConfig)
+class LoanConfigAdmin(admin.ModelAdmin):
+    list_display = ['max_loan_amount', 'is_active', 'created_at']
+
+@admin.register(LoanRequest)
+class LoanRequestAdmin(admin.ModelAdmin):
+    list_display = ['employee', 'amount', 'status', 'due_date', 'created_at']
+    list_filter = ['status']

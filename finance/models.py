@@ -256,9 +256,9 @@ class DisbursementReconciliation(BaseModel):
     #     blank=True,
     #     verbose_name="Receipt",
     # )
-    
+
     receipt = CloudinaryField(
-        folder="receipt", blank=True, verbose_name="Receipt", resource_type="image"
+        folder="receipt", blank=True, null=True, verbose_name="Receipt", resource_type="image"
     )
 
     comments = models.TextField(blank=True, null=True, verbose_name="Comments")
@@ -304,3 +304,73 @@ class MpesaTransactionCost(BaseModel):
 
     def __str__(self):
         return f"KES {self.min_amount} - {self.max_amount}: KES {self.cost}"
+
+
+def get_default_pending_status():
+    return Status.objects.get(code="pending").id
+
+
+class LoanConfig(BaseModel):
+    """
+    Org-wide loan settings — managed via Django admin.
+    Only one active config at a time.
+    """
+
+    max_loan_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=10000,
+        verbose_name=_("Maximum Loan Amount (KES)"),
+    )
+
+    class Meta:
+        db_table = "loan_config"
+        verbose_name = _("Loan Configuration")
+
+    def __str__(self):
+        return f"Loan Config — Max KES {self.max_loan_amount}"
+
+
+class LoanRequest(BaseModel):
+    employee = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="loan_requests",
+        verbose_name=_("Employee"),
+    )
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name=_("Amount")
+    )
+    reason = models.TextField(blank=True, null=True, verbose_name=_("Reason"))
+    status = models.ForeignKey(
+        Status,
+        on_delete=models.PROTECT,
+        default=get_default_pending_status,
+        related_name="loan_requests",
+        verbose_name=_("Status"),
+    )
+    due_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_("Due Date"),  # set on disburse → end of month
+    )
+    repaid_at = models.DateTimeField(null=True, blank=True, verbose_name=_("Repaid At"))
+    decision_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="loan_decisions",
+        verbose_name=_("Decision By"),
+    )
+    decision_reason = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Decision Reason")
+    )
+    metadata = models.JSONField(default=dict, blank=True, verbose_name=_("Metadata"))
+
+    class Meta:
+        db_table = "loan_requests"
+        verbose_name = _("Loan Request")
+        verbose_name_plural = _("Loan Requests")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.employee.email} — KES {self.amount} ({self.status.name})"
