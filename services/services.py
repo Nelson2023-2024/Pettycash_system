@@ -24,6 +24,7 @@ from django.db import transaction, IntegrityError
 import logging
 from decimal import Decimal
 import calendar
+from django.db import models
 
 logger = logging.getLogger(__name__)
 
@@ -287,6 +288,15 @@ class UserService(ServiceBase):
             },
         )
         return user, log
+
+    def search(self, query: str):
+        return self.manager.filter(
+                is_active=True
+            ).filter(
+                models.Q(first_name__icontains=query) |
+                models.Q(last_name__icontains=query) |
+                models.Q(email__icontains=query)
+            ).select_related('role', 'department')[:20]
 
 
 # -----------------------------------------------------------------------------
