@@ -6,7 +6,7 @@ from .views import (create_expense_view, create_petty_cash_view, create_topup_vi
   list_all_reconciliations_view, list_all_topups_view, list_my_expenses_view,
   list_my_reconciliations_view, list_my_topups_view, review_reconciliation_view,
   submit_reconciliation_receipt_view, update_expense_view, update_petty_cash_view,
-  update_topup_view, get_petty_cash_activity_view)
+  update_topup_view, get_petty_cash_activity_view,list_my_loans_view,disburse_loan_view,decide_loan_view,get_loan_view,mark_loan_repaid_view, create_loan_view, list_all_loans_view)
 
 urlpatterns = [
   path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),
@@ -34,11 +34,19 @@ urlpatterns = [
   path('topup/<str:topup_id>/disburse/', disburse_topup_view, name='disburse-topup-request'),
   path('topup/<str:topup_id>/update/', update_topup_view, name='update-topup-request'),
   path('topup/<str:topup_id>/deactivate/', deactivate_topup_view, name='deactivate-topup-request'),
-  
+
    # ── disbursement reconciliation ──────────────────────────
-    path('reconciliation/', list_all_reconciliations_view, name='list-all-reconciliations'),
-    path('reconciliation/mine/', list_my_reconciliations_view, name='list-my-reconciliations'),
-    path('reconciliation/<str:reconciliation_id>/', get_reconciliation_view, name='get-reconciliation'),
-    path('reconciliation/<str:reconciliation_id>/submit/', submit_reconciliation_receipt_view, name='submit-reconciliation-receipt'),
-    path('reconciliation/<str:reconciliation_id>/review/', review_reconciliation_view, name='review-reconciliation'),
+  path('reconciliation/', list_all_reconciliations_view, name='list-all-reconciliations'),
+  path('reconciliation/mine/', list_my_reconciliations_view, name='list-my-reconciliations'),
+  path('reconciliation/<str:reconciliation_id>/', get_reconciliation_view, name='get-reconciliation'),
+  path('reconciliation/<str:reconciliation_id>/submit/', submit_reconciliation_receipt_view, name='submit-reconciliation-receipt'),
+  path('reconciliation/<str:reconciliation_id>/review/', review_reconciliation_view, name='review-reconciliation'),
+
+  path("loan/", list_all_loans_view, name="list-all-loans"),
+  path("loan/mine/", list_my_loans_view, name="list-my-loans"),
+  path("loan/create/", create_loan_view, name="create-loan"),
+  path("loan/<str:loan_id>/", get_loan_view, name="get-loan"),
+  path("loan/<str:loan_id>/decide/", decide_loan_view, name="decide-loan"),
+  path("loan/<str:loan_id>/disburse/", disburse_loan_view, name="disburse-loan"),
+  path("loan/<str:loan_id>/repaid/", mark_loan_repaid_view, name="mark-loan-repaid"),
 ]
