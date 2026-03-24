@@ -98,6 +98,19 @@ class UserController:
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
 
+    @classmethod
+    def search_users(cls, request) -> ResponseProvider:
+        try:
+            query = request.GET.get('search', '').strip()
+            if len(query) < 2:
+                return ResponseProvider.success(data=[])
+            users = UserService().search(query=query)
+            return ResponseProvider.success(
+                data=[cls._serialize(user) for user in users]
+            )
+        except Exception as ex:
+            return ResponseProvider.handle_exception(ex)
+
     # -------------------------------------------------------------------------
     # CREATE USER — admin only
     # -------------------------------------------------------------------------
