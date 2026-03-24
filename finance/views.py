@@ -9,6 +9,7 @@ from utils.response_provider import ResponseProvider
 from finance.services.expense_request_service import ExpenseRequestController
 from finance.services.topup_request_service import TopUpRequestController
 from finance.services.disbursment_reconciliation_service import DisbursementReconciliationController
+from .services.loan_request_service import LoanController
 from .services.pettycash_services import PettyCashService
 
 
@@ -211,3 +212,53 @@ def submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonR
 @login_required("FO", "CFO", "ADM")  # only FO/CFO can review
 def review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:
     return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)
+
+
+# ── TOP UP REQUESTS ──────────────────────────────────────────
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO", "FO")
+def list_all_loans_view(request):
+    return LoanController.get_all(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "ADM", "CFO", "FO")
+def list_my_loans_view(request):
+    return LoanController.get_my_loans(request)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("EMP")
+def create_loan_view(request):
+    return LoanController.create(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "ADM", "CFO", "FO")
+def get_loan_view(request, loan_id: str):
+    return LoanController.get_by_id(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("FO", "ADM")
+def decide_loan_view(request, loan_id: str):
+    return LoanController.decide(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("CFO", "ADM")
+def disburse_loan_view(request, loan_id: str):
+    return LoanController.disburse(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("CFO", "ADM")
+def mark_loan_repaid_view(request, loan_id: str):
+    return LoanController.mark_repaid(request, loan_id)
