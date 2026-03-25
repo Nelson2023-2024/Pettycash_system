@@ -71,6 +71,12 @@ def get_petty_cash_activity_view(request):
     except Exception as ex:
         return ResponseProvider().handle_exception(ex)
 
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO")
+def export_account_activity_view(request):
+    return PettyCashService.export_account_activity(request)
+
 
 # ── EXPENSE REQUESTS ─────────────────────────────────────────
 @csrf_exempt

@@ -6,12 +6,13 @@ from .views import (create_expense_view, create_petty_cash_view, create_topup_vi
   list_all_reconciliations_view, list_all_topups_view, list_my_expenses_view,
   list_my_reconciliations_view, list_my_topups_view, review_reconciliation_view,
   submit_reconciliation_receipt_view, update_expense_view, update_petty_cash_view,
-  update_topup_view, get_petty_cash_activity_view,list_my_loans_view,disburse_loan_view,decide_loan_view,get_loan_view,mark_loan_repaid_view, create_loan_view, list_all_loans_view)
+  update_topup_view, get_petty_cash_activity_view,list_my_loans_view,disburse_loan_view,decide_loan_view,get_loan_view,mark_loan_repaid_view, create_loan_view, list_all_loans_view, export_account_activity_view)
 
 urlpatterns = [
   path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),
   path('petty_cash/', get_all_petty_cash_view, name='get-all-petty-cash-accounts'),
   path("petty_cash/activity/", get_petty_cash_activity_view, name="get-petty-cash-activity",),
+  path("petty_cash/activity/export/", export_account_activity_view, name="export-petty-cash-activity"),
   path('petty_cash/<str:account_id>/', get_petty_cash_view, name='get-petty-cash-account'),
   path('petty_cash/<str:account_id>/update/', update_petty_cash_view, name='update-petty-cash-account'),
   path('petty_cash/<str:account_id>/deactivate/', deactivate_petty_cash_view, name='deactivate-petty-cash-account'),
