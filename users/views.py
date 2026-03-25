@@ -79,3 +79,10 @@ def update_user_view(request, user_id):
 @login_required("ADM")
 def list_roles_view(request):
     return RoleController.list_roles(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO", "FO")
+def search_users_view(request):
+    return UserController.search_users(request)
