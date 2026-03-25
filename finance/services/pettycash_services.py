@@ -36,7 +36,7 @@ class PettyCashService:
         NotificationService.notify_many(
             transaction_log=log,
             recipients=UserService().get_active_admin_fo_cfo(),
-            channel=Notifications.Channel.IN_APP
+            channel=Notifications.Channel.IN_APP,
         )
 
         return ResponseProvider.created(
@@ -158,11 +158,32 @@ class PettyCashService:
     @staticmethod
     def _serialize_log(log) -> dict:
         metadata = log.metadata or {}
+
+        expense_amount = metadata.get("expense_amount")
+        transaction_cost = metadata.get("transaction_cost")
+        amount_deducted = metadata.get("amount_deducted")
+        topup_amount = metadata.get("amount")
+
+        try:
+            total_spent = (
+                str(float(expense_amount) + float(transaction_cost))
+                if expense_amount and transaction_cost
+                else amount_deducted or topup_amount
+            )
+        except (TypeError, ValueError):
+            total_spent = amount_deducted or topup_amount
+
+        # ── item: use expense title if available, else log message ──
+        title = metadata.get("title")
+        employee_email = metadata.get("employee_email")
+        item = (
+            f"{title} — {employee_email}"
+            if title and employee_email
+            else title or log.event_message
+        )
+
         return {
-            "id": str(log.id),
-            "event_code": log.event_type.code if log.event_type else None,
-            "event_name": log.event_type.name if log.event_type else None,
-            "message": log.event_message,
+            "date": log.created_at.isoformat(),
             "triggered_by": (
                 {
                     "id": str(log.triggered_by.id),
@@ -172,10 +193,11 @@ class PettyCashService:
                 if log.triggered_by
                 else None
             ),
-            "created_at": log.created_at.isoformat(),
-            "amount": metadata.get("amount") or metadata.get("amount_deducted"),
-            "expense_amount": metadata.get("expense_amount"),
-            "transaction_cost": metadata.get("transaction_cost"),
-            "previous_balance": metadata.get("previous_balance"),
-            "new_balance": metadata.get("new_balance"),
+            "item": item,
+            "amount": expense_amount or topup_amount,
+            "transaction_cost": transaction_cost or "0",
+            "total_spent": total_spent,
+            "balance": metadata.get("new_balance"),
+            "event_code": log.event_type.code if log.event_type else None,
+            "event_name": log.event_type.name if log.event_type else None,
         }
