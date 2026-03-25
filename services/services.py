@@ -290,13 +290,15 @@ class UserService(ServiceBase):
         return user, log
 
     def search(self, query: str):
-        return self.manager.filter(
-                is_active=True
-            ).filter(
-                models.Q(first_name__icontains=query) |
-                models.Q(last_name__icontains=query) |
-                models.Q(email__icontains=query)
-            ).select_related('role', 'department')[:20]
+        return (
+            self.manager.filter(is_active=True)
+            .filter(
+                models.Q(first_name__icontains=query)
+                | models.Q(last_name__icontains=query)
+                | models.Q(email__icontains=query)
+            )
+            .select_related("role", "department")[:20]
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -815,7 +817,15 @@ class PettyCashAccountService(ServiceBase):
         )
         return account, log
 
-    def deduct_balance(self, amount, triggered_by, request=None, transaction_cost=None):
+    def deduct_balance(
+        self,
+        amount,
+        triggered_by,
+        request=None,
+        transaction_cost=None,
+        title=None,
+        employee_email=None,
+    ):
         """
         Deducts the disbursed amount from the active petty cash account balance.
         Raises ValueError if no active account exists or if balance would go negative.
@@ -858,6 +868,8 @@ class PettyCashAccountService(ServiceBase):
                 metadata={
                     "account_id": str(account.id),
                     "account_name": account.name,
+                    "title": title,  # ← expense title
+                    "employee_email": employee_email,  # <- employee who receives the money
                     "expense_amount": (
                         str(amount - transaction_cost)
                         if transaction_cost
@@ -1218,6 +1230,8 @@ class ExpenseRequestService(ServiceBase):
                 transaction_cost=transaction_cost,
                 triggered_by=triggered_by,
                 request=request,
+                title=expense.title,
+                employee_email=expense.employee.email,
             )
 
             disbursed_status = Status.objects.get(code="disbursed")
@@ -2065,7 +2079,8 @@ class LoanRequestService(ServiceBase):
 
         # ── Guard: one active loan at a time ─────────────
         active_loan = self.manager.filter(
-            employee=employee, status__code__in=["pending", "approved", "disbursed", 'defaulted']
+            employee=employee,
+            status__code__in=["pending", "approved", "disbursed", "defaulted"],
         ).first()
         if active_loan:
             raise ValueError(
@@ -2175,7 +2190,12 @@ class LoanRequestService(ServiceBase):
             total_deduction = loan.amount + transaction_cost
 
             # ── Deduct from petty cash ────────────────────
-            _, previous_balance, new_balance, _ = PettyCashAccountService().deduct_balance(
+            (
+                _,
+                previous_balance,
+                new_balance,
+                _,
+            ) = PettyCashAccountService().deduct_balance(
                 amount=total_deduction,
                 transaction_cost=transaction_cost,
                 triggered_by=triggered_by,
@@ -2190,16 +2210,18 @@ class LoanRequestService(ServiceBase):
             disbursed_status = Status.objects.get(code="disbursed")
             loan.status = disbursed_status
             loan.due_date = due_date
-            loan.metadata.update({
-                "disbursed_by": str(triggered_by.id),
-                "disbursed_by_email": triggered_by.email,
-                "disbursed_at": timezone.now().isoformat(),
-                "transaction_cost": str(transaction_cost),
-                "total_deduction": str(total_deduction),
-                "previous_balance": str(previous_balance),
-                "new_balance": str(new_balance),
-                "due_date": str(due_date),
-            })
+            loan.metadata.update(
+                {
+                    "disbursed_by": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_at": timezone.now().isoformat(),
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "due_date": str(due_date),
+                }
+            )
             loan.save(update_fields=["status", "due_date", "metadata", "updated_at"])
 
             TransactionLogService.log(
@@ -2223,7 +2245,9 @@ class LoanRequestService(ServiceBase):
             )
             return loan
 
-    def mark_repaid(self, loan_id: str, triggered_by: User, request=None) -> LoanRequest:
+    def mark_repaid(
+        self, loan_id: str, triggered_by: User, request=None
+    ) -> LoanRequest:
         """
         CFO marks a disbursed loan as repaid after M-Pesa confirmation.
         Credits the loan amount back to petty cash.
@@ -2244,13 +2268,15 @@ class LoanRequestService(ServiceBase):
             repaid_status = Status.objects.get(code="repaid")
             loan.status = repaid_status
             loan.repaid_at = timezone.now()
-            loan.metadata.update({
-                "repaid_by": str(triggered_by.id),
-                "repaid_by_email": triggered_by.email,
-                "repaid_at": timezone.now().isoformat(),
-                "previous_balance": str(previous_balance),
-                "new_balance": str(new_balance),
-            })
+            loan.metadata.update(
+                {
+                    "repaid_by": str(triggered_by.id),
+                    "repaid_by_email": triggered_by.email,
+                    "repaid_at": timezone.now().isoformat(),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                }
+            )
             loan.save(update_fields=["status", "repaid_at", "metadata", "updated_at"])
 
             TransactionLogService.log(
@@ -2270,4 +2296,3 @@ class LoanRequestService(ServiceBase):
                 },
             )
             return loan
-
