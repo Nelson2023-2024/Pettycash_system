@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "cloudinary",
     "cloudinary_storage",
+    "django_extensions"
 ]
 
 MIDDLEWARE = [
@@ -225,3 +226,9 @@ CELERY_BROKER_URL = ENV.CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}

@@ -9,6 +9,7 @@ from datetime import timedelta
 from django.utils import timezone
 import openpyxl
 from django.http import HttpResponse
+from audit.models import EventTypes
 
 
 
@@ -233,6 +234,18 @@ class PettyCashService:
             for col in ws.columns:
                 max_len = max(len(str(cell.value or "")) for cell in col)
                 ws.column_dimensions[col[0].column_letter].width = max_len + 4
+
+                # ── Log the export as a transaction ───────────────
+            TransactionLogBase.objects.create(
+                    triggered_by=request.user,
+                    event_type=EventTypes.objects.get(code="petty_cash_export"),
+                    metadata={
+                        "account_id": str(account.id),
+                        "period": period,
+                        "export_count": logs.count(),
+                    },
+                    event_message=f"{request.user.email} exported petty cash activity ({period})",
+                )
 
             # ── Return as download ────────────────────────────
             filename = f"petty_cash_{period}_{timezone.now().strftime('%Y%m%d')}.xlsx"

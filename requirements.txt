@@ -16,3 +16,8 @@ redis==7.3.0
 flower
 
 openpyxl
+
+django-extensions 
+graphviz 
+pydot 
+pyparsing
