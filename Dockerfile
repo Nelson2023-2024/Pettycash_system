@@ -15,12 +15,13 @@ COPY requirements.txt .
 # -> built time
 RUN pip install --upgrade pip 
 RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y curl
 
 # host -> container
 COPY . .
 
 
-EXPOSE 8001
+EXPOSE 8000
 
 # -> runtime
 # 0.0.0.0 - means  server inside the container will accept connections on all network interfaces with in the container
