@@ -1234,8 +1234,10 @@ class ExpenseRequestService(ServiceBase):
                 employee_email=expense.employee.email,
             )
 
-            disbursed_status = Status.objects.get(code="disbursed")
-            expense.status = disbursed_status
+            # on reimbusment the status chanhes to complete once disbursed on disburemtn -> disbursed
+            is_reimbursement = expense.expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT
+            final_status = Status.objects.get(code="completed" if is_reimbursement else "disbursed")
+            expense.status = final_status
             expense.metadata.update(
                 {
                     "disbursed_by": str(triggered_by.id),
@@ -1280,7 +1282,7 @@ class ExpenseRequestService(ServiceBase):
             )
 
             return expense, log
-        # REIMBURSEMENT: submitted → pending → approved → disbursed ✅ (closed)
+        # REIMBURSEMENT: submitted → pending → approved → completed ✅ (closed)
         # DISBURSEMENT:  submitted → pending → approved → disbursed → reconciliation pending → under_review → completed ✅
 
 
