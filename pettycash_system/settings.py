@@ -39,7 +39,14 @@ SECRET_KEY = "django-insecure-wp+03--cs*3$d7_%@95#!1k_(ezv-h_2(vytn(kh2$rd#g022y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "pettycash-backend",   # Docker service name
+    "pettycash-backend-1", # Scaled instance 1
+    "pettycash-backend-2", # Scaled instance 2
+    "0.0.0.0",
+]
 
 AUTH_USER_MODEL = "users.User"
 # Application definition
