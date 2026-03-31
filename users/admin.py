@@ -4,7 +4,9 @@ from users.models import User, Role, Permission
 
 # Register your models here.
 
-
+admin.site.site_header = "Petty Cash System"
+admin.site.site_title = "Petty Cash System"
+admin.site.index_title = "Welcome to Petty Cash Management"
 # ── Permission Admin ──────────────────────────────────────────
 @admin.register(Permission)
 class PermissionAdmin(admin.ModelAdmin):
