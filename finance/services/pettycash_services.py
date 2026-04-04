@@ -171,6 +171,7 @@ class PettyCashService:
                     event_type__code__in=[
                         "petty_cash_balance_deducted",
                         "topup_disbursed",
+                        "loan_disbursed"
                     ],
                     metadata__account_id=str(account.id),
                     created_at__gte=date_from,
