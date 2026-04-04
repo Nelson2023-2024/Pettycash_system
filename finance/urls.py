@@ -6,7 +6,7 @@ from .views import (create_expense_view, create_petty_cash_view, create_topup_vi
   list_all_reconciliations_view, list_all_topups_view, list_my_expenses_view,
   list_my_reconciliations_view, list_my_topups_view, review_reconciliation_view,
   submit_reconciliation_receipt_view, update_expense_view, update_petty_cash_view,
-  update_topup_view, get_petty_cash_activity_view,list_my_loans_view,disburse_loan_view,decide_loan_view,get_loan_view,mark_loan_repaid_view, create_loan_view, list_all_loans_view, export_account_activity_view)
+  update_topup_view, get_petty_cash_activity_view,list_my_loans_view,disburse_loan_view,decide_loan_view,get_loan_view,mark_loan_repaid_view, create_loan_view, list_all_loans_view, export_account_activity_view, deactivate_loan_view, update_loan_view)
 
 urlpatterns = [
   path('petty_cash/create/',create_petty_cash_view, name='create-petty-cash-account'),
@@ -50,4 +50,6 @@ urlpatterns = [
   path("loan/<str:loan_id>/decide/", decide_loan_view, name="decide-loan"),
   path("loan/<str:loan_id>/disburse/", disburse_loan_view, name="disburse-loan"),
   path("loan/<str:loan_id>/repaid/", mark_loan_repaid_view, name="mark-loan-repaid"),
+  path("loan/<str:loan_id>/deactivate/",deactivate_loan_view,name="deactivate-loan"),
+  path("loan/<str:loan_id>/update/",update_loan_view,name="update-loan"),
 ]

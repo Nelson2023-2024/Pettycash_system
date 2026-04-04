@@ -12,8 +12,8 @@ class LoanController:
         try:
             data = get_clean_request_data(
                 request,
-                required_fields={"amount", "reason"},
-                allowed_fields={"amount", "reason"},
+                required_fields={"amount", "reason",'phone_number'},
+                allowed_fields={"amount", "reason", 'phone_number'},
             )
 
             # ── Validate amount is positive ───────────────
@@ -21,11 +21,12 @@ class LoanController:
             if amount <= 0:
                 raise ValueError("Loan amount must be greater than 0.")
 
-            loan = LoanRequestService().create(
+            loan, log = LoanRequestService().create(
                 employee=request.user,
                 amount=amount,
                 reason=data.get("reason", ""),
                 request=request,
+                phone_number=data.get("phone_number")
             )
             return ResponseProvider.created(
                 message="Loan request submitted successfully.",
@@ -84,7 +85,7 @@ class LoanController:
                     f"Current status: '{loan.status.name}'."
                 )
 
-            loan = LoanRequestService().decide(
+            loan, log = LoanRequestService().decide(
                 loan_id=loan_id,
                 decision=decision,
                 triggered_by=request.user,
@@ -93,7 +94,7 @@ class LoanController:
             )
 
             NotificationService.notify(
-                transaction_log=loan.metadata.get("log"),
+                transaction_log=log,
                 recipient=loan.employee,
             )
 
@@ -116,14 +117,14 @@ class LoanController:
                     f"Current status: '{loan.status.name}'."
                 )
 
-            loan = LoanRequestService().disburse(
+            loan, log = LoanRequestService().disburse(
                 loan_id=loan_id,
                 triggered_by=request.user,
                 request=request,
             )
 
             NotificationService.notify(
-                transaction_log=loan.metadata.get("log"),
+                transaction_log=log,
                 recipient=loan.employee,
             )
 
@@ -159,6 +160,53 @@ class LoanController:
         except Exception as ex:
             return ResponseProvider.handle_exception(ex)
 
+    @classmethod
+    def deactivate(cls, request, loan_id: str) -> ResponseProvider:
+        """Employee cancels a loan request."""
+        try:
+            loan = LoanRequestService().deactivate(
+                loan_id=loan_id,
+                triggered_by=request.user,
+                request=request,
+            )
+
+            return ResponseProvider.success(
+                message="Loan request cancelled successfully.",
+                data=cls._serialize(loan),
+            )
+
+        except Exception as ex:
+            return ResponseProvider.handle_exception(ex)
+
+    @classmethod
+    def update(cls, request, loan_id: str) -> ResponseProvider:
+        """Employee updates a pending loan request."""
+        try:
+            data = get_clean_request_data(
+                request,
+                allowed_fields={"amount", "reason"},
+            )
+
+            loan = LoanRequestService().get_by_id(loan_id)
+            if loan.status.code != "pending":
+                raise ValueError(
+                    f"Only pending loans can be updated. "
+                    f"Current status: '{loan.status.name}'."
+                )
+
+            loan, log = LoanRequestService().update(
+                loan_id=loan_id,
+                data=data,
+                triggered_by=request.user,
+                request=request,
+            )
+            return ResponseProvider.success(
+                message="Loan updated successfully.",
+                data=cls._serialize(loan),
+            )
+        except Exception as ex:
+            return ResponseProvider.handle_exception(ex)
+
     @staticmethod
     def _serialize(loan) -> dict:
         return {
@@ -168,6 +216,7 @@ class LoanController:
             "due_date": loan.due_date.isoformat() if loan.due_date else None,
             "repaid_at": loan.repaid_at.isoformat() if loan.repaid_at else None,
             "decision_reason": loan.decision_reason,
+            "phone_number": loan.phone_number,
             "is_active": loan.is_active,
             "created_at": loan.created_at.isoformat(),
             "updated_at": loan.updated_at.isoformat(),
@@ -181,11 +230,15 @@ class LoanController:
                 "email": loan.employee.email,
             },
             # ── Decision by ───────────────────────────────
-            "decision_by": {
-                "id": str(loan.decision_by.id),
-                "name": f"{loan.decision_by.first_name} {loan.decision_by.last_name}".strip(),
-                "email": loan.decision_by.email,
-            } if loan.decision_by else None,
+            "decision_by": (
+                {
+                    "id": str(loan.decision_by.id),
+                    "name": f"{loan.decision_by.first_name} {loan.decision_by.last_name}".strip(),
+                    "email": loan.decision_by.email,
+                }
+                if loan.decision_by
+                else None
+            ),
             # ── Financial details from metadata ───────────
             "transaction_cost": loan.metadata.get("transaction_cost"),
             "total_deduction": loan.metadata.get("total_deduction"),

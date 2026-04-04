@@ -341,6 +341,7 @@ class LoanRequest(BaseModel):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name=_("Amount")
     )
+    phone_number = models.CharField(blank=True, null=True, verbose_name=_("Phone Number"))
     reason = models.TextField(blank=True, null=True, verbose_name=_("Reason"))
     status = models.ForeignKey(
         Status,
@@ -359,6 +360,7 @@ class LoanRequest(BaseModel):
         User,
         on_delete=models.PROTECT,
         related_name="loan_decisions",
+        null=True, blank=True,
         verbose_name=_("Decision By"),
     )
     decision_reason = models.CharField(
