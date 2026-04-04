@@ -25,6 +25,7 @@ import logging
 from decimal import Decimal
 import calendar
 from django.db import models
+from django.core.exceptions import PermissionDenied
 
 logger = logging.getLogger(__name__)
 
@@ -1099,6 +1100,12 @@ class ExpenseRequestService(ServiceBase):
             ExpenseRequest.DoesNotExist: If no matching expense request is found.
         """
         expense = self.manager.select_related("status").get(id=expense_request_id)
+
+        # ── Only pending expenses can be deactivated ──
+        if expense.status.code != "pending":
+            raise PermissionDenied(
+                f'Expense "{expense.title}" cannot be deleted because its status is "{expense.status.name}". Only pending expenses can be deleted.'
+            )
         inactive_status, _ = Status.objects.get_or_create(
             code="INACT",
             defaults={"name": "Inactive", "description": "Deactivated record"},
@@ -1235,8 +1242,12 @@ class ExpenseRequestService(ServiceBase):
             )
 
             # on reimbusment the status chanhes to complete once disbursed on disburemtn -> disbursed
-            is_reimbursement = expense.expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT
-            final_status = Status.objects.get(code="completed" if is_reimbursement else "disbursed")
+            is_reimbursement = (
+                expense.expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT
+            )
+            final_status = Status.objects.get(
+                code="completed" if is_reimbursement else "disbursed"
+            )
             expense.status = final_status
             expense.metadata.update(
                 {
@@ -2070,7 +2081,12 @@ class LoanRequestService(ServiceBase):
         )
 
     def create(
-        self, employee: User, amount: Decimal, reason: str, request=None
+        self,
+        employee: User,
+        amount: Decimal,
+        reason: str,
+        phone_number: str,
+        request=None,
     ) -> LoanRequest:
         """
         Creates a new loan request for the employee.
@@ -2083,13 +2099,39 @@ class LoanRequestService(ServiceBase):
         active_loan = self.manager.filter(
             employee=employee,
             status__code__in=["pending", "approved", "disbursed", "defaulted"],
+            is_active=True,
         ).first()
         if active_loan:
-            raise ValueError(
-                f"You already have an active loan of KES {active_loan.amount} "
-                f"with status '{active_loan.status.name}'. "
-                f"Repay it before requesting a new one."
-            )
+            status = active_loan.status.code
+
+            if status == "pending":
+                message = (
+                    f"You already have a pending loan request of KES {active_loan.amount}. "
+                    f"Please wait for it to be approved or rejected before requesting another."
+                )
+
+            elif status == "approved":
+                message = (
+                    f"You already have an approved loan of KES {active_loan.amount} "
+                    f"awaiting disbursement. Please wait for processing."
+                )
+
+            elif status == "disbursed":
+                message = (
+                    f"You already have an active loan of KES {active_loan.amount}. "
+                    f"Please repay it before requesting another."
+                )
+
+            elif status == "defaulted":
+                message = (
+                    f"You have a defaulted loan of KES {active_loan.amount}. "
+                    f"Please clear it before requesting another loan."
+                )
+
+            else:
+                message = "You already have an active loan."
+
+            raise ValueError(message)
 
         # ── Guard: amount within limit ────────────────────
         config = LoanConfig.objects.filter(is_active=True).first()
@@ -2103,9 +2145,10 @@ class LoanRequestService(ServiceBase):
                 employee=employee,
                 amount=amount,
                 reason=reason,
+                phone_number=phone_number
             )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=loan,
                 event_code="loan_requested",
                 triggered_by=employee,
@@ -2115,11 +2158,12 @@ class LoanRequestService(ServiceBase):
                     "loan_id": str(loan.id),
                     "employee_id": str(employee.id),
                     "employee_email": employee.email,
+                    "phone_number": phone_number,
                     "amount": str(amount),
                     "reason": reason,
                 },
             )
-            return loan
+            return loan, log
 
     def decide(
         self,
@@ -2160,7 +2204,7 @@ class LoanRequestService(ServiceBase):
                 ]
             )
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=loan,
                 event_code=event_code,
                 triggered_by=triggered_by,
@@ -2176,7 +2220,7 @@ class LoanRequestService(ServiceBase):
                     "decision_by": triggered_by.email,
                 },
             )
-            return loan
+            return loan, log
 
     def disburse(self, loan_id: str, triggered_by: User, request=None) -> LoanRequest:
         """
@@ -2202,6 +2246,8 @@ class LoanRequestService(ServiceBase):
                 transaction_cost=transaction_cost,
                 triggered_by=triggered_by,
                 request=request,
+                title=f"Loan disbursement",
+                employee_email=loan.employee.email,
             )
 
             # ── Set due date → last day of current month ──
@@ -2226,7 +2272,7 @@ class LoanRequestService(ServiceBase):
             )
             loan.save(update_fields=["status", "due_date", "metadata", "updated_at"])
 
-            TransactionLogService.log(
+            log = TransactionLogService.log(
                 entity=loan,
                 event_code="loan_disbursed",
                 triggered_by=triggered_by,
@@ -2245,7 +2291,7 @@ class LoanRequestService(ServiceBase):
                     "disbursed_by": triggered_by.email,
                 },
             )
-            return loan
+            return loan, log
 
     def mark_repaid(
         self, loan_id: str, triggered_by: User, request=None
@@ -2298,3 +2344,72 @@ class LoanRequestService(ServiceBase):
                 },
             )
             return loan
+
+    def deactivate(self, loan_id: str, triggered_by: User, request=None) -> LoanRequest:
+        """
+        Employee cancels (deactivates) their loan request.
+        Only allowed if loan is still pending.
+        """
+        with transaction.atomic():
+            loan = self.get_by_id(loan_id)
+
+            # ── Guard: only pending loans can be cancelled ──
+            if loan.status.code != "pending":
+                raise ValueError(
+                    f"Only pending loans can be cancelled. "
+                    f"Current status: '{loan.status.name}'."
+                )
+
+            loan.is_active = False
+            loan.metadata.update(
+                {
+                    "deactivated_by": str(triggered_by.id),
+                    "deactivated_by_email": triggered_by.email,
+                    "deactivated_at": timezone.now().isoformat(),
+                }
+            )
+            loan.save(update_fields=["is_active", "metadata", "updated_at"])
+
+            TransactionLogService.log(
+                entity=loan,
+                event_code="loan_deactivated",
+                triggered_by=triggered_by,
+                message=f"Loan of KES {loan.amount} cancelled by {triggered_by.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(loan.employee.id),
+                    "employee_email": loan.employee.email,
+                    "amount": str(loan.amount),
+                    "deactivated_by": triggered_by.email,
+                },
+            )
+
+            return loan
+
+    def update(self, loan_id: str, data: dict, triggered_by: User, request=None):
+        with transaction.atomic():
+            loan = self.manager.select_for_update().get(id=loan_id, is_active=True)
+
+            old_values = {field: str(getattr(loan, field, None)) for field in data}
+
+            for field, value in data.items():
+                setattr(loan, field, value)
+
+            loan.save(update_fields=list(data.keys()) + ["updated_at"])
+
+            log = TransactionLogService.log(
+                entity=loan,
+                event_code="loan_updated",
+                triggered_by=triggered_by,
+                message=f"Loan request {loan_id} updated",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "changed_fields": list(data.keys()),
+                    "old_values": old_values,
+                    "new_values": {k: str(v) for k, v in data.items()},
+                    "updated_by": triggered_by.email,
+                },
+            )
+        return loan, log
