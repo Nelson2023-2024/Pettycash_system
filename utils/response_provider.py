@@ -45,6 +45,7 @@ class ResponseProvider:
             return cls.not_found(error=str(ex))
         elif isinstance(ex, IntegrityError):
              # e.g. duplicate unique field, FK constraint violation
+            print(f"[IntegrityError] {ex}") 
             return cls.conflict(error="A record with this data already exists or a required relation is missing.")
         elif isinstance(ex, DataError):
             # e.g. value too long for a CharField, out of range for DecimalField
