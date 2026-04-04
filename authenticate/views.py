@@ -29,7 +29,7 @@ def refresh_token(request) -> JsonResponse:
 @require_http_methods(["POST"])
 def logout(request) -> JsonResponse:
     try:
-        return AuthService.logout()
+        return AuthService.logout(request)
     except Exception as ex:
         return ResponseProvider.handle_exception(ex)
 
