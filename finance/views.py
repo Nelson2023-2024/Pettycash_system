@@ -8,13 +8,16 @@ from utils.decorators.login_required import login_required
 from utils.response_provider import ResponseProvider
 from finance.services.expense_request_service import ExpenseRequestController
 from finance.services.topup_request_service import TopUpRequestController
-from finance.services.disbursment_reconciliation_service import DisbursementReconciliationController
+from finance.services.disbursment_reconciliation_service import (
+    DisbursementReconciliationController,
+)
+from .services.loan_request_service import LoanController
 from .services.pettycash_services import PettyCashService
 
 
 @csrf_exempt
 @allowed_http_methods("POST")
-@login_required("ADM", "CFO","ADM")
+@login_required("ADM", "CFO", "ADM")
 def create_petty_cash_view(request) -> ResponseProvider | Any:
     try:
         return PettyCashService().create_petty_cash_account(request)
@@ -24,7 +27,7 @@ def create_petty_cash_view(request) -> ResponseProvider | Any:
 
 @csrf_exempt
 @allowed_http_methods("GET")
-@login_required("ADM", "CFO", "FO","ADM")
+@login_required("ADM", "CFO", "FO", "ADM")
 def get_petty_cash_view(request, account_id: str) -> JsonResponse:
     try:
         return PettyCashService().get_petty_cash_account(account_id)
@@ -34,7 +37,7 @@ def get_petty_cash_view(request, account_id: str) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("GET")
-@login_required("ADM", "CFO", "FO","ADM")
+@login_required("ADM", "CFO", "FO", "ADM")
 def get_all_petty_cash_view(request) -> JsonResponse:
     try:
         return PettyCashService().get_all_petty_cash_accounts()
@@ -44,7 +47,7 @@ def get_all_petty_cash_view(request) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
-@login_required("ADM", "CFO","ADM")
+@login_required("ADM", "CFO", "ADM")
 def update_petty_cash_view(request, account_id: str) -> JsonResponse:
     try:
         return PettyCashService().update_petty_cash_account(request, account_id)
@@ -54,13 +57,14 @@ def update_petty_cash_view(request, account_id: str) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("DELETE")
-@login_required("ADM", "CFO","ADM")
+@login_required("ADM", "CFO", "ADM")
 def deactivate_petty_cash_view(request, account_id: str) -> JsonResponse:
     try:
         return PettyCashService().deactivate_petty_cash_account(request, account_id)
     except Exception as ex:
         return ResponseProvider().handle_exception(ex)
-    
+
+
 @csrf_exempt
 @allowed_http_methods("GET")
 @login_required("ADM", "CFO", "FO")
@@ -71,10 +75,17 @@ def get_petty_cash_activity_view(request):
         return ResponseProvider().handle_exception(ex)
 
 
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO")
+def export_account_activity_view(request):
+    return PettyCashService.export_account_activity(request)
+
+
 # ── EXPENSE REQUESTS ─────────────────────────────────────────
 @csrf_exempt
 @allowed_http_methods("POST")
-@login_required("EMP", "FO","ADM")  # employees and FO can submit expenses
+@login_required("EMP", "FO", "ADM")  # employees and FO can submit expenses
 def create_expense_view(request) -> JsonResponse:
     return ExpenseRequestController().create_expense_request(request)
 
@@ -92,6 +103,7 @@ def list_all_expenses_view(request) -> JsonResponse:
 def list_my_expenses_view(request) -> JsonResponse:
     return ExpenseRequestController().get_auth_user_expense_request(request)
 
+
 @csrf_exempt
 @allowed_http_methods("GET")
 @login_required("EMP", "FO", "CFO", "ADM")
@@ -101,7 +113,7 @@ def get_expense_request_view(request) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
-@login_required("EMP", "FO","ADM")
+@login_required("EMP", "FO", "ADM")
 def update_expense_view(request, expense_id: str) -> JsonResponse:
     return ExpenseRequestController().update_expense_request(request, expense_id)
 
@@ -114,11 +126,14 @@ def deactivate_expense_view(request, expense_request_id: str) -> JsonResponse:
         request, expense_request_id
     )
 
+
 @csrf_exempt
 @allowed_http_methods("PATCH")
 @login_required("FO", "CFO", "ADM")
 def decide_expense_view(request, expense_id: str) -> JsonResponse:
-    return ExpenseRequestController().approve_or_rejext_expense_request(request, expense_id)
+    return ExpenseRequestController().approve_or_rejext_expense_request(
+        request, expense_id
+    )
 
 
 @csrf_exempt
@@ -127,10 +142,11 @@ def decide_expense_view(request, expense_id: str) -> JsonResponse:
 def disburse_expense_view(request, expense_id: str) -> JsonResponse:
     return ExpenseRequestController().disburse_expense_request(request, expense_id)
 
+
 # ── TOP UP REQUESTS ──────────────────────────────────────────
 @csrf_exempt
 @allowed_http_methods("POST")
-@login_required("FO","ADM")  # only Finance Officer can request top-ups
+@login_required("FO", "ADM")  # only Finance Officer can request top-ups
 def create_topup_view(request, pettycash_account_id: str) -> JsonResponse:
     return TopUpRequestController().create(request, pettycash_account_id)
 
@@ -151,21 +167,21 @@ def list_my_topups_view(request) -> JsonResponse:
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
-@login_required("CFO","ADM")  # only CFO can approve/reject
+@login_required("CFO", "ADM")  # only CFO can approve/reject
 def decide_topup_view(request, topup_id: str) -> JsonResponse:
     return TopUpRequestController().decide(request, topup_id)
 
 
 @csrf_exempt
 @allowed_http_methods("POST")
-@login_required("CFO","ADM")  # Finance Officer disburses after CFO approves
+@login_required("CFO", "ADM")  # Finance Officer disburses after CFO approves
 def disburse_topup_view(request, topup_id: str) -> JsonResponse:
     return TopUpRequestController().disburse(request, topup_id)
 
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
-@login_required("FO","ADM")  # only requester role can edit their own pending request
+@login_required("FO", "ADM")  # only requester role can edit their own pending request
 def update_topup_view(request, topup_id: str) -> JsonResponse:
     return TopUpRequestController().update(request, topup_id)
 
@@ -196,18 +212,87 @@ def list_all_reconciliations_view(request) -> JsonResponse:
 @allowed_http_methods("GET")
 @login_required("EMP", "FO", "CFO", "ADM")
 def get_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:
-    return DisbursementReconciliationController().get_reconciliation(request, reconciliation_id)
+    return DisbursementReconciliationController().get_reconciliation(
+        request, reconciliation_id
+    )
 
 
 @csrf_exempt
 @allowed_http_methods("POST")
 @login_required("EMP", "ADM")  # only the employee submits their own receipt
 def submit_reconciliation_receipt_view(request, reconciliation_id: str) -> JsonResponse:
-    return DisbursementReconciliationController().submit_reconciliation_receipt(request, reconciliation_id)
+    return DisbursementReconciliationController().submit_reconciliation_receipt(
+        request, reconciliation_id
+    )
 
 
 @csrf_exempt
 @allowed_http_methods("PATCH")
 @login_required("FO", "CFO", "ADM")  # only FO/CFO can review
 def review_reconciliation_view(request, reconciliation_id: str) -> JsonResponse:
-    return DisbursementReconciliationController().review_reconciliation(request, reconciliation_id)
+    return DisbursementReconciliationController().review_reconciliation(
+        request, reconciliation_id
+    )
+
+
+# ── LOAN REQUESTS ──────────────────────────────────────────
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("ADM", "CFO", "FO")
+def list_all_loans_view(request):
+    return LoanController.get_all(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "ADM", "CFO", "FO")
+def list_my_loans_view(request):
+    return LoanController.get_my_loans(request)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("EMP", "ADM", "CFO", "FO")
+def create_loan_view(request):
+    return LoanController.create(request)
+
+
+@csrf_exempt
+@allowed_http_methods("GET")
+@login_required("EMP", "ADM", "CFO", "FO")
+def get_loan_view(request, loan_id: str):
+    return LoanController.get_by_id(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("CFO", "ADM","FO")
+def decide_loan_view(request, loan_id: str):
+    return LoanController.decide(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("CFO", "ADM","FO")
+def disburse_loan_view(request, loan_id: str):
+    return LoanController.disburse(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("POST")
+@login_required("CFO", "ADM")
+def mark_loan_repaid_view(request, loan_id: str):
+    return LoanController.mark_repaid(request, loan_id)
+
+
+@csrf_exempt
+@allowed_http_methods("DELETE")
+@login_required("CFO", "ADM", "EMP", "FO")
+def deactivate_loan_view(request, loan_id: str):
+    return LoanController.deactivate(request, loan_id)
+
+@csrf_exempt
+@login_required("CFO", "ADM", "EMP", "FO")
+@allowed_http_methods("PATCH")
+def update_loan_view(request, loan_id):
+    return LoanController.update(request, loan_id)

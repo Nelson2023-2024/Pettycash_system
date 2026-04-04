@@ -1,4 +1,5 @@
 from services.services import NotificationService
+from utils.pagination import PaginationService
 from utils.response_provider import ResponseProvider
 
 
@@ -24,10 +25,16 @@ class NotificationController:
             unread_count = NotificationService().get_unread_count(
                 auth_user=request.user.id
             )
+
+            paginated = PaginationService.paginate(
+                queryset=notifications,
+                request=request,
+                serializer=cls._serialize
+            )
             return ResponseProvider.success(
                 data={
                     "unread_count": unread_count,
-                    "notifications": [cls._serialize(n) for n in notifications],
+                    **paginated # ← spreads count, total_pages, results etc.
                 }
             )
         except Exception as ex:

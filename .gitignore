@@ -12,3 +12,6 @@ __pycache__/
 *.pyo
 *.pyd
 data.json
+
+models.dot
+media

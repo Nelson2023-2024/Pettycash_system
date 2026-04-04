@@ -14,3 +14,10 @@ django_cloudinary_storage
 celery==5.6.2
 redis==7.3.0
 flower
+
+openpyxl
+
+django-extensions 
+graphviz 
+pydot 
+pyparsing

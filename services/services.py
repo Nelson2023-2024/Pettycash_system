@@ -3,11 +3,13 @@ from django.db.models import Manager, QuerySet
 from typing import Type
 
 from finance.models import (
-    PettyCashAccount,
-    ExpenseRequest,
-    TopUpRequest,
     DisbursementReconciliation,
+    ExpenseRequest,
+    LoanRequest,
     MpesaTransactionCost,
+    PettyCashAccount,
+    TopUpRequest,
+    LoanConfig,
 )
 from base.models import Status, Category
 from department.models import Department
@@ -21,6 +23,9 @@ from utils.exceptions import TransactionLogError
 from django.db import transaction, IntegrityError
 import logging
 from decimal import Decimal
+import calendar
+from django.db import models
+from django.core.exceptions import PermissionDenied
 
 logger = logging.getLogger(__name__)
 
@@ -284,6 +289,17 @@ class UserService(ServiceBase):
             },
         )
         return user, log
+
+    def search(self, query: str):
+        return (
+            self.manager.filter(is_active=True)
+            .filter(
+                models.Q(first_name__icontains=query)
+                | models.Q(last_name__icontains=query)
+                | models.Q(email__icontains=query)
+            )
+            .select_related("role", "department")[:20]
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -802,7 +818,15 @@ class PettyCashAccountService(ServiceBase):
         )
         return account, log
 
-    def deduct_balance(self, amount, triggered_by, request=None, transaction_cost=None):
+    def deduct_balance(
+        self,
+        amount,
+        triggered_by,
+        request=None,
+        transaction_cost=None,
+        title=None,
+        employee_email=None,
+    ):
         """
         Deducts the disbursed amount from the active petty cash account balance.
         Raises ValueError if no active account exists or if balance would go negative.
@@ -845,6 +869,8 @@ class PettyCashAccountService(ServiceBase):
                 metadata={
                     "account_id": str(account.id),
                     "account_name": account.name,
+                    "title": title,  # ← expense title
+                    "employee_email": employee_email,  # <- employee who receives the money
                     "expense_amount": (
                         str(amount - transaction_cost)
                         if transaction_cost
@@ -1074,6 +1100,12 @@ class ExpenseRequestService(ServiceBase):
             ExpenseRequest.DoesNotExist: If no matching expense request is found.
         """
         expense = self.manager.select_related("status").get(id=expense_request_id)
+
+        # ── Only pending expenses can be deactivated ──
+        if expense.status.code != "pending":
+            raise PermissionDenied(
+                f'Expense "{expense.title}" cannot be deleted because its status is "{expense.status.name}". Only pending expenses can be deleted.'
+            )
         inactive_status, _ = Status.objects.get_or_create(
             code="INACT",
             defaults={"name": "Inactive", "description": "Deactivated record"},
@@ -1205,10 +1237,18 @@ class ExpenseRequestService(ServiceBase):
                 transaction_cost=transaction_cost,
                 triggered_by=triggered_by,
                 request=request,
+                title=expense.title,
+                employee_email=expense.employee.email,
             )
 
-            disbursed_status = Status.objects.get(code="disbursed")
-            expense.status = disbursed_status
+            # on reimbusment the status chanhes to complete once disbursed on disburemtn -> disbursed
+            is_reimbursement = (
+                expense.expense_type == ExpenseRequest.ExpenseType.REIMBURSEMENT
+            )
+            final_status = Status.objects.get(
+                code="completed" if is_reimbursement else "disbursed"
+            )
+            expense.status = final_status
             expense.metadata.update(
                 {
                     "disbursed_by": str(triggered_by.id),
@@ -1253,7 +1293,7 @@ class ExpenseRequestService(ServiceBase):
             )
 
             return expense, log
-        # REIMBURSEMENT: submitted → pending → approved → disbursed ✅ (closed)
+        # REIMBURSEMENT: submitted → pending → approved → completed ✅ (closed)
         # DISBURSEMENT:  submitted → pending → approved → disbursed → reconciliation pending → under_review → completed ✅
 
 
@@ -2011,3 +2051,365 @@ class DisbursementReconciliationService(ServiceBase):
             },
         )
         return reconciliation, log
+
+
+class LoanRequestService(ServiceBase):
+    manager = LoanRequest.objects
+
+    def get_all(self):
+        return (
+            self.manager.filter(is_active=True)
+            .select_related("employee", "status", "decision_by")
+            .order_by("-created_at")
+        )
+
+    def get_by_id(self, loan_id: str) -> LoanRequest:
+        loan = (
+            self.manager.filter(id=loan_id, is_active=True)
+            .select_related("employee", "status", "decision_by")
+            .first()
+        )
+        if not loan:
+            raise ValueError("Loan request not found.")
+        return loan
+
+    def get_my_loans(self, employee: User):
+        return (
+            self.manager.filter(employee=employee, is_active=True)
+            .select_related("status", "decision_by")
+            .order_by("-created_at")
+        )
+
+    def create(
+        self,
+        employee: User,
+        amount: Decimal,
+        reason: str,
+        phone_number: str,
+        request=None,
+    ) -> LoanRequest:
+        """
+        Creates a new loan request for the employee.
+        Validates:
+        - Employee has no active loan (pending, approved, disbursed)
+        - Amount does not exceed LoanConfig.max_loan_amount
+        """
+
+        # ── Guard: one active loan at a time ─────────────
+        active_loan = self.manager.filter(
+            employee=employee,
+            status__code__in=["pending", "approved", "disbursed", "defaulted"],
+            is_active=True,
+        ).first()
+        if active_loan:
+            status = active_loan.status.code
+
+            if status == "pending":
+                message = (
+                    f"You already have a pending loan request of KES {active_loan.amount}. "
+                    f"Please wait for it to be approved or rejected before requesting another."
+                )
+
+            elif status == "approved":
+                message = (
+                    f"You already have an approved loan of KES {active_loan.amount} "
+                    f"awaiting disbursement. Please wait for processing."
+                )
+
+            elif status == "disbursed":
+                message = (
+                    f"You already have an active loan of KES {active_loan.amount}. "
+                    f"Please repay it before requesting another."
+                )
+
+            elif status == "defaulted":
+                message = (
+                    f"You have a defaulted loan of KES {active_loan.amount}. "
+                    f"Please clear it before requesting another loan."
+                )
+
+            else:
+                message = "You already have an active loan."
+
+            raise ValueError(message)
+
+        # ── Guard: amount within limit ────────────────────
+        config = LoanConfig.objects.filter(is_active=True).first()
+        if config and amount > config.max_loan_amount:
+            raise ValueError(
+                f"Loan amount KES {amount} exceeds the maximum allowed "
+                f"KES {config.max_loan_amount}."
+            )
+        with transaction.atomic():
+            loan = self.manager.create(
+                employee=employee,
+                amount=amount,
+                reason=reason,
+                phone_number=phone_number
+            )
+
+            log = TransactionLogService.log(
+                entity=loan,
+                event_code="loan_requested",
+                triggered_by=employee,
+                message=f"Loan of KES {amount} requested by {employee.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(employee.id),
+                    "employee_email": employee.email,
+                    "phone_number": phone_number,
+                    "amount": str(amount),
+                    "reason": reason,
+                },
+            )
+            return loan, log
+
+    def decide(
+        self,
+        loan_id: str,
+        decision: str,
+        triggered_by: User,
+        decision_reason: str = "",
+        request=None,
+    ) -> LoanRequest:
+        """
+        FO approves or rejects a pending loan request.
+        decision: 'approved' or 'rejected'
+        """
+        with transaction.atomic():
+            loan = self.get_by_id(loan_id)
+            new_status = Status.objects.get(code=decision)
+            event_code = f"loan_{decision}"
+
+            loan.status = new_status
+            loan.decision_by = triggered_by
+            loan.decision_reason = decision_reason
+            loan.metadata.update(
+                {
+                    "decision": decision,
+                    "decision_by": str(triggered_by.id),
+                    "decision_by_email": triggered_by.email,
+                    "decision_at": timezone.now().isoformat(),
+                    "decision_reason": decision_reason,
+                }
+            )
+            loan.save(
+                update_fields=[
+                    "status",
+                    "decision_by",
+                    "decision_reason",
+                    "metadata",
+                    "updated_at",
+                ]
+            )
+
+            log = TransactionLogService.log(
+                entity=loan,
+                event_code=event_code,
+                triggered_by=triggered_by,
+                message=f"Loan of KES {loan.amount} {decision} by {triggered_by.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(loan.employee.id),
+                    "employee_email": loan.employee.email,
+                    "amount": str(loan.amount),
+                    "decision": decision,
+                    "decision_reason": decision_reason,
+                    "decision_by": triggered_by.email,
+                },
+            )
+            return loan, log
+
+    def disburse(self, loan_id: str, triggered_by: User, request=None) -> LoanRequest:
+        """
+        CFO disburses an approved loan.
+        - Deducts from petty cash (amount + transaction cost)
+        - Sets due_date to end of current month
+        """
+        with transaction.atomic():
+            loan = self.get_by_id(loan_id)
+
+            # ── Calculate M-Pesa transaction cost ─────────
+            transaction_cost = MpesaTransactionCostService().calculate(loan.amount)
+            total_deduction = loan.amount + transaction_cost
+
+            # ── Deduct from petty cash ────────────────────
+            (
+                _,
+                previous_balance,
+                new_balance,
+                _,
+            ) = PettyCashAccountService().deduct_balance(
+                amount=total_deduction,
+                transaction_cost=transaction_cost,
+                triggered_by=triggered_by,
+                request=request,
+                title=f"Loan disbursement",
+                employee_email=loan.employee.email,
+            )
+
+            # ── Set due date → last day of current month ──
+            today = timezone.now().date()
+            last_day = calendar.monthrange(today.year, today.month)[1]
+            due_date = today.replace(day=last_day)
+
+            disbursed_status = Status.objects.get(code="disbursed")
+            loan.status = disbursed_status
+            loan.due_date = due_date
+            loan.metadata.update(
+                {
+                    "disbursed_by": str(triggered_by.id),
+                    "disbursed_by_email": triggered_by.email,
+                    "disbursed_at": timezone.now().isoformat(),
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "due_date": str(due_date),
+                }
+            )
+            loan.save(update_fields=["status", "due_date", "metadata", "updated_at"])
+
+            log = TransactionLogService.log(
+                entity=loan,
+                event_code="loan_disbursed",
+                triggered_by=triggered_by,
+                message=f"Loan of KES {loan.amount} disbursed to {loan.employee.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(loan.employee.id),
+                    "employee_email": loan.employee.email,
+                    "amount": str(loan.amount),
+                    "transaction_cost": str(transaction_cost),
+                    "total_deduction": str(total_deduction),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "due_date": str(due_date),
+                    "disbursed_by": triggered_by.email,
+                },
+            )
+            return loan, log
+
+    def mark_repaid(
+        self, loan_id: str, triggered_by: User, request=None
+    ) -> LoanRequest:
+        """
+        CFO marks a disbursed loan as repaid after M-Pesa confirmation.
+        Credits the loan amount back to petty cash.
+        """
+        with transaction.atomic():
+            loan = self.get_by_id(loan_id)
+
+            # ── Credit petty cash back ────────────────────
+            account = PettyCashAccountService().get_active_accounts().first()
+            if not account:
+                raise ValueError("No active petty cash account found.")
+
+            previous_balance = account.current_balance
+            account.current_balance += loan.amount
+            account.save(update_fields=["current_balance", "updated_at"])
+            new_balance = account.current_balance
+
+            repaid_status = Status.objects.get(code="repaid")
+            loan.status = repaid_status
+            loan.repaid_at = timezone.now()
+            loan.metadata.update(
+                {
+                    "repaid_by": str(triggered_by.id),
+                    "repaid_by_email": triggered_by.email,
+                    "repaid_at": timezone.now().isoformat(),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                }
+            )
+            loan.save(update_fields=["status", "repaid_at", "metadata", "updated_at"])
+
+            TransactionLogService.log(
+                entity=loan,
+                event_code="loan_repaid",
+                triggered_by=triggered_by,
+                message=f"Loan of KES {loan.amount} repaid by {loan.employee.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(loan.employee.id),
+                    "employee_email": loan.employee.email,
+                    "amount": str(loan.amount),
+                    "previous_balance": str(previous_balance),
+                    "new_balance": str(new_balance),
+                    "repaid_by": triggered_by.email,
+                },
+            )
+            return loan
+
+    def deactivate(self, loan_id: str, triggered_by: User, request=None) -> LoanRequest:
+        """
+        Employee cancels (deactivates) their loan request.
+        Only allowed if loan is still pending.
+        """
+        with transaction.atomic():
+            loan = self.get_by_id(loan_id)
+
+            # ── Guard: only pending loans can be cancelled ──
+            if loan.status.code != "pending":
+                raise ValueError(
+                    f"Only pending loans can be cancelled. "
+                    f"Current status: '{loan.status.name}'."
+                )
+
+            loan.is_active = False
+            loan.metadata.update(
+                {
+                    "deactivated_by": str(triggered_by.id),
+                    "deactivated_by_email": triggered_by.email,
+                    "deactivated_at": timezone.now().isoformat(),
+                }
+            )
+            loan.save(update_fields=["is_active", "metadata", "updated_at"])
+
+            TransactionLogService.log(
+                entity=loan,
+                event_code="loan_deactivated",
+                triggered_by=triggered_by,
+                message=f"Loan of KES {loan.amount} cancelled by {triggered_by.email}",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "employee_id": str(loan.employee.id),
+                    "employee_email": loan.employee.email,
+                    "amount": str(loan.amount),
+                    "deactivated_by": triggered_by.email,
+                },
+            )
+
+            return loan
+
+    def update(self, loan_id: str, data: dict, triggered_by: User, request=None):
+        with transaction.atomic():
+            loan = self.manager.select_for_update().get(id=loan_id, is_active=True)
+
+            old_values = {field: str(getattr(loan, field, None)) for field in data}
+
+            for field, value in data.items():
+                setattr(loan, field, value)
+
+            loan.save(update_fields=list(data.keys()) + ["updated_at"])
+
+            log = TransactionLogService.log(
+                entity=loan,
+                event_code="loan_updated",
+                triggered_by=triggered_by,
+                message=f"Loan request {loan_id} updated",
+                ip_address=request.META.get("REMOTE_ADDR") if request else None,
+                metadata={
+                    "loan_id": str(loan.id),
+                    "changed_fields": list(data.keys()),
+                    "old_values": old_values,
+                    "new_values": {k: str(v) for k, v in data.items()},
+                    "updated_by": triggered_by.email,
+                },
+            )
+        return loan, log
